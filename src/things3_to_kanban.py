@@ -25,8 +25,8 @@ from random import shuffle
 FILE_SQLITE = '~/Library/Containers/com.culturedcode.ThingsMac/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'\
     if not environ.get('THINGSDB') else environ.get('THINGSDB')
-ANONYMIZE = False
-TAG_WAITING = "Waiting"
+ANONYMIZE = False if not environ.get('ANONYMIZE') else True
+TAG_WAITING = "Waiting" if not environ.get('TAG_WAITING') else environ.get('TAG_WAITING')
 
 # Basic variables
 FILE_SQLITE = expanduser(FILE_SQLITE)
