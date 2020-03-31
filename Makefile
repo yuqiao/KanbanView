@@ -44,9 +44,9 @@ code-lint:
 	@type pyflakes >/dev/null 2>&1 || (echo "Run 'pip install pyflakes' first." >&2 ; exit 1)
 	@type pylint >/dev/null 2>&1 || (echo "Run 'pip install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run 'pip install flake8' first." >&2 ; exit 1)
-	@pyflakes $(SRC_CORE)
-	@pylint $(SRC_CORE)
-	@flake8 --max-complexity 10 $(SRC_CORE)
+	@echo "PyFlakes:" ; pyflakes $(SRC_CORE)
+	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py
+	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE)
 
 code-count:
 	@type cloc >/dev/null 2>&1 || (echo "Run 'brew install cloc' first." >&2 ; exit 1)
