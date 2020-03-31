@@ -5,10 +5,11 @@ import sqlite3
 import webbrowser
 import codecs
 from os.path import expanduser, dirname, realpath
+from os import environ
 
 # Basic file info
 home = expanduser("~")
-sqlite_file = home + '/Library/Containers/com.culturedcode.ThingsMac/Data/Library/Application Support/Cultured Code/Things/Things.sqlite3'
+sqlite_file = home + '/Library/Containers/com.culturedcode.ThingsMac/Data/Library/Application Support/Cultured Code/Things/Things.sqlite3' if not environ.get('THINGS_DB') else expanduser(environ.get('THINGS_DB'))
 fout = dirname(realpath(__file__)) + '/kanban.html'
 
 mstr1 = []
