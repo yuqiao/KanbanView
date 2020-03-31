@@ -41,7 +41,7 @@ def select_all_tasks(conn):
     rowTask = cur.fetchall()
     nbTask=len(rowTask)
 
-    #print('Nb Areas:',nbArea, '  Nb Projects:',nbProj, nbProj2, '  Nb Tasks:',nbTask)
+    print('Statistics:', '\n  Nb Areas:',nbArea, '\n  Nb Projects:',nbProj, nbProj2, '\n  Nb Tasks:',nbTask)
     
     #Extracting the # of active (i.e. excluding completed) tasks for specific projects with existing due date
     ip=0
