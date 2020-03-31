@@ -1,4 +1,5 @@
 MAIN=getThings3.py
+DEST=kanban.html
 SRC_CORE=.
 SRC_TEST=tests
 PYTHON=python3
@@ -8,6 +9,7 @@ PIP=pip3
 help:
 	@echo "Some available commands:"
 	@echo " * run          - Run code."
+	@echo " * open         - Open Kanban Board."
 	@echo " * test         - Run unit tests and test coverage."
 	@echo " * doc          - Document code (pydoc)."
 	@echo " * clean        - Cleanup (e.g. pyc files)."
@@ -32,9 +34,13 @@ doc:
 #	@$(PYDOC) src.hello
 	@echo "not implemented"
 
+.PHONY: open
+open:
+	@open $(DEST)
+
 .PHONY: clean
 clean:
-	@rm -f kanban.html
+	@rm -f $(DEST)
 
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run 'pip install pycodestyle' first." >&2 ; exit 1)
