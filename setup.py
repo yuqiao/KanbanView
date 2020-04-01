@@ -8,7 +8,7 @@ Usage:
 from setuptools import setup
 
 APP = ['src/things3_to_kanban.py']
-DATA_FILES = ['resources']
+DATA_FILES = ['resources/style.css', 'resources/logo.png']
 OPTIONS = {
         'iconfile':'resources/icon.icns',
         'plist': {'CFBundleShortVersionString':'1.0.0',}
