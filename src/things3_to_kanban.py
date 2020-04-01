@@ -32,6 +32,8 @@ TAG_WAITING = "Waiting" if not environ.get('TAG_WAITING') else environ.get('TAG_
 FILE_SQLITE = expanduser(FILE_SQLITE)
 FILE_HTML = dirname(realpath(__file__)) + '/kanban.html'
 
+cursor = sqlite3.connect(FILE_SQLITE).cursor()
+
 # Database layout info
 TASKTABLE = "TMTask"
 AREATABLE = "TMArea"
@@ -77,7 +79,7 @@ def anonymize(word):
     return word
 
 
-def write_html_column(uid, file, cursor, title, sql):
+def write_html_column(uid, file, title, sql):
     """Create a column in the output."""
 
     sql = """
@@ -135,21 +137,22 @@ def write_html_footer(file):
         </div></body></html>"""
     file.write(message)
 
+def write_html_columns(file):
+    write_html_column(1, file, "Backlog", LIST_SOMEDAY)
+    write_html_column(2, file, "Upcoming", LIST_UPCOMING)
+    write_html_column(3, file, "Waiting", LIST_WAITING)
+    write_html_column(4, file, "Inbox", LIST_INBOX)
+    write_html_column(5, file, "Today", LIST_TODAY)
+    write_html_column(6, file, "Next", LIST_ANYTIME)
 
 def main():
     """Convert Things 3 database to Kanban HTML view."""
 
-    cursor = sqlite3.connect(FILE_SQLITE).cursor()
     file = codecs.open(FILE_HTML, 'w', 'utf-8')
 
     write_html_header(file)
 
-    write_html_column(1, file, cursor, "Backlog", LIST_SOMEDAY)
-    write_html_column(2, file, cursor, "Upcoming", LIST_UPCOMING)
-    write_html_column(3, file, cursor, "Waiting", LIST_WAITING)
-    write_html_column(4, file, cursor, "Inbox", LIST_INBOX)
-    write_html_column(5, file, cursor, "Today", LIST_TODAY)
-    write_html_column(6, file, cursor, "Next", LIST_ANYTIME)
+    write_html_columns(file)
 
     write_html_footer(file)
 
