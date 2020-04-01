@@ -2,3 +2,6 @@ kanban.html
 .DS_Store
 dist
 build
+__pycache__
+*.pyc
+
