@@ -10,6 +10,7 @@ help:
 	@echo "Some available commands:"
 	@echo " * run          - Run code."
 	@echo " * open         - Open Kanban Board."
+	@echo " * app          - Create KanbanView App."
 	@echo " * test         - Run unit tests and test coverage."
 	@echo " * doc          - Document code (pydoc)."
 	@echo " * clean        - Cleanup (e.g. pyc files)."
@@ -30,6 +31,11 @@ test:
 #	@coverage report
 	@echo "not implemented"
 
+.PHONY: app
+app:
+	@$(PYTHON) setup.py py2app --iconfile resources/icon.icns
+	@open dist
+
 .PHONY: doc
 doc:
 #	@$(PYDOC) src.hello
@@ -42,6 +48,7 @@ open:
 .PHONY: clean
 clean:
 	@rm -f $(DEST)
+	@rm -rf build dist
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run 'pip install autopep8' first." >&2 ; exit 1)
