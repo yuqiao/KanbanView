@@ -7,11 +7,11 @@ Usage:
 
 from setuptools import setup
 
-APP = ['src/things3_to_kanban.py']
-DATA_FILES = ['resources/style.css', 'resources/logo.png']
+APP = ['src/things3_to_kanban_server.py']
+DATA_FILES = ['resources/style.css', 'resources/logo.png', 'resources/scripts.js', 'src/things3_to_kanban.py', 'resources/kanban.html']
 OPTIONS = {
-        'iconfile':'resources/icon.icns',
-        'plist': {'CFBundleShortVersionString':'1.0.0',}
+        'plist': {'CFBundleShortVersionString':'2.0.0'},
+        'optimize':'2'
 }
 
 setup(

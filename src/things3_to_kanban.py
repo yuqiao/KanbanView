@@ -25,14 +25,15 @@ from random import shuffle
 FILE_SQLITE = '~/Library/Containers/com.culturedcode.ThingsMac/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'\
     if not environ.get('THINGSDB') else environ.get('THINGSDB')
-ANONYMIZE = False if not environ.get('ANONYMIZE') else True
-TAG_WAITING = "Waiting" if not environ.get('TAG_WAITING') else environ.get('TAG_WAITING')
+ANONYMIZE = bool(environ.get('ANONYMIZE'))
+TAG_WAITING = "Waiting" if not environ.get('TAG_WAITING') \
+    else environ.get('TAG_WAITING')
 
 # Basic variables
 FILE_SQLITE = expanduser(FILE_SQLITE)
 FILE_HTML = dirname(realpath(__file__)) + '/kanban.html'
 
-cursor = sqlite3.connect(FILE_SQLITE).cursor()
+CURSOR = sqlite3.connect(FILE_SQLITE).cursor()
 
 # Database layout info
 TASKTABLE = "TMTask"
@@ -95,8 +96,8 @@ def write_html_column(uid, file, title, sql):
         WHERE """ + sql + """
         ORDER BY
             TASK.duedate, TASK.startdate, TASK.todayIndex"""
-    cursor.execute(sql)
-    rows = cursor.fetchall()
+    CURSOR.execute(sql)
+    rows = CURSOR.fetchall()
 
     file.write('<div id="left' + str(uid) + '"><div class="inner"><h2>' +
                title + ' <span class="size">' +
@@ -137,13 +138,17 @@ def write_html_footer(file):
         </div></body></html>"""
     file.write(message)
 
+
 def write_html_columns(file):
+    """Write HTML columns."""
+
     write_html_column(1, file, "Backlog", LIST_SOMEDAY)
     write_html_column(2, file, "Upcoming", LIST_UPCOMING)
     write_html_column(3, file, "Waiting", LIST_WAITING)
     write_html_column(4, file, "Inbox", LIST_INBOX)
     write_html_column(5, file, "Today", LIST_TODAY)
     write_html_column(6, file, "Next", LIST_ANYTIME)
+
 
 def main():
     """Convert Things 3 database to Kanban HTML view."""
@@ -157,7 +162,7 @@ def main():
     write_html_footer(file)
 
     file.close()
-    cursor.close()
+    CURSOR.close()
 
     webbrowser.open_new_tab('file://' + FILE_HTML)
 
