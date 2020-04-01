@@ -1,10 +1,15 @@
+[![GitHub Release](https://img.shields.io/github/v/release/AlexanderWillner/kanbanview?sort=semver)](https://github.com/AlexanderWillner/KanbanView/releases)
+[![GitHub Download Count](https://img.shields.io/github/downloads/AlexanderWillner/KanbanView/total.svg)](https://github.com/AlexanderWillner/KanbanView/releases)
+[![GitHub Issues](https://img.shields.io/github/issues/alexanderwillner/kanbanview)](https://github.com/AlexanderWillner/KanbanView/issues)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/quality/g/alexanderwillner/kanbanview)](https://scrutinizer-ci.com/g/AlexanderWillner/KanbanView/?branch=master)
+
 # KanbanView for Things 3
 
-This script will create a visual task-level overview (Kanban) of what is on your plate in [Things3](http://culturedcode.com) by generating an HTML file.
+This script will create a visual task-level overview (Kanban) of what is on your plate in [Things3](http://culturedcode.com) by generating an HTML file. Download it via the [release page](https://github.com/AlexanderWillner/KanbanView/releases).
 
 ![view2020](doc/view-2020.png)
 
-This project has been refactored massively and the old documentation follows.
+This project has been refactored massively and the old documentation follows. 
 
 ## Content
 
@@ -12,11 +17,9 @@ It is comprised of 3 files:
 
 - a python script
 - a CSS file and
-- a PDF README file
+- a README file
 
-It can be executed from the terminal or as a system service using the
-macOS Automator app (thus never needing to open a terminal and can be
-associated to a keyboard short cut).
+It can be executed from the terminal or as a system service using the macOS Automator app (thus never needing to open a terminal and can be associated to a keyboard short cut).
 
 ## Disclaimer
 
@@ -47,7 +50,7 @@ It does not replace your task manager in the day-to-day operation. Things should
 
 ## Files included and where they should go
 
-Download the zip file [here](archive/master.zip). Unzipping will show a folder that contains:
+Download the zip file [here](https://github.com/AlexanderWillner/KanbanView/releases). Unzipping will show a folder that contains:
 
 - getThings3.py: the main python script
 - 3col.css: ccs style for on the fly html visualization style (column definition, color, independent scrolling, ...)
