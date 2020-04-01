@@ -1,8 +1,14 @@
 # KanbanView for Things 3
 
-## Synopsis
+This script will create a visual task-level overview (Kanban) of what is on your plate in [Things3](http://culturedcode.com) by generating an HTML file.
 
-The following will allow a visual project-level overview of what is on your plate. It is comprised of 3 files:
+![view2020](doc/view-2020.png)
+
+This project has been refactored massively and the old documentation follows.
+
+## Content
+
+It is comprised of 3 files:
 
 - a python script
 - a CSS file and
