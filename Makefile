@@ -14,6 +14,7 @@ help:
 	@echo " * run-server   - Run code in server mode."
 	@echo " * open         - Open GUI."
 	@echo " * open-server  - Open GUI in server mode."
+	@echo " * kill-server  - Kill a running server."
 	@echo " * app          - Create KanbanView App."
 	@echo " * test         - Run unit tests and test coverage."
 	@echo " * doc          - Document code (pydoc)."
@@ -32,6 +33,9 @@ run:
 
 run-server:
 	@$(PYTHON) $(SRC_CORE)/$(SERVER)
+
+kill-server:
+	@lsof -nti:8080 | xargs kill
 
 open-server:
 	@open $(DEST_SRV)
