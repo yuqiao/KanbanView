@@ -9,9 +9,15 @@ This script will create a visual task-level overview (Kanban) of what is on your
 
 ![view2020](doc/view-2020.png)
 
-This project has been refactored massively and the old documentation follows. 
+## Application
+
+If you want to start the application as a web service (with an auto-update GUI), you can either execute ```make run-server``` or download the App. However, as the App is not digitally signed, you need to execute the following command once, after you've copied it to the Applications folder:
+
+```xattr -rd com.apple.quarantine /Applications/KanbanView.app```
 
 ## Content
+
+This project has been refactored massively and the old documentation follows. 
 
 It is comprised of 3 files:
 

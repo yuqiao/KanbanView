@@ -47,8 +47,12 @@ test:
 	@echo "not implemented"
 
 .PHONY: app
-app:
+app: clean
 	@$(PYTHON) setup.py py2app -s --iconfile 'resources/icon.icns'
+	@xattr -cr dist/KanbanView.app || true
+	@hdiutil create dist/tmp.dmg -ov -volname "KanbanView" -fs HFS+ -srcfolder "dist"
+	@hdiutil convert dist/tmp.dmg -format UDZO -o dist/KanbanView.dmg
+	@rm dist/tmp.dmg
 	@open dist
 
 .PHONY: doc
