@@ -173,6 +173,7 @@ def write_html_header(file):
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
           <link rel="stylesheet" href="../resources/style.css">
+          <title>KanbanView for Things 3</title>
         </head>
 
         <body>
