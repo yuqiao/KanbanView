@@ -18,6 +18,8 @@ from io import StringIO
 from os.path import dirname, realpath
 from os import system
 from signal import signal, SIGINT
+from threading import Thread
+from time import sleep
 import sys
 import webbrowser
 from wsgiref.simple_server import make_server
@@ -51,6 +53,10 @@ def kanban_server(environ, start_response):
     start_response('200 OK', [('Content-Length', str(len(response_body)))])
     return [response_body]
 
+def open_browser():
+    """Delay opening the browser."""
+    sleep(1)
+    webbrowser.open('http://localhost:%s/%s' % (PORT, FILE))
 
 if __name__ == "__main__":
     signal(SIGINT, handler)
@@ -58,5 +64,5 @@ if __name__ == "__main__":
     system('lsof -nti:' + str(PORT) + ' | xargs kill -9 ; sleep 1')
 
     HTTPD = make_server("", PORT, kanban_server)
-    webbrowser.open('http://localhost:%s/%s' % (PORT, FILE))
+    Thread(target=open_browser).start()
     HTTPD.serve_forever()
