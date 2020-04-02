@@ -22,12 +22,14 @@ from os import environ
 from random import shuffle
 
 # Basic config
-FILE_SQLITE = '~/Library/Containers/com.culturedcode.ThingsMac/Data/Library/'\
+FILE_SQLITE = '~/Library/Containers/com.culturedcode.ThingsMac.beta/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'\
     if not environ.get('THINGSDB') else environ.get('THINGSDB')
 ANONYMIZE = bool(environ.get('ANONYMIZE'))
 TAG_WAITING = "Waiting" if not environ.get('TAG_WAITING') \
     else environ.get('TAG_WAITING')
+TAG_MIT = "MIT" if not environ.get('TAG_MIT') \
+    else environ.get('TAG_MIT')
 
 # Basic variables
 FILE_SQLITE = expanduser(FILE_SQLITE)
@@ -54,21 +56,33 @@ ISHEADING = "TASK.type = 2"
 ISOPENTASK = ISTASK + " AND " + ISNOTTRASHED + " AND " + ISOPEN
 
 # Queries
-LIST_SOMEDAY = ISOPENTASK + " AND " + ISPOSTPONED
-LIST_INBOX = ISOPENTASK + " AND " + ISNOTSTARTED
+LIST_SOMEDAY = ISOPENTASK + " AND " + ISPOSTPONED + \
+    " AND TASK.startdate IS NULL AND TASK.recurrenceRule IS NULL" + \
+    " ORDER BY TASK.duedate DESC, TASK.creationdate DESC"
+LIST_INBOX = ISOPENTASK + " AND " + ISNOTSTARTED + \
+    " ORDER BY TASK.duedate DESC , TASK.todayIndex"
 LIST_ANYTIME = ISOPENTASK + " AND " + ISSTARTED + \
+    " AND TASK.startdate is NULL" + \
     " AND (TASK.area NOT NULL OR TASK.project in (SELECT uuid FROM " + \
     TASKTABLE + \
-    " WHERE uuid=TASK.project AND " + ISSTARTED + \
-    " AND " + ISNOTTRASHED + "))"
+    " WHERE uuid=TASK.project AND start=1" + \
+    " AND trashed=0))" + \
+    " ORDER BY TASK.duedate DESC , TASK.todayIndex"
 LIST_TODAY = ISOPENTASK + " AND " + ISSTARTED + \
-    " AND TASK.startdate is NOT NULL"
+    " AND TASK.startdate is NOT NULL" + \
+    " ORDER BY TASK.duedate DESC , TASK.todayIndex"
 LIST_UPCOMING = ISOPENTASK + " AND " + ISPOSTPONED + \
-    " AND (TASK.startDate NOT NULL OR TASK.recurrenceRule NOT NULL)"
+    " AND (TASK.startDate NOT NULL OR TASK.recurrenceRule NOT NULL)" + \
+    " ORDER BY TASK.startdate, TASK.todayIndex"
 LIST_WAITING = ISOPENTASK + \
     " AND TAGS.tags=(SELECT uuid FROM " + TAGTABLE + \
-    " WHERE title='" + TAG_WAITING + "')"
-
+    " WHERE title='" + TAG_WAITING + "')" + \
+    " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+LIST_MIT = ISOPENTASK + " AND " + ISSTARTED + \
+    " AND TASK.startdate is NOT NULL" + \
+    " AND TAGS.tags=(SELECT uuid FROM " + TAGTABLE + \
+    " WHERE title='" + TAG_MIT + "')" + \
+    " ORDER BY TASK.duedate DESC , TASK.todayIndex"
 
 def anonymize(word):
     """Scramble output for screenshots."""
@@ -84,18 +98,20 @@ def write_html_column(uid, file, title, sql):
     """Create a column in the output."""
 
     sql = """
-        SELECT
+        SELECT DISTINCT
             TASK.uuid, TASK.title, PROJECT.title,
-            PROJECT.uuid, TASK.dueDate
+            PROJECT.uuid,
+            CASE 
+                WHEN TASK.recurrenceRule IS NULL THEN date(TASK.dueDate,"unixepoch")
+            ELSE NULL
+            END
         FROM
             TMTask AS TASK
         LEFT JOIN
             TMTaskTag TAGS ON TAGS.tasks = TASK.uuid
         LEFT OUTER JOIN
             TMTask PROJECT ON TASK.project = PROJECT.uuid
-        WHERE """ + sql + """
-        ORDER BY
-            TASK.duedate, TASK.startdate, TASK.todayIndex"""
+        WHERE """ + sql
     CURSOR.execute(sql)
     rows = CURSOR.fetchall()
 
@@ -103,6 +119,7 @@ def write_html_column(uid, file, title, sql):
                title + ' <span class="size">' +
                str(len(rows)) + '</span></h2>')
     for row in rows:
+        deadline = str(row[4]) if row[4] is not None else ''
         project_name = '<a href="things:///show?id=' + \
             row[3] + '">' + anonymize(str(row[2])) + \
             '</a>' if row[2] is not None else 'None'
@@ -110,7 +127,7 @@ def write_html_column(uid, file, title, sql):
         css_class = 'hasDeadline' if row[4] is not None else css_class
         file.write('<div id="box">' +
                    '<a href="things:///show?id=' + row[0] + '">' +
-                   anonymize(row[1]) + '</a> <div class="area ' +
+                   anonymize(row[1]) + '</a> <div class="deadline">' + deadline + '</div><div class="area ' +
                    css_class + '">' + project_name + '</div></div>')
     file.write("</div></div>")
 
@@ -146,8 +163,9 @@ def write_html_columns(file):
     write_html_column(2, file, "Upcoming", LIST_UPCOMING)
     write_html_column(3, file, "Waiting", LIST_WAITING)
     write_html_column(4, file, "Inbox", LIST_INBOX)
-    write_html_column(5, file, "Today", LIST_TODAY)
-    write_html_column(6, file, "Next", LIST_ANYTIME)
+    write_html_column(5, file, "MIT", LIST_MIT)
+    write_html_column(6, file, "Today", LIST_TODAY)
+    write_html_column(7, file, "Next", LIST_ANYTIME)
 
 
 def main():

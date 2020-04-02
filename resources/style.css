@@ -23,20 +23,22 @@ a { color: #333; text-decoration: none; }
 .hasNoProject {background-color: #ee8;}
 .hasDeadline {background-color: #e88;}
 
-#left1, #left2, #left3, #left4, #left5, #left6 {bottom:50px; font-size:1em; left:0; overflow:auto; position:absolute; top:100px; width:16.66%; z-index:4;}
-* html #left1, * html #left2, * html #left3, * html #left4, * html #left5, * html #left6 { border-bottom:50px solid #fff; border-top:100px solid #fff; bottom:0; top:0;}
+#left1, #left2, #left3, #left4, #left5, #left6, #left7 {bottom:50px; font-size:1em; left:0; overflow:auto; position:absolute; top:100px; width:14.28%; z-index:4;}
+* html #left1, * html #left2, * html #left3, * html #left4, * html #left5, * html #left6, * html #left7 { border-bottom:50px solid #fff; border-top:100px solid #fff; bottom:0; top:0;}
 #left1 {background:#ddd; left:0; }
 #left1 .inner h2 {background:#2DB4B2;}
-#left2 {background:#eee; left:16.66%;}
+#left2 {background:#eee; left:14.28%;}
 #left2 .inner h2 {background:#1297FF;}
-#left3 {background:#ddd; left:33.33%;}
+#left3 {background:#ddd; left:28.56%;}
 #left3 .inner h2 {background:#879AA4;}
-#left4 {background:#eee; left:49.99%;}
+#left4 {background:#eee; left:42.84%;}
 #left4 .inner h2 {background:#FC8E16;}
-#left5 {background:#ddd; left:66.66%;}
-#left5 .inner h2 {background:#7862D9;}
-#left6 {background:#eee; left:83.33%;}
-#left6 .inner h2 {background:#7AC537;}
+#left5 {background:#ddd; left:57.12%;}
+#left5 .inner h2 {background:#7A127A;}
+#left6 {background:#eee; left:71.40%;}
+#left6 .inner h2 {background:#7862D9;}
+#left7 {background:#ddd; left:85.68%;}
+#left7 .inner h2 {background:#37C57A;}
 
 #box {
     background-color: #fff;
@@ -51,3 +53,4 @@ a { color: #333; text-decoration: none; }
 
 .inner { display:block; }
 .bold { font-size:1.5em; font-weight:bold;}
+.deadline { color: #999; }
