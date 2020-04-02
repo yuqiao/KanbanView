@@ -5,7 +5,8 @@ py2app configuration file.
 from setuptools import setup
 
 APP = ['src/things3_to_kanban_server.py']
-DATA_FILES = ['resources/style.css', 'resources/logo.png', 'resources/scripts.js', 'src/things3_to_kanban.py', 'resources/kanban.html']
+DATA_FILES = ['resources/style.css', 'resources/logo.png', 'resources/scripts.js', 'resources/kanban.html',
+              'src/things3_to_kanban.py', 'src/things3.py']
 OPTIONS = {
         'plist': {'CFBundleShortVersionString':'1.1.0'},
         'optimize':'2'
