@@ -22,6 +22,9 @@ help:
 	@echo " * auto-style   - Automatially style code (autopep8)."
 	@echo " * code-style   - Check code style (pycodestyle)."
 	@echo " * code-lint    - Check code lints (pyflakes, pyline, flake8)."
+	@echo " * css-lint     - Check CSS styke lints (csslint)."
+	@echo " * js-lint      - Check JS code lints (jslint)."
+	@echo " * html-lint    - Check HTML file lints (tidy)."
 	@echo " * code-count   - Count code lines (cloc)."
 	@echo " * deps-install - Install dependencies (see requirements.txt)."
 	@echo " * deps-update  - Update dependencies (pur)."
@@ -74,6 +77,8 @@ auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
 	@autopep8 -i -r $(SRC_CORE)
 
+lint: code-style code-lint css-lint js-lint html-lint
+
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run '$(PIP) install pycodestyle' first." >&2 ; exit 1)
 	@pycodestyle --max-line-length=80 $(SRC_CORE)
@@ -85,6 +90,18 @@ code-lint:
 	@echo "PyFlakes:" ; pyflakes $(SRC_CORE)
 	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE)
 	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py
+
+css-lint:
+	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
+	@csslint --format=compact resources/*.css
+
+js-lint:
+	@type jslint >/dev/null 2>&1 || (echo "Run 'npm install -g jslint' first." >&2 ; exit 1)
+	@jslint resources/*.js
+
+html-lint:
+	@type tidy >/dev/null 2>&1 || (echo "Run 'brew install tidy' first." >&2 ; exit 1)
+	@tidy -qe resources/*.html
 
 code-count:
 	@type cloc >/dev/null 2>&1 || (echo "Run 'brew install cloc' first." >&2 ; exit 1)
