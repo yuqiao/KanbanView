@@ -22,7 +22,8 @@ from os import environ
 from random import shuffle
 
 # Basic config
-FILE_SQLITE = '~/Library/Containers/com.culturedcode.ThingsMac.beta/Data/Library/'\
+FILE_SQLITE = '~/Library/Containers/'\
+              'com.culturedcode.ThingsMac.beta/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'\
     if not environ.get('THINGSDB') else environ.get('THINGSDB')
 ANONYMIZE = bool(environ.get('ANONYMIZE'))
@@ -84,6 +85,7 @@ LIST_MIT = ISOPENTASK + " AND " + ISSTARTED + \
     " WHERE title='" + TAG_MIT + "')" + \
     " ORDER BY TASK.duedate DESC , TASK.todayIndex"
 
+
 def anonymize(word):
     """Scramble output for screenshots."""
 
@@ -94,15 +96,25 @@ def anonymize(word):
     return word
 
 
-def write_html_column(uid, file, title, sql):
+def write_html_column(uid, file, header, sql):
     """Create a column in the output."""
 
     sql = """
         SELECT DISTINCT
-            TASK.uuid, TASK.title, PROJECT.title,
-            PROJECT.uuid,
-            CASE 
-                WHEN TASK.recurrenceRule IS NULL THEN date(TASK.dueDate,"unixepoch")
+            TASK.uuid,
+            TASK.title,
+            CASE
+                WHEN AREA.title IS NOT NULL THEN AREA.title
+                WHEN PROJECT.title IS NOT NULL THEN PROJECT.title
+                WHEN HEADING.title IS NOT NULL THEN HEADING.title
+            END,
+            CASE
+                WHEN AREA.uuid IS NOT NULL THEN AREA.uuid
+                WHEN PROJECT.uuid IS NOT NULL THEN PROJECT.uuid
+            END,
+            CASE
+                WHEN TASK.recurrenceRule IS NULL
+                THEN date(TASK.dueDate,"unixepoch")
             ELSE NULL
             END
         FROM
@@ -111,24 +123,37 @@ def write_html_column(uid, file, title, sql):
             TMTaskTag TAGS ON TAGS.tasks = TASK.uuid
         LEFT OUTER JOIN
             TMTask PROJECT ON TASK.project = PROJECT.uuid
+        LEFT OUTER JOIN
+            TMArea AREA ON TASK.area = AREA.uuid
+        LEFT OUTER JOIN
+            TMTask HEADING ON TASK.actionGroup = HEADING.uuid
         WHERE """ + sql
     CURSOR.execute(sql)
     rows = CURSOR.fetchall()
 
     file.write('<div id="left' + str(uid) + '"><div class="inner"><h2>' +
-               title + ' <span class="size">' +
+               header + ' <span class="size">' +
                str(len(rows)) + '</span></h2>')
+
     for row in rows:
+        task_uuid = str(row[0]) if row[0] is not None else ''
+        task_title = anonymize(str(row[1])) if row[1] is not None else ''
+        context_title = anonymize(str(row[2])) if row[2] is not None else ''
+        context_uuid = str(row[3]) if row[3] is not None else ''
         deadline = str(row[4]) if row[4] is not None else ''
-        project_name = '<a href="things:///show?id=' + \
-            row[3] + '">' + anonymize(str(row[2])) + \
-            '</a>' if row[2] is not None else 'None'
-        css_class = 'hasProject' if row[2] is not None else 'hasNoProject'
-        css_class = 'hasDeadline' if row[4] is not None else css_class
-        file.write('<div id="box">' +
-                   '<a href="things:///show?id=' + row[0] + '">' +
-                   anonymize(row[1]) + '</a> <div class="deadline">' + deadline + '</div><div class="area ' +
-                   css_class + '">' + project_name + '</div></div>')
+
+        task_link = '<a href="things:///show?id=' + task_uuid + '">' + \
+            task_title + '</a>' if task_uuid != '' else task_title
+        context_link = '<a href="things:///show?id=' + context_uuid + '">' + \
+            context_title + '</a>' if context_uuid != '' else context_title
+        css_class = 'hasProject' if context_title != '' else 'hasNoProject'
+        css_class = 'hasDeadline' if deadline != '' else css_class
+
+        file.write('<div id="box">' + task_link +
+                   '<div class="deadline">' + deadline + '</div>' +
+                   '<div class="area ' + css_class + '">' + context_link +
+                   '</div>' +
+                   '</div>')
     file.write("</div></div>")
 
 
