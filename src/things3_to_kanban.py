@@ -132,14 +132,15 @@ def get_rows(sql):
     return CURSOR.fetchall()
 
 
-def write_html_column(uid, file, header, sql):
+def write_html_column(cssclass, file, header, sql):
     """Create a column in the output."""
 
     rows = get_rows(sql)
 
-    file.write('<div id="left' + str(uid) + '"><div class="inner"><h2>' +
-               header + ' <span class="size">' +
-               str(len(rows)) + '</span></h2>')
+    file.write("<div class='column'><div class=''>" +
+               "<h2 class='" + cssclass + "'>" + header +
+               "<span class='size'>" + str(len(rows)) +
+               "</span></h2>")
 
     for row in rows:
         task_uuid = str(row[0]) if row[0] is not None else ''
@@ -155,7 +156,7 @@ def write_html_column(uid, file, header, sql):
         css_class = 'hasProject' if context_title != '' else 'hasNoProject'
         css_class = 'hasDeadline' if deadline != '' else css_class
 
-        file.write('<div id="box">' + task_link +
+        file.write('<div class="box">' + task_link +
                    '<div class="deadline">' + deadline + '</div>' +
                    '<div class="area ' + css_class + '">' + context_link +
                    '</div>' +
@@ -166,13 +167,22 @@ def write_html_column(uid, file, header, sql):
 def write_html_header(file):
     """Write HTML header."""
 
-    message = """<head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" href="../resources/style.css">
+    message = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+          <link rel="stylesheet" href="../resources/style.css">
         </head>
 
         <body>
-        <img id="logo" src="../resources/logo.png" alt="logo" />
+          <header>
+            <a href="#" onclick="refresh();" title="click to refresh">
+              <img class="logo" src="../resources/logo.png" alt="logo">
+            </a>
+          </header>
+          <article class='some-page-wrapper'>
+            <div class='row'>
         """
     file.write(message)
 
@@ -181,22 +191,24 @@ def write_html_footer(file):
     """Write HTML footer."""
 
     message = """
-        <div id="foot"><br />
+            </div>
+          </article>
+        <footer class="footer"><br />
         Copyright &copy;2018 Luc Beaulieu / 2020 Alexander Willner
-        </div></body></html>"""
+        </footer></body></html>"""
     file.write(message)
 
 
 def write_html_columns(file):
     """Write HTML columns."""
 
-    write_html_column(1, file, "Backlog", LIST_SOMEDAY)
-    write_html_column(2, file, "Upcoming", LIST_UPCOMING)
-    write_html_column(3, file, "Waiting", LIST_WAITING)
-    write_html_column(4, file, "Inbox", LIST_INBOX)
-    write_html_column(5, file, "MIT", LIST_MIT)
-    write_html_column(6, file, "Today", LIST_TODAY)
-    write_html_column(7, file, "Next", LIST_ANYTIME)
+    write_html_column("color1", file, "Backlog", LIST_SOMEDAY)
+    write_html_column("color5", file, "Upcoming", LIST_UPCOMING)
+    write_html_column("color3", file, "Waiting", LIST_WAITING)
+    write_html_column("color4", file, "Inbox", LIST_INBOX)
+    write_html_column("color2", file, "MIT", LIST_MIT)
+    write_html_column("color6", file, "Today", LIST_TODAY)
+    write_html_column("color7", file, "Next", LIST_ANYTIME)
 
 
 def main():

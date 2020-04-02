@@ -1,46 +1,46 @@
-html {
-background:#fff;
-border:0;
-font-family: helvetica, arial, sans-serif;
-font-family: sans-serif;
-font-size:76%;
-height:100%;
-margin:0;
-max-height:100%;
-overflow: hidden;
-padding:0;
+html, body{
+    background:#fff;
+    border:0;
+    font-family: helvetica, arial, sans-serif;
+    font-size:76%;
+    height:100%;
+    margin:0;
+    max-height:100%;
+    overflow: hidden;
+    padding:0;
+  }
+
+  .some-page-wrapper {
+    height: 90%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+  }
+
+.column {
+  display: flex;
+  flex: 1;
+  flex-basis: 100%;
+  flex-direction: column;
+  height:100%;
+  overflow:auto;
+  overflow-x:hidden;
+  padding:0;
 }
 
-body {border:0; height:100%; margin:0; max-height:100%; overflow:hidden; padding:0;}
-#foot {bottom:0; color:black; display:block; font-size:0.8em; height:50px; left:0; margin:0; position:absolute; text-align:center; width:100%; z-index:5;}
-#logo {height:70px; margin:15px;}
+.column:nth-child(even) {background: #eee}
+.column:nth-child(odd) {background: #ddd}
 
-h2 { color: white; margin:0; padding:15px;}
-h2 .size {float: right; padding-right: 10px;}
-a { color: #333; text-decoration: none; }
-.area { border-radius: 0 0 3px 3px; margin:10px -10px -10px -10px; padding:5px 10px 5px 10px;}
-.hasProject {background-color: #8d8;}
-.hasNoProject {background-color: #ee8;}
-.hasDeadline {background-color: #e88;}
-
-#left1, #left2, #left3, #left4, #left5, #left6, #left7 {bottom:50px; font-size:1em; left:0; overflow:auto; position:absolute; top:100px; width:14.28%; z-index:4;}
-* html #left1, * html #left2, * html #left3, * html #left4, * html #left5, * html #left6, * html #left7 { border-bottom:50px solid #fff; border-top:100px solid #fff; bottom:0; top:0;}
-#left1 {background:#ddd; left:0; }
-#left1 .inner h2 {background:#2DB4B2;}
-#left2 {background:#eee; left:14.28%;}
-#left2 .inner h2 {background:#1297FF;}
-#left3 {background:#ddd; left:28.56%;}
-#left3 .inner h2 {background:#879AA4;}
-#left4 {background:#eee; left:42.84%;}
-#left4 .inner h2 {background:#FC8E16;}
-#left5 {background:#ddd; left:57.12%;}
-#left5 .inner h2 {background:#7A127A;}
-#left6 {background:#eee; left:71.40%;}
-#left6 .inner h2 {background:#7862D9;}
-#left7 {background:#ddd; left:85.68%;}
-#left7 .inner h2 {background:#37C57A;}
-
-#box {
+.footer {bottom:0; color:black; display:block; font-size:0.8em; height:50px; left:0; margin:0; position:absolute; text-align:center; width:100%; z-index:5;}
+.logo {height:70px; margin:15px;}
+.box {
     background-color: #fff;
     border-radius: 3px;
     box-shadow: 2px 2px #999;
@@ -51,6 +51,20 @@ a { color: #333; text-decoration: none; }
     word-wrap: break-word;
 }
 
-.inner { display:block; }
-.bold { font-size:1.5em; font-weight:bold;}
+h2 { color: white; margin:0; padding:15px;}
+h2 .size {float: right; padding-right: 10px;}
+a { color: #333; text-decoration: none; }
+
+.area { border-radius: 0 0 3px 3px; margin:10px -10px -10px -10px; padding:5px 10px 5px 10px;}
+.hasProject {background-color: #8d8;}
+.hasNoProject {background-color: #ee8;}
+.hasDeadline {background-color: #e88;}
+
 .deadline { color: #999; }
+.color1 {background:#7862D9;}
+.color2 {background:#7A127A;}
+.color3 {background:#879AA4;}
+.color4 {background:#FC8E16;}
+.color5 {background:#2DB4B2;}
+.color6 {background:#37C57A;}
+.color7 {background:#1297FF;}
