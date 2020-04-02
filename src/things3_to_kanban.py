@@ -96,8 +96,8 @@ def anonymize(word):
     return word
 
 
-def write_html_column(uid, file, header, sql):
-    """Create a column in the output."""
+def get_rows(sql):
+    """Query Things database."""
 
     sql = """
         SELECT DISTINCT
@@ -129,7 +129,13 @@ def write_html_column(uid, file, header, sql):
             TMTask HEADING ON TASK.actionGroup = HEADING.uuid
         WHERE """ + sql
     CURSOR.execute(sql)
-    rows = CURSOR.fetchall()
+    return CURSOR.fetchall()
+
+
+def write_html_column(uid, file, header, sql):
+    """Create a column in the output."""
+
+    rows = get_rows(sql)
 
     file.write('<div id="left' + str(uid) + '"><div class="inner"><h2>' +
                header + ' <span class="size">' +
