@@ -53,10 +53,12 @@ def kanban_server(environ, start_response):
     start_response('200 OK', [('Content-Length', str(len(response_body)))])
     return [response_body]
 
+
 def open_browser():
     """Delay opening the browser."""
     sleep(1)
     webbrowser.open('http://localhost:%s/%s' % (PORT, FILE))
+
 
 if __name__ == "__main__":
     signal(SIGINT, handler)
