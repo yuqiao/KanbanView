@@ -49,7 +49,8 @@ def kanban_server(environ, start_response):
 
     filename = environ['PATH_INFO'][1:]
     filename = dirname(realpath(__file__)) + PATH + filename
-    response_body = open(filename, 'rb').read()
+    with open(filename, 'rb') as source:
+        response_body = source.read()
     start_response('200 OK', [('Content-Length', str(len(response_body)))])
     return [response_body]
 
