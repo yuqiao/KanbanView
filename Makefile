@@ -71,7 +71,7 @@ open:
 clean:
 	@rm -f $(DEST)
 	@rm -f $(SRC_CORE)/*.pyc
-	@rm -rf build dist
+	@rm -rf build dist *.egg-info
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
