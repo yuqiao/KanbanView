@@ -23,13 +23,14 @@ from time import sleep
 import sys
 import webbrowser
 from wsgiref.simple_server import make_server
+from http import HTTPStatus
 import things3_to_kanban
 
 FILE = 'kanban.html'
-PATH = '/../resources/'
+PATH = dirname(realpath(__file__)) + '/../resources/'
 PORT = 8080
 HTTPD = None
-
+OK = str(HTTPStatus.OK.value) + ' ' + HTTPStatus.OK.phrase
 
 def handler(signal_received, frame):
     """Handle any cleanup here."""
@@ -42,16 +43,15 @@ def kanban_server(environ, start_response):
     """Serving generated HTML tables via AJAX."""
 
     if environ['REQUEST_METHOD'] == 'POST':
-        start_response('200 OK', [('Content-type', 'text/plain')])
+        start_response(OK, [('Content-type', 'text/plain')])
         output = StringIO()
         things3_to_kanban.write_html_columns(output)
         return [output.getvalue().encode()]
 
-    filename = environ['PATH_INFO'][1:]
-    filename = dirname(realpath(__file__)) + PATH + filename
+    filename = PATH + environ['PATH_INFO'][1:]
     with open(filename, 'rb') as source:
         response_body = source.read()
-    start_response('200 OK', [('Content-Length', str(len(response_body)))])
+    start_response(OK, [('Content-Length', str(len(response_body)))])
     return [response_body]
 
 
@@ -65,7 +65,6 @@ if __name__ == "__main__":
     signal(SIGINT, handler)
     # kill possible zombie processes; can't use psutil in py2app context
     system('lsof -nti:' + str(PORT) + ' | xargs kill -9 ; sleep 1')
-
     HTTPD = make_server("", PORT, kanban_server)
     Thread(target=open_browser).start()
     HTTPD.serve_forever()
