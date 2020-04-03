@@ -121,15 +121,10 @@ def write_html_columns(file):
 def main():
     """Convert Things 3 database to Kanban HTML view."""
 
-    file = codecs.open(FILE_HTML, 'w', 'utf-8')
-
-    write_html_header(file)
-
-    write_html_columns(file)
-
-    write_html_footer(file)
-
-    file.close()
+    with codecs.open(FILE_HTML, 'w', 'utf-8') as file:
+        write_html_header(file)
+        write_html_columns(file)
+        write_html_footer(file)
 
     webbrowser.open_new_tab('file://' + FILE_HTML)
 
