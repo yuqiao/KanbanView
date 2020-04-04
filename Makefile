@@ -1,5 +1,6 @@
 MAIN=things3_to_kanban.py
 SERVER=things3_to_kanban_server.py
+API=things3_api.py
 SRC_CORE=src
 SRC_TEST=tests
 DEST=$(SRC_CORE)/kanban.html
@@ -12,6 +13,7 @@ help:
 	@echo "Some available commands:"
 	@echo " * run          - Run code."
 	@echo " * run-server   - Run code in server mode."
+	@echo " * run-api      - Run code in API server mode."
 	@echo " * open         - Open GUI."
 	@echo " * open-server  - Open GUI in server mode."
 	@echo " * kill-server  - Kill a running server."
@@ -36,6 +38,9 @@ run:
 
 run-server:
 	@$(PYTHON) $(SRC_CORE)/$(SERVER)
+
+run-api:
+	@$(PYTHON) $(SRC_CORE)/$(API)
 
 kill-server:
 	@lsof -nti:8080 | xargs kill

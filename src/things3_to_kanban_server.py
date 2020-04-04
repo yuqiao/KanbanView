@@ -23,36 +23,41 @@ from time import sleep
 import sys
 import webbrowser
 from wsgiref.simple_server import make_server
-from http import HTTPStatus
+import falcon
 import things3_to_kanban
 
 FILE = 'kanban.html'
 PATH = dirname(realpath(__file__)) + '/../resources/'
 PORT = 8080
 HTTPD = None
-OK = str(HTTPStatus.OK.value) + ' ' + HTTPStatus.OK.phrase
-
-def handler(signal_received, frame):
-    """Handle any cleanup here."""
-    print("Shutting down...: " + str(signal_received) + " / " + str(frame))
-    HTTPD.server_close()
-    sys.exit(0)
 
 
-def kanban_server(environ, start_response):
-    """Serving generated HTML tables via AJAX."""
+class ThingsKanbanAPI:
+    """Simple KanbanView API."""
 
-    if environ['REQUEST_METHOD'] == 'POST':
-        start_response(OK, [('Content-type', 'text/plain')])
-        output = StringIO()
-        things3_to_kanban.write_html_columns(output)
-        return [output.getvalue().encode()]
+    def on_get(self, req, resp, url):
+        """Handles GET requests"""
 
-    filename = PATH + environ['PATH_INFO'][1:]
-    with open(filename, 'rb') as source:
-        response_body = source.read()
-    start_response(OK, [('Content-Length', str(len(response_body)))])
-    return [response_body]
+        if url == "kanban":
+            resp.content_type = falcon.MEDIA_HTML
+            output = StringIO()
+            things3_to_kanban.write_html_columns(output)
+            resp.data = output.getvalue().encode()
+        else:
+            filename = PATH + url
+            resp.status = falcon.HTTP_200
+            if filename.endswith('css'):
+                resp.content_type = 'text/css'
+            if filename.endswith('html'):
+                resp.content_type = falcon.MEDIA_HTML
+            if filename.endswith('js'):
+                resp.content_type = falcon.MEDIA_JS
+            if filename.endswith('png'):
+                resp.content_type = falcon.MEDIA_PNG
+            if filename.endswith('jpg'):
+                resp.content_type = falcon.MEDIA_JPEG
+            with open(filename, 'rb') as source:
+                resp.data = source.read()
 
 
 def open_browser():
@@ -61,10 +66,23 @@ def open_browser():
     webbrowser.open('http://localhost:%s/%s' % (PORT, FILE))
 
 
+def handler(signal_received, frame):
+    """Handle any cleanup here."""
+    print("Shutting down...: " + str(signal_received) + " / " + str(frame))
+    HTTPD.server_close()
+    sys.exit(0)
+
+
 if __name__ == "__main__":
+    print("Starting up...")
     signal(SIGINT, handler)
     # kill possible zombie processes; can't use psutil in py2app context
     system('lsof -nti:' + str(PORT) + ' | xargs kill -9 ; sleep 1')
-    HTTPD = make_server("", PORT, kanban_server)
+
+    APP = falcon.App()
+    APP.add_route('/{url}', ThingsKanbanAPI())
+
+    HTTPD = make_server('', PORT, APP)
+    print("Serving at http://localhost:%d/" % PORT)
     Thread(target=open_browser).start()
     HTTPD.serve_forever()

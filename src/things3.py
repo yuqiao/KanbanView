@@ -50,6 +50,13 @@ ISPROJECT = "TASK.type = 1"
 ISHEADING = "TASK.type = 2"
 ISOPENTASK = ISTASK + " AND " + ISNOTTRASHED + " AND " + ISOPEN
 
+# Query Index
+I_UUID = 0
+I_TITLE = 1
+I_CONTEXT = 2
+I_CONTEXT_UUID = 3
+I_DUE = 4
+
 # Queries
 LIST_SOMEDAY = ISOPENTASK + " AND " + ISPOSTPONED + \
     " AND TASK.startdate IS NULL AND TASK.recurrenceRule IS NULL" + \
@@ -89,6 +96,11 @@ def get_today():
     return get_rows(LIST_TODAY)
 
 
+def get_not_implemented():
+    """Not implemented warning."""
+    return [["0", "not implemented", "no context", "0", "0"]]
+
+
 def get_rows(sql):
     """Query Things database."""
 
@@ -123,3 +135,22 @@ def get_rows(sql):
         WHERE """ + sql
     CURSOR.execute(sql)
     return CURSOR.fetchall()
+
+
+def convert_task_to_model(task):
+    """Convert task to model."""
+    model = {'uuid': task[I_UUID],
+             'title': task[I_TITLE],
+             'context': task[I_CONTEXT],
+             'context_uuid': task[I_CONTEXT_UUID],
+             'due': task[I_DUE],
+             }
+    return model
+
+
+def convert_tasks_to_model(tasks):
+    """Convert tasks to model."""
+    model = []
+    for task in tasks:
+        model.append(convert_task_to_model(task))
+    return model

@@ -22,10 +22,6 @@ import things3
 class Things3CLI():
     """Simple read-only Thing 3 CLI."""
 
-    I_UUID = 0
-    I_TITLE = 1
-    I_CONTEXT = 2
-    I_CONTEXT_UUID = 3
     print_json = False
 
     def __init__(self, print_json):
@@ -33,15 +29,12 @@ class Things3CLI():
 
     def print_tasks(self, tasks):
         """Print a task."""
-        for task in tasks:
-            title = task[self.I_TITLE]
-            context = str(task[self.I_CONTEXT])
-            if self.print_json:
-                print(json.dumps([{
-                    'title': title,
-                    'context': context
-                    }]))
-            else:
+        if self.print_json:
+            print(json.dumps(things3.convert_tasks_to_model(tasks)))
+        else:
+            for task in tasks:
+                title = task[things3.I_TITLE]
+                context = task[things3.I_CONTEXT]
                 print(' - ' + title + ' (' + context + ')')
 
     def print_today(self):

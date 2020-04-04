@@ -2,9 +2,9 @@
 /*jslint browser: true*/
 /*global $*/
 
-function xml_http_post(url, data, callback) {
+function xml_http_get(url, data, callback) {
     var req = new XMLHttpRequest();
-    req.open("POST", url, true);
+    req.open("GET", url, true);
     req.onreadystatechange = function () { if (req.readyState === 4) { callback(req); } };
     req.send(data);
 }
@@ -15,7 +15,7 @@ function add_content(req) {
 }
 
 function refresh() {
-    xml_http_post(null, null, add_content);
+    xml_http_get('/kanban', null, add_content);
 }
 
 window.onfocus = refresh;
