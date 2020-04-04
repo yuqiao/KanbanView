@@ -49,10 +49,9 @@ open-server:
 	@open $(DEST_SRV)
 
 test:
-#	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
-#	@coverage run --source . -m $(SRC_TEST).test_getthings
-#	@coverage report
-	@echo "not implemented"
+	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
+	@coverage run --source . -m $(SRC_TEST).test_things3
+	@coverage report
 
 .PHONY: app
 app: clean
