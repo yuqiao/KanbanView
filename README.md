@@ -9,8 +9,6 @@ This repository contains a simple read-only CLI, API and Web Service for [Things
 
 ![view2020](doc/view-2020.png)
 
-
-
 ## Commands
 
 The available commands are listed by executing `make`:
@@ -50,8 +48,6 @@ Available commands:
  * deps-create  - Create dependencies (pipreqs).
  * feedback     - Create a GitHub issue.
 ```
-
-
 
 ## Command Line Interface (CLI)
 
@@ -152,8 +148,6 @@ optional arguments:
   --version       show program's version number and exit
 ```
 
-
-
 ## Application Programming Interface  (API)
 
 The API allows you to access the Things3 todos within other Python scripts:
@@ -175,8 +169,6 @@ class Things3(builtins.object)
      |      Get all tasks from the inbox.
 ...
 ```
-
-
 
 ## Web Service
 
@@ -203,25 +195,12 @@ $ curl -s http://localhost:8088/api/today | jq
 ]
 ```
 
-
-
 ## Kanban Application
 
 The Kanban Application allows you to visualize the Things3 database following the Kanban approach. There are different implementations of the application available.
 
-The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```:
+The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```: `make run`.
 
-```bash
-$ make run
-```
+The **dynamic** version runs a web application at [http://localhost:8088/kanban.html](http://localhost:8088/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`.
 
-The **dynamic** version runs a web application at http://localhost:8088/kanban.html and updates the GUI via JavaScript automatically using the **Web Service**:
-
-```bash
-$ make run-server
-```
-
-The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder:
-
-```xattr -rd com.apple.quarantine /Applications/KanbanView.app```
-
+The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder: `xattr -rd com.apple.quarantine /Applications/KanbanView.app`
