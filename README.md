@@ -3,11 +3,13 @@
 [![GitHub Issues](https://img.shields.io/github/issues/alexanderwillner/kanbanview)](https://github.com/AlexanderWillner/KanbanView/issues)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/quality/g/alexanderwillner/kanbanview)](https://scrutinizer-ci.com/g/AlexanderWillner/KanbanView/?branch=master)
 
-# CLI, API and Web Service for Things 3
+# CLI, API, Web Service and Kanban for Things 3
 
-This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate. Clone the and contribute to the repository or download it via the [release page](https://github.com/AlexanderWillner/KanbanView/releases).
+This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate. Clone and contribute to the repository or download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
 
 ![view2020](doc/view-2020.png)
+
+
 
 ## Commands
 
@@ -49,6 +51,8 @@ Available commands:
  * feedback     - Create a GitHub issue.
 ```
 
+
+
 ## Command Line Interface (CLI)
 
 The CLI allows you to access the Things3 database via the comand line:
@@ -56,9 +60,44 @@ The CLI allows you to access the Things3 database via the comand line:
 ```bash
 $ ./src/things3_cli.py today
  -  Today Todo  ( Today Project )
-./src/things3_cli.py --json inbox
+```
+
+It is also possible to get the information formatted as ```json``` strings:
+
+```bash
+$ ./src/things3_cli.py --json inbox
 [{"uuid": "29ACB795-2037-4FFD-BB09-851CDE53B4B9", "title": "Inbox Todo", "context": null, "context_uuid": null, "due": null}]
 ```
+
+However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh).
+
+
+
+## Application Programmer Interface  (API)
+
+The API allows you to access the Things3 database within other Python scripts:
+
+```bash
+$ make doc
+...
+class Things3(builtins.object)
+     |  Things3()
+     |  
+     |  Simple read-only API for Things 3.
+     |  
+     |  Methods defined here:
+     |  
+     |  get_anytime(self)
+     |      Get anytime tasks.
+     |  
+     |  get_inbox(self)
+     |      Get all tasks from the inbox.
+     |  
+
+...
+```
+
+
 
 ## Web Service
 
@@ -68,13 +107,20 @@ The web service allows you to access the Things3 database via a web service:
 $ make run-server
 Starting up...
 Serving API at http://localhost:8088/api/{command}
+```
+
+Via ```curl``` you can browse the ```json``` data via command line:
+
+```bash
 $ curl http://localhost:8088/api/inbox
 [{"uuid": "29ACB795-2037-4FFD-BB09-851CDE53B4B9", "title": "Inbox Todo", "context": null, "context_uuid": null, "due": null}]
 ```
 
+
+
 ## Kanban Application
 
-The Kanban Application allows you to visualize the Things3 database following the Kanban approach. There are two implementations of the application available.
+The Kanban Application allows you to visualize the Things3 database following the Kanban approach. There are different implementations of the application available.
 
 The **static** version creates a snapshot of the current status and writes an HTML file to ```src/kanban-static.html:
 
@@ -82,7 +128,7 @@ The **static** version creates a snapshot of the current status and writes an HT
 $ make run
 ```
 
-The **dynamic** version runs a web application at http://localhost:8088/kanban.html and updates the GUI via JavaScript automatically:
+The **dynamic** version runs a web application at http://localhost:8088/kanban.html and updates the GUI via JavaScript automatically using the **Web Service**:
 
 ```bash
 $ make run-server
@@ -91,6 +137,4 @@ $ make run-server
 The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied it to the Applications folder:
 
 ```xattr -rd com.apple.quarantine /Applications/KanbanView.app```
-
-## 
 

@@ -73,8 +73,7 @@ app: clean
 
 .PHONY: doc
 doc:
-#	@$(PYDOC) src.hello
-	@echo "not implemented"
+	@$(PYDOC) src.things3
 
 .PHONY: open
 open:
