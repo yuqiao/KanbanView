@@ -10,7 +10,18 @@ PYDOC=pydoc3
 PIP=pip3
 
 help:
-	@echo "Some available commands:"
+	@echo "CLI, API and Web Service for Things3."
+	@echo ""
+	@echo "Configuration:"
+	@echo " * Static Kanban : $(DEST)"
+	@echo " * Dynamic Kanban: $(DEST_SRV)"
+	@echo ""
+	@echo "Avaliable environment variables:"
+	@echo " * THINGSDB    - Path to database"
+	@echo " * TAG_WAITING - Tag for tasks you are waiting for"
+	@echo " * TAG_MIT     - Tag for most important tassk"
+	@echo ""
+	@echo "Available commands:"
 	@echo " * run          - Run code in static mode."
 	@echo " * run-server   - Run code in server mode."
 	@echo " * open         - Open GUI in static mode."
@@ -37,7 +48,7 @@ run:
 	@open $(DEST)
 
 run-server:
-	@echo "App running at: $(DEST_SRV)"
+	@(sleep 3 ; open "$(DEST_SRV)") &
 	@$(PYTHON) $(SRC_CORE)/$(SERVER)
 
 kill-server:
