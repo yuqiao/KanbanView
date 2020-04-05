@@ -15,8 +15,7 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import codecs
-from os.path import dirname, realpath
-from os import environ
+from os import environ, getcwd
 from random import shuffle
 from things3 import Things3
 
@@ -24,7 +23,7 @@ from things3 import Things3
 ANONYMIZE = bool(environ.get('ANONYMIZE'))
 
 # Basic variables
-FILE_HTML = dirname(realpath(__file__)) + '/kanban-static.html'
+FILE_HTML = getcwd() + '/kanban-static.html'
 
 THINGS3 = Things3()
 
@@ -77,14 +76,14 @@ def write_html_header(file):
         <html>
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link rel="stylesheet" href="../resources/kanban.css">
+          <link rel="stylesheet" href="./resources/kanban.css">
           <title>KanbanView for Things 3</title>
         </head>
 
         <body>
           <header>
             <a href="#" onclick="refresh();" title="click to refresh">
-              <img class="logo" src="../resources/logo.png" alt="logo">
+              <img class="logo" src="./resources/logo.png" alt="logo">
             </a>
           </header>
           <article class='some-page-wrapper'>

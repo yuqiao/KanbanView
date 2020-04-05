@@ -14,16 +14,15 @@ __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
 
-from os import sys
-from os.path import dirname, realpath
+from os import sys, getcwd
+from os.path import dirname, abspath
 from wsgiref.simple_server import make_server
 import falcon
 from things3 import Things3
 
 PORT = 8088
 APP = falcon.App()
-PATH = dirname(realpath(__file__)) + '/../resources/'
-
+PATH = getcwd() + '/resources/'
 
 class ThingsGUI:
     """Simple read-only Things KanbanView."""

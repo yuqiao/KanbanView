@@ -5,10 +5,17 @@ py2app configuration file.
 from setuptools import setup
 
 APP = ['src/things3_app.py']
-DATA_FILES = ['resources/kanban.css', 'resources/logo.png', 'resources/kanban.js', 'resources/kanban.html',
+DATA_FILES = ['resources',
               'src/things3.py', 'src/things3_api.py']
 OPTIONS = {
-        'plist': {'CFBundleShortVersionString':'2.0.0'},
+        'argv_emulation': True,
+        'plist': {'CFBundleName': "KanbanView",
+                  'CFBundleDisplayName': "KanbanView",
+                  'CFBundleGetInfoString': "KanbanView",
+                  'CFBundleIdentifier': "ws.willner.kanbanview",
+                  'CFBundleVersion': "2.0.0",
+                  'CFBundleShortVersionString': "2.0.0",
+                  'NSHumanReadableCopyright':'Copyright 2020 Alexander Willner'},
         'optimize':'2'
 }
 

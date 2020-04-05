@@ -157,7 +157,7 @@ $ curl -s http://localhost:8088/api/today | jq
 
 The Kanban Application allows you to visualize the Things3 database following the Kanban approach. There are different implementations of the application available.
 
-The **static** version creates a snapshot of the current status and writes an HTML file to ```src/kanban-static.html:
+The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```:
 
 ```bash
 $ make run
