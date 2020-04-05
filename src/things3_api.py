@@ -15,7 +15,6 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 from os import sys, getcwd
-from os.path import dirname, abspath
 from wsgiref.simple_server import make_server
 import falcon
 from things3 import Things3
