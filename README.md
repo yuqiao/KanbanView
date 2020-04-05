@@ -98,11 +98,63 @@ $ $ ./src/things3_cli.py --json next | jq
 ]
 ```
 
-However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh)
+However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh). Overall commands are:
+
+```bash
+$ ./src/things3_cli.py -h
+usage: things3_cli.py [-h] [-j] [-c] [--version] command ...
+
+Simple read-only Thing 3 CLI.
+
+positional arguments:
+  command         One of the following commands:
+    inbox         Shows all inbox tasks
+    today         Shows all todays tasks
+    upcoming      Shows all upcoming tasks
+    next          Shows all next tasks
+    someday       Shows all someday tasks
+    completed     Shows all completed tasks
+    cancelled     Shows all cancelled tasks
+    trashed       Shows all trashed tasks
+    feedback      Give feedback
+    all           Shows all tasks
+    csv           Exports all tasks as CSV
+    due           Shows all tasks with due dates
+    headings      Shows all headings
+    hours         Shows how many hours have been planned today
+    ical          Shows all tasks ordered by due date as iCal
+    logbook       Shows all tasks completed today
+    mostClosed    Shows days on which most tasks were closed
+    mostCancelled
+                  Shows days on which most tasks were cancelled
+    mostTrashed   Shows days on which most tasks were trashed
+    mostCreated   Shows days on which most tasks were created
+    mostTasks     Shows projects that have most tasks
+    mostCharacters
+                  Shows tasks that have most characters
+    nextish       Shows all nextish tasks
+    old           Shows all old tasks
+    projects      Shows all projects
+    repeating     Shows all repeating tasks
+    schedule      Schedules an event using a template
+    search        Searches for a specific task
+    stat          Provides a number of statistics
+    statcsv       Exports some statistics as CSV
+    subtasks      Shows all subtasks
+    tag           Shows all tasks with the waiting for tag
+    tags          Shows all tags ordered by their usage
+    waiting       Shows all tasks with the waiting for tag
+
+optional arguments:
+  -h, --help      show this help message and exit
+  -j, --json      output as JSON
+  -c, --csv       output as CSV
+  --version       show program's version number and exit
+```
 
 
 
-## Application Programmer Interface  (API)
+## Application Programming Interface  (API)
 
 The API allows you to access the Things3 todos within other Python scripts:
 
