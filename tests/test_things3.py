@@ -67,5 +67,10 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_all()
         self.assertEqual(13, len(tasks))
 
+    def test_due(self):
+        """Test due tasks."""
+        tasks = self.things3.get_due()
+        self.assertEqual(1, len(tasks))
+
 if __name__ == '__main__':
     unittest.main()

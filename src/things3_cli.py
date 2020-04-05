@@ -84,6 +84,8 @@ def main(args):
         things_cli.print_tasks(things3.get_trashed())
     elif command == "all":
         things_cli.print_tasks(things3.get_all())
+    elif command == "due":
+        things_cli.print_tasks(things3.get_due())
     elif command == "csv":
         print("Deprecated: use --csv instead")
     elif command == "feedback":

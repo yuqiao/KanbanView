@@ -88,6 +88,9 @@ class ThingsAPI:
         elif command == "all":
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_all())
+        elif command == "due":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_due())
         else:
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_not_implemented())

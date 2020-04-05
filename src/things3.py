@@ -160,6 +160,12 @@ class Things3():
         query = self.ISNOTTRASHED + " AND " + self.ISTASK
         return self.get_rows(query)
 
+    def get_due(self):
+        """Get due tasks."""
+        query = self.ISOPENTASK + " AND TASK.dueDate NOT NULL" + \
+            " ORDER BY TASK.dueDate"
+        return self.get_rows(query)
+
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""
