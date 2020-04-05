@@ -9,41 +9,35 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache"
-__version__ = "0.0.1"
+__version__ = "2.0.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import argparse
 import json
-import things3
+from things3 import Things3
 
 
 class Things3CLI():
     """Simple read-only Thing 3 CLI."""
 
     print_json = False
+    things3 = None
 
-    def __init__(self, print_json):
+    def __init__(self, print_json, things):
         self.print_json = print_json
+        self.things3 = things
 
     def print_tasks(self, tasks):
         """Print a task."""
         if self.print_json:
-            print(json.dumps(things3.convert_tasks_to_model(tasks)))
+            print(json.dumps(self.things3.convert_tasks_to_model(tasks)))
         else:
             for task in tasks:
-                title = task[things3.I_TITLE]
-                context = task[things3.I_CONTEXT]
-                print(' - ' + title + ' (' + context + ')')
-
-    def print_today(self):
-        """Show Today."""
-        self.print_tasks(things3.get_today())
-
-    def print_inbox(self):
-        """Show Inbox."""
-        self.print_tasks(things3.get_inbox())
+                title = task[self.things3.I_TITLE]
+                context = task[self.things3.I_CONTEXT]
+                print(' - ', title, ' (', context, ')')
 
     @classmethod
     def print_unimplemented(cls):
@@ -53,11 +47,24 @@ class Things3CLI():
 
 def main(args):
     """ Main entry point of the app """
-    things = Things3CLI(args.json)
-    if args.command == "inbox":
-        things.print_inbox()
-    elif args.command == "today":
-        things.print_today()
+    things3 = Things3()
+    things_cli = Things3CLI(args.json, things3)
+    command = args.command
+
+    if command == "inbox":
+        things_cli.print_tasks(things3.get_inbox())
+    elif command == "today":
+        things_cli.print_tasks(things3.get_today())
+    elif command == "next":
+        things_cli.print_tasks(things3.get_anytime())
+    elif command == "backlog":
+        things_cli.print_tasks(things3.get_someday())
+    elif command == "upcoming":
+        things_cli.print_tasks(things3.get_upcoming())
+    elif command == "waiting":
+        things_cli.print_tasks(things3.get_waiting())
+    elif command == "mit":
+        things_cli.print_tasks(things3.get_mit())
     else:
         Things3CLI.print_unimplemented()
 

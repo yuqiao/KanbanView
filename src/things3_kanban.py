@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""KanbanView for Things 3."""
+"""KanbanView (static) for Things 3."""
 
 from __future__ import print_function
 
@@ -9,23 +9,24 @@ __author__ = "Luc Beaulieu and Alexander Willner"
 __copyright__ = "Copyright 2018 Luc Beaulieu / 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "unknown"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
 
-import webbrowser
 import codecs
 from os.path import dirname, realpath
 from os import environ
 from random import shuffle
-import things3
+from things3 import Things3
 
 # Basic config
 ANONYMIZE = bool(environ.get('ANONYMIZE'))
 
 # Basic variables
-FILE_HTML = dirname(realpath(__file__)) + '/kanban.html'
+FILE_HTML = dirname(realpath(__file__)) + '/kanban-static.html'
+
+THINGS3 = Things3()
 
 
 def anonymize(word):
@@ -38,10 +39,8 @@ def anonymize(word):
     return word
 
 
-def write_html_column(cssclass, file, header, sql):
+def write_html_column(cssclass, file, header, rows):
     """Create a column in the output."""
-
-    rows = things3.get_rows(sql)
 
     file.write("<div class='column'><div class=''>" +
                "<h2 class='" + cssclass + "'>" + header +
@@ -78,7 +77,7 @@ def write_html_header(file):
         <html>
         <head>
           <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-          <link rel="stylesheet" href="../resources/style.css">
+          <link rel="stylesheet" href="../resources/kanban.css">
           <title>KanbanView for Things 3</title>
         </head>
 
@@ -109,13 +108,13 @@ def write_html_footer(file):
 def write_html_columns(file):
     """Write HTML columns."""
 
-    write_html_column("color1", file, "Backlog", things3.LIST_SOMEDAY)
-    write_html_column("color5", file, "Upcoming", things3.LIST_UPCOMING)
-    write_html_column("color3", file, "Waiting", things3.LIST_WAITING)
-    write_html_column("color4", file, "Inbox", things3.LIST_INBOX)
-    write_html_column("color2", file, "MIT", things3.LIST_MIT)
-    write_html_column("color6", file, "Today", things3.LIST_TODAY)
-    write_html_column("color7", file, "Next", things3.LIST_ANYTIME)
+    write_html_column("color1", file, "Backlog", THINGS3.get_someday())
+    write_html_column("color5", file, "Upcoming", THINGS3.get_upcoming())
+    write_html_column("color3", file, "Waiting", THINGS3.get_waiting())
+    write_html_column("color4", file, "Inbox", THINGS3.get_inbox())
+    write_html_column("color2", file, "MIT", THINGS3.get_mit())
+    write_html_column("color6", file, "Today", THINGS3.get_today())
+    write_html_column("color7", file, "Next", THINGS3.get_anytime())
 
 
 def main():
@@ -125,8 +124,6 @@ def main():
         write_html_header(file)
         write_html_columns(file)
         write_html_footer(file)
-
-    webbrowser.open_new_tab('file://' + FILE_HTML)
 
 
 if __name__ == "__main__":

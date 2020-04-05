@@ -16,17 +16,12 @@ __status__ = "Development"
 
 from os import sys
 from os.path import dirname, realpath
-from signal import signal, SIGINT
-from threading import Thread
-from time import sleep
-import webbrowser
 from wsgiref.simple_server import make_server
 import falcon
-import things3
+from things3 import Things3
 
-FILE = "kanban2.html"
 PORT = 8088
-HTTPD = None
+APP = falcon.App()
 PATH = dirname(realpath(__file__)) + '/../resources/'
 
 
@@ -47,6 +42,8 @@ class ThingsGUI:
             resp.content_type = falcon.MEDIA_PNG
         if filename.endswith('jpg'):
             resp.content_type = falcon.MEDIA_JPEG
+        if filename.endswith('ico'):
+            resp.content_type = 'image/x-ico'
         with open(filename, 'rb') as source:
             resp.data = source.read()
 
@@ -54,40 +51,56 @@ class ThingsGUI:
 class ThingsAPI:
     """Simple read-only Things API."""
 
+    things3 = Things3()
+
     def on_get(self, req, resp, command):
         """Handles GET requests"""
         if command == "inbox":
-            resp.media = things3.convert_tasks_to_model(things3.get_inbox())
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_inbox())
         elif command == "today":
-            resp.media = things3.convert_tasks_to_model(things3.get_today())
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_today())
+        elif command == "next":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_anytime())
+        elif command == "backlog":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_someday())
+        elif command == "upcoming":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_upcoming())
+        elif command == "waiting":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_waiting())
+        elif command == "mit":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_mit())
         else:
-            resp.media = things3.convert_tasks_to_model(
-                things3.get_not_implemented())
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_not_implemented())
             resp.status = falcon.HTTP_404
 
 
-def open_browser():
-    """Delay opening the browser."""
-    sleep(1)
-    webbrowser.open('http://localhost:%s/%s' % (PORT, FILE))
+def setup():
+    APP.add_route('/api/{command}', ThingsAPI())
+    APP.add_route('/{url}', ThingsGUI())
+    HTTPD = make_server('', PORT, APP)
+    print("Serving API at http://localhost:%d/api/{command}" % PORT)
+    return HTTPD
 
 
-def handler(signal_received, frame):
-    """Handle any cleanup here."""
-    print("Shutting down...: " + str(signal_received) + " / " + str(frame))
-    HTTPD.server_close()
-    sys.exit(0)
+def main():
+    print("Starting up...")
+    HTTPD = setup()
+
+    try:
+        HTTPD.serve_forever()
+    except KeyboardInterrupt:
+        print("Shutting down...")
+        HTTPD.server_close()
+        sys.exit(0)
 
 
 if __name__ == "__main__":
-    print("Starting up...")
-    signal(SIGINT, handler)
-
-    APP = falcon.App()
-    APP.add_route('/api/{command}', ThingsAPI())
-    APP.add_route('/{url}', ThingsGUI())
-
-    HTTPD = make_server('', PORT, APP)
-    print("Serving at http://localhost:%d/api/{command}" % PORT)
-    Thread(target=open_browser).start()
-    HTTPD.serve_forever()
+    main()

@@ -1,20 +1,19 @@
-MAIN=things3_to_kanban.py
-SERVER=things3_to_kanban_server.py
-API=things3_api.py
+MAIN=things3_kanban.py
+SERVER=things3_api.py
+SERVER_PORT=8088
 SRC_CORE=src
 SRC_TEST=tests
-DEST=$(SRC_CORE)/kanban.html
-DEST_SRV=http://localhost:8080/kanban.html
+DEST=$(SRC_CORE)/kanban-static.html
+DEST_SRV=http://localhost:$(SERVER_PORT)/kanban.html
 PYTHON=python3
 PYDOC=pydoc3
 PIP=pip3
 
 help:
 	@echo "Some available commands:"
-	@echo " * run          - Run code."
+	@echo " * run          - Run code in static mode."
 	@echo " * run-server   - Run code in server mode."
-	@echo " * run-api      - Run code in API server mode."
-	@echo " * open         - Open GUI."
+	@echo " * open         - Open GUI in static mode."
 	@echo " * open-server  - Open GUI in server mode."
 	@echo " * kill-server  - Kill a running server."
 	@echo " * app          - Create KanbanView App."
@@ -35,22 +34,21 @@ help:
 
 run:
 	@$(PYTHON) $(SRC_CORE)/$(MAIN)
+	@open $(DEST)
 
 run-server:
+	@echo "App running at: $(DEST_SRV)"
 	@$(PYTHON) $(SRC_CORE)/$(SERVER)
 
-run-api:
-	@$(PYTHON) $(SRC_CORE)/$(API)
-
 kill-server:
-	@lsof -nti:8080 | xargs kill
+	@lsof -nti:$(SERVER_PORT) | xargs kill
 
 open-server:
 	@open $(DEST_SRV)
 
 test:
 	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
-	@coverage run --source . -m $(SRC_TEST).test_things3
+	@coverage run --source . -m $(SRC_TEST).test_things3 || true
 	@coverage report
 
 .PHONY: app
@@ -91,9 +89,9 @@ code-lint:
 	@type pyflakes >/dev/null 2>&1 || (echo "Run '$(PIP) install pyflakes' first." >&2 ; exit 1)
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
-	@echo "PyFlakes:" ; pyflakes $(SRC_CORE)
-	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE)
-	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py
+	@echo "PyFlakes:" ; pyflakes $(SRC_CORE) || true
+	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) || true
+	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py || true
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
