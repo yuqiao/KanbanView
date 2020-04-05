@@ -24,9 +24,10 @@ APP = falcon.App()
 PATH = getcwd() + '/resources/'
 
 
-class ThingsGUI:
+class ThingsGUI:  # pylint: disable=too-few-public-methods
     """Simple read-only Things KanbanView."""
 
+    # pylint: disable=no-self-use,unused-argument
     def on_get(self, req, resp, url):
         """Handles GET requests"""
         filename = PATH + url
@@ -47,49 +48,19 @@ class ThingsGUI:
             resp.data = source.read()
 
 
-class ThingsAPI:
+class ThingsAPI:  # pylint: disable=too-few-public-methods
     """Simple read-only Things API."""
 
     things3 = Things3()
 
+    # pylint: disable=no-self-use,unused-argument
     def on_get(self, req, resp, command):
         """Handles GET requests"""
-        if command == "inbox":
+
+        if command in self.things3.functions:
+            func = self.things3.functions[command]
             resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_inbox())
-        elif command == "today":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_today())
-        elif command == "next":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_anytime())
-        elif command == "backlog":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_someday())
-        elif command == "upcoming":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_upcoming())
-        elif command == "waiting":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_waiting())
-        elif command == "mit":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_mit())
-        elif command == "completed":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_completed())
-        elif command == "cancelled":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_cancelled())
-        elif command == "trashed":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_trashed())
-        elif command == "all":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_all())
-        elif command == "due":
-            resp.media = self.things3.convert_tasks_to_model(
-                self.things3.get_due())
+                func(self.things3))
         else:
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_not_implemented())
@@ -97,22 +68,24 @@ class ThingsAPI:
 
 
 def setup():
+    """Create server."""
     APP.add_route('/api/{command}', ThingsAPI())
     APP.add_route('/{url}', ThingsGUI())
-    HTTPD = make_server('', PORT, APP)
+    httpd = make_server('', PORT, APP)
     print("Serving API at http://localhost:%d/api/{command}" % PORT)
-    return HTTPD
+    return httpd
 
 
 def main():
+    """"Main function."""
     print("Starting up...")
-    HTTPD = setup()
+    httpd = setup()
 
     try:
-        HTTPD.serve_forever()
+        httpd.serve_forever()
     except KeyboardInterrupt:
         print("Shutting down...")
-        HTTPD.server_close()
+        httpd.server_close()
         sys.exit(0)
 
 

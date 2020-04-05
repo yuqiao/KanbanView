@@ -62,34 +62,14 @@ def main(args):
     things_cli = Things3CLI(args, things3)
     command = args.command
 
-    if command == "inbox":
-        things_cli.print_tasks(things3.get_inbox())
-    elif command == "today":
-        things_cli.print_tasks(things3.get_today())
-    elif command == "next":
-        things_cli.print_tasks(things3.get_anytime())
-    elif command == "backlog":
-        things_cli.print_tasks(things3.get_someday())
-    elif command == "upcoming":
-        things_cli.print_tasks(things3.get_upcoming())
-    elif command == "waiting":
-        things_cli.print_tasks(things3.get_waiting())
-    elif command == "mit":
-        things_cli.print_tasks(things3.get_mit())
-    elif command == "completed":
-        things_cli.print_tasks(things3.get_completed())
-    elif command == "cancelled":
-        things_cli.print_tasks(things3.get_cancelled())
-    elif command == "trashed":
-        things_cli.print_tasks(things3.get_trashed())
-    elif command == "all":
-        things_cli.print_tasks(things3.get_all())
-    elif command == "due":
-        things_cli.print_tasks(things3.get_due())
+    if command in things3.functions:
+        func = things3.functions[command]
+        things_cli.print_tasks(func(things3))
     elif command == "csv":
         print("Deprecated: use --csv instead")
     elif command == "feedback":
-        webbrowser.open('https://github.com/AlexanderWillner/KanbanView/issues')
+        webbrowser.open(
+            'https://github.com/AlexanderWillner/KanbanView/issues')
     else:
         Things3CLI.print_unimplemented()
 

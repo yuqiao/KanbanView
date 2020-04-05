@@ -5,6 +5,7 @@
 
 from __future__ import print_function
 
+# pylint: disable=duplicate-code
 __author__ = "Luc Beaulieu and Alexander Willner"
 __copyright__ = "Copyright 2018 Luc Beaulieu / 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]

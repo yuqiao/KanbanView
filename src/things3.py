@@ -169,7 +169,8 @@ class Things3():
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""
-        return [["0", "not implemented", "no context", "0", "0"]]
+        return [["0", "not implemented", "no context", "0", "0", "0", "0",
+                 "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]]
 
     def get_rows(self, sql):
         """Query Things database."""
@@ -233,3 +234,18 @@ class Things3():
         for task in tasks:
             model.append(self.convert_task_to_model(task))
         return model
+
+    functions = {
+        "inbox": get_inbox,
+        "today": get_today,
+        "next": get_anytime,
+        "backlog": get_someday,
+        "upcoming": get_upcoming,
+        "waiting": get_waiting,
+        "mit": get_mit,
+        "completed": get_completed,
+        "cancelled": get_cancelled,
+        "trashed": get_trashed,
+        "all": get_all,
+        "due": get_due,
+    }
