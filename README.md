@@ -2,6 +2,7 @@
 [![GitHub Download Count](https://img.shields.io/github/downloads/AlexanderWillner/KanbanView/total.svg)](https://github.com/AlexanderWillner/KanbanView/releases)
 [![GitHub Issues](https://img.shields.io/github/issues/alexanderwillner/kanbanview)](https://github.com/AlexanderWillner/KanbanView/issues)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/quality/g/alexanderwillner/kanbanview)](https://scrutinizer-ci.com/g/AlexanderWillner/KanbanView/?branch=master)
+[![Build Status](https://travis-ci.com/AlexanderWillner/KanbanView.svg?branch=master)](https://travis-ci.com/AlexanderWillner/KanbanView)
 [![Coverage Status](https://coveralls.io/repos/github/AlexanderWillner/KanbanView/badge.svg?branch=master)](https://coveralls.io/github/AlexanderWillner/KanbanView?branch=master)
 
 # CLI, API, Web Service and Kanban for Things 3
