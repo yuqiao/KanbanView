@@ -24,6 +24,7 @@ PORT = 8088
 APP = falcon.App()
 PATH = getcwd() + '/resources/'
 
+
 class ThingsGUI:
     """Simple read-only Things KanbanView."""
 
