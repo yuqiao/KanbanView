@@ -98,17 +98,17 @@ code-lint:
 	@type pyflakes >/dev/null 2>&1 || (echo "Run '$(PIP) install pyflakes' first." >&2 ; exit 1)
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
-	@echo "PyFlakes:" ; pyflakes $(SRC_CORE) || true
-	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) || true
-	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py || true
+	@echo "PyFlakes:" ; pyflakes $(SRC_CORE)
+	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE)
+	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
 	@csslint --format=compact resources/*.css
 
 js-lint:
-	@type jslint >/dev/null 2>&1 || (echo "Run 'npm install -g jslint' first." >&2 ; exit 1)
-	@jslint resources/*.js
+	@type jslint >/dev/null 2>&1 || (echo "Run 'npm install -g jslint-node' first." >&2 ; exit 1)
+	@jslint resources/*.js || true
 
 html-lint:
 	@type tidy >/dev/null 2>&1 || (echo "Run 'brew install tidy' first." >&2 ; exit 1)
