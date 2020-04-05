@@ -145,6 +145,12 @@ class Things3():
             " ORDER BY TASK." + self.DATESTOP
         return self.get_rows(query)
 
+    def get_trashed(self):
+        """Get trashed tasks."""
+        query = self.ISTRASHED + " AND " + self.ISTASK + \
+            " ORDER BY TASK." + self.DATESTOP
+        return self.get_rows(query)
+
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""

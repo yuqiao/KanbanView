@@ -57,5 +57,11 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_cancelled()
         self.assertEqual(1, len(tasks))
 
+    def test_trashed(self):
+        """Test trashed tasks."""
+        tasks = self.things3.get_trashed()
+        self.assertEqual(3, len(tasks))
+
+
 if __name__ == '__main__':
     unittest.main()

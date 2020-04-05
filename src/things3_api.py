@@ -82,6 +82,9 @@ class ThingsAPI:
         elif command == "cancelled":
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_cancelled())
+        elif command == "trashed":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_trashed())
         else:
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_not_implemented())
