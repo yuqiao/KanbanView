@@ -62,6 +62,10 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_trashed()
         self.assertEqual(3, len(tasks))
 
+    def test_all(self):
+        """Test all tasks."""
+        tasks = self.things3.get_all()
+        self.assertEqual(13, len(tasks))
 
 if __name__ == '__main__':
     unittest.main()

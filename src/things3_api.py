@@ -85,6 +85,9 @@ class ThingsAPI:
         elif command == "trashed":
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_trashed())
+        elif command == "all":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_all())
         else:
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_not_implemented())

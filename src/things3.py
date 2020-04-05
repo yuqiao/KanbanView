@@ -151,6 +151,11 @@ class Things3():
             " ORDER BY TASK." + self.DATESTOP
         return self.get_rows(query)
 
+    def get_all(self):
+        """Get all tasks."""
+        query = self.ISNOTTRASHED + " AND " + self.ISTASK
+        return self.get_rows(query)
+
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""

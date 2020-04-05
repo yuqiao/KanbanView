@@ -71,6 +71,8 @@ def main(args):
         things_cli.print_tasks(things3.get_cancelled())
     elif command == "trashed":
         things_cli.print_tasks(things3.get_trashed())
+    elif command == "all":
+        things_cli.print_tasks(things3.get_all())
     else:
         Things3CLI.print_unimplemented()
 
