@@ -5,7 +5,7 @@
 
 # CLI, API, Web Service and Kanban for Things 3
 
-This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate. Clone and contribute to the repository or download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
+This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate. Star, fork and contribute to the repository or download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
 
 ![view2020](doc/view-2020.png)
 
@@ -26,7 +26,7 @@ Configuration:
 Avaliable environment variables:
  * THINGSDB    - Path to database
  * TAG_WAITING - Tag for tasks you are waiting for
- * TAG_MIT     - Tag for most important tassk
+ * TAG_MIT     - Tag for most important tasks
 
 Available commands:
  * run          - Run code in static mode.
@@ -58,24 +58,53 @@ Available commands:
 The CLI allows you to access the Things3 database via the comand line:
 
 ```bash
-$ ./src/things3_cli.py today
- -  Today Todo  ( Today Project )
+$ ./src/things3_cli.py inbox
+ -  Inbox Todo  ( None )
 ```
 
 It is also possible to get the information formatted as ```json``` strings:
 
 ```bash
-$ ./src/things3_cli.py --json inbox
-[{"uuid": "29ACB795-2037-4FFD-BB09-851CDE53B4B9", "title": "Inbox Todo", "context": null, "context_uuid": null, "due": null}]
+$ $ ./src/things3_cli.py --json next | jq
+[
+  {
+    "uuid": "9CD92553-95D7-4CF2-B554-F1DE9F563018",
+    "title": "Due Todo",
+    "context": "Next Project",
+    "context_uuid": "DED787E0-874A-4783-8F0F-0A02F87F8419",
+    "due": "2152-08-28"
+  },
+  {
+    "uuid": "4C5D620C-165C-41D2-BC5B-A34065348D92",
+    "title": "Today Project Todo",
+    "context": "Today Project",
+    "context_uuid": "52ADBAB5-A0EC-4D3F-BF83-2D578DAE3AF3",
+    "due": null
+  },
+  {
+    "uuid": "2ECBE4AA-2E3F-49CC-AA38-CBFFBFD2B1FD",
+    "title": "Todo with Checklist",
+    "context": "Next Project",
+    "context_uuid": "DED787E0-874A-4783-8F0F-0A02F87F8419",
+    "due": null
+  },
+  {
+    "uuid": "709794DA-EB89-4A1B-BBE5-2BF8424BBA28",
+    "title": "Waiting for Todo",
+    "context": "Next Project",
+    "context_uuid": "DED787E0-874A-4783-8F0F-0A02F87F8419",
+    "due": null
+  }
+]
 ```
 
-However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh).
+However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh)
 
 
 
 ## Application Programmer Interface  (API)
 
-The API allows you to access the Things3 database within other Python scripts:
+The API allows you to access the Things3 todos within other Python scripts:
 
 ```bash
 $ make doc
@@ -92,8 +121,6 @@ class Things3(builtins.object)
      |  
      |  get_inbox(self)
      |      Get all tasks from the inbox.
-     |  
-
 ...
 ```
 
@@ -112,8 +139,16 @@ Serving API at http://localhost:8088/api/{command}
 Via ```curl``` you can browse the ```json``` data via command line:
 
 ```bash
-$ curl http://localhost:8088/api/inbox
-[{"uuid": "29ACB795-2037-4FFD-BB09-851CDE53B4B9", "title": "Inbox Todo", "context": null, "context_uuid": null, "due": null}]
+$ curl -s http://localhost:8088/api/today | jq
+[
+  {
+    "uuid": "D7D879D2-5A2D-48AA-AF8A-AADCEC228D2B",
+    "title": "Today Todo",
+    "context": "Today Project",
+    "context_uuid": "52ADBAB5-A0EC-4D3F-BF83-2D578DAE3AF3",
+    "due": null
+  }
+]
 ```
 
 
@@ -134,7 +169,7 @@ The **dynamic** version runs a web application at http://localhost:8088/kanban.h
 $ make run-server
 ```
 
-The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied it to the Applications folder:
+The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder:
 
 ```xattr -rd com.apple.quarantine /Applications/KanbanView.app```
 
