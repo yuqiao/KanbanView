@@ -42,7 +42,7 @@ class Things3CLI():
     @classmethod
     def print_unimplemented(cls):
         """Show warning that method is not yet implemented."""
-        print("not implemented yet")
+        print("not implemented yet (see things.sh for a more complete CLI)")
 
 
 def main(args):
@@ -65,6 +65,8 @@ def main(args):
         things_cli.print_tasks(things3.get_waiting())
     elif command == "mit":
         things_cli.print_tasks(things3.get_mit())
+    elif command == "completed":
+        things_cli.print_tasks(things3.get_completed())
     else:
         Things3CLI.print_unimplemented()
 

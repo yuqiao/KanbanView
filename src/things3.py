@@ -51,6 +51,11 @@ class Things3():
     ISPROJECT = "TASK.type = 1"
     ISHEADING = "TASK.type = 2"
     ISOPENTASK = ISTASK + " AND " + ISNOTTRASHED + " AND " + ISOPEN
+    DATECREATE = "creationDate"
+    DATEMOD = "userModificationDate"
+    DATEDUE = "dueDate"
+    DATESTART = "unixepoch"
+    DATESTOP = "stopDate"
 
     # Query Index
     I_UUID = 0
@@ -124,6 +129,13 @@ class Things3():
             " WHERE uuid=TASK.project AND start=1" + \
             " AND trashed=0))" + \
             " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+        return self.get_rows(query)
+
+    def get_completed(self):
+        """Get completed tasks."""
+        query = self.ISNOTTRASHED + " AND " + self.ISTASK + \
+            " AND " + self.ISCOMPLETED + \
+            " ORDER BY TASK." + self.DATESTOP
         return self.get_rows(query)
 
     @staticmethod

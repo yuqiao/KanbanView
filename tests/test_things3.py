@@ -47,6 +47,11 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_mit()
         self.assertEqual(0, len(tasks))
 
+    def test_completed(self):
+        """Test completed tasks."""
+        tasks = self.things3.get_completed()
+        self.assertEqual(1, len(tasks))
+
 
 if __name__ == '__main__':
     unittest.main()

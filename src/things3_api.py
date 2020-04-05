@@ -76,6 +76,9 @@ class ThingsAPI:
         elif command == "mit":
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_mit())
+        elif command == "completed":
+            resp.media = self.things3.convert_tasks_to_model(
+                self.things3.get_completed())
         else:
             resp.media = self.things3.convert_tasks_to_model(
                 self.things3.get_not_implemented())
