@@ -67,6 +67,8 @@ def main(args):
         things_cli.print_tasks(things3.get_mit())
     elif command == "completed":
         things_cli.print_tasks(things3.get_completed())
+    elif command == "cancelled":
+        things_cli.print_tasks(things3.get_cancelled())
     else:
         Things3CLI.print_unimplemented()
 
