@@ -63,6 +63,10 @@ class Things3():
     I_CONTEXT = 2
     I_CONTEXT_UUID = 3
     I_DUE = 4
+    I_CREATE = 5
+    I_MOD = 6
+    I_START = 7
+    I_STOP = 8
 
     def __init__(self,
                  database=FILE_SQLITE,
@@ -181,18 +185,25 @@ class Things3():
                     WHEN TASK.recurrenceRule IS NULL
                     THEN date(TASK.dueDate,"unixepoch")
                 ELSE NULL
-                END
+                END,
+                date(TASK.creationDate,"unixepoch"),
+                date(TASK.userModificationDate,"unixepoch"),
+                date(TASK.startDate,"unixepoch"),
+                date(TASK.stopDate,"unixepoch")
             FROM
                 TMTask AS TASK
-            LEFT JOIN
-                TMTaskTag TAGS ON TAGS.tasks = TASK.uuid
             LEFT OUTER JOIN
                 TMTask PROJECT ON TASK.project = PROJECT.uuid
             LEFT OUTER JOIN
                 TMArea AREA ON TASK.area = AREA.uuid
             LEFT OUTER JOIN
                 TMTask HEADING ON TASK.actionGroup = HEADING.uuid
+            LEFT OUTER JOIN
+                TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
+            LEFT OUTER JOIN
+                TMTag TAG ON TAGS.tags = TAG.uuid
             WHERE """ + sql
+
         self.cursor.execute(sql)
         return self.cursor.fetchall()
 
@@ -203,6 +214,10 @@ class Things3():
                  'context': task[self.I_CONTEXT],
                  'context_uuid': task[self.I_CONTEXT_UUID],
                  'due': task[self.I_DUE],
+                 'created': task[self.I_CREATE],
+                 'modified': task[self.I_MOD],
+                 'started': task[self.I_START],
+                 'stopped': task[self.I_STOP]
                  }
         return model
 

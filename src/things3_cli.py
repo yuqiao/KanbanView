@@ -16,6 +16,9 @@ __status__ = "Development"
 
 import argparse
 import json
+import csv
+import sys
+import webbrowser
 from things3 import Things3
 
 
@@ -23,16 +26,24 @@ class Things3CLI():
     """Simple read-only Thing 3 CLI."""
 
     print_json = False
+    print_csv = False
     things3 = None
 
-    def __init__(self, print_json, things):
-        self.print_json = print_json
+    def __init__(self, args, things):
+        self.print_json = args.json
+        self.print_csv = args.csv
         self.things3 = things
 
     def print_tasks(self, tasks):
         """Print a task."""
         if self.print_json:
             print(json.dumps(self.things3.convert_tasks_to_model(tasks)))
+        elif self.print_csv:
+            fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'due',
+                          'created', 'modified', 'started', 'stopped']
+            writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(self.things3.convert_tasks_to_model(tasks))
         else:
             for task in tasks:
                 title = task[self.things3.I_TITLE]
@@ -48,7 +59,7 @@ class Things3CLI():
 def main(args):
     """ Main entry point of the app """
     things3 = Things3()
-    things_cli = Things3CLI(args.json, things3)
+    things_cli = Things3CLI(args, things3)
     command = args.command
 
     if command == "inbox":
@@ -73,6 +84,10 @@ def main(args):
         things_cli.print_tasks(things3.get_trashed())
     elif command == "all":
         things_cli.print_tasks(things3.get_all())
+    elif command == "csv":
+        print("Deprecated: use --csv instead")
+    elif command == "feedback":
+        webbrowser.open('https://github.com/AlexanderWillner/KanbanView/issues')
     else:
         Things3CLI.print_unimplemented()
 
@@ -157,6 +172,11 @@ if __name__ == "__main__":
     PARSER.add_argument("-j", "--json",
                         action="store_true", default=False,
                         help="output as JSON", dest="json")
+
+    PARSER.add_argument("-c", "--csv",
+                        action="store_true", default=False,
+                        help="output as CSV", dest="csv")
+
     PARSER.add_argument(
         "--version",
         action="version",
