@@ -23,6 +23,7 @@ FILE_HTML = getcwd() + '/kanban-static.html'
 THINGS3 = Things3()
 TARGET = codecs.open(FILE_HTML, 'w', 'utf-8')
 
+
 def write_html_column(cssclass, file, header, rows):
     """Create a column in the output."""
 

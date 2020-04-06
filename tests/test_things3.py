@@ -80,5 +80,6 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_today()
         self.assertNotIn("Today Todo", tasks.pop())
 
+
 if __name__ == '__main__':
     unittest.main()

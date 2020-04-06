@@ -15,8 +15,9 @@ class Things3KanbanCase(unittest.TestCase):
     things3 = Things3(database='tests/Things.sqlite3')
 
     class CustomStringIO(io.StringIO):
+        """Do not close output for testing."""
         def close(self):
-            True
+            pass
 
     def test_today(self):
         """Test Today."""
@@ -24,6 +25,7 @@ class Things3KanbanCase(unittest.TestCase):
         src.things3_kanban.THINGS3 = self.things3
         src.things3_kanban.main(output)
         self.assertIn("Today Todo", output.getvalue())
+
 
 if __name__ == '__main__':
     unittest.main()

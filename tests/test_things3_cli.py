@@ -27,5 +27,6 @@ class Things3CLICase(unittest.TestCase):
             sys.stdout = old_out
         self.assertIn("Today Todo", new_out.getvalue())
 
+
 if __name__ == '__main__':
     unittest.main()

@@ -17,6 +17,7 @@ class Things3APICase(unittest.TestCase):
     things_api.things3 = Things3(database='tests/Things.sqlite3')
     @dataclass
     class Resp:
+        """Store httpd responses."""
         media: str
         status: str
         data: bytes
@@ -34,6 +35,7 @@ class Things3APICase(unittest.TestCase):
         resp = self.Resp("", "", None)
         self.things_gui.on_get(None, resp, "/kanban.html")
         self.assertIn("footer", resp.data.decode())
+
 
 if __name__ == '__main__':
     unittest.main()
