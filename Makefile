@@ -8,6 +8,7 @@ DEST_SRV=http://localhost:$(SERVER_PORT)/kanban.html
 PYTHON=python3
 PYDOC=pydoc3
 PIP=pip3
+PIPENV=pipenv
 
 help:
 	@echo "CLI, API and Web Service for Things3."
@@ -126,17 +127,9 @@ code-count:
 	@type cloc >/dev/null 2>&1 || (echo "Run 'brew install cloc' first." >&2 ; exit 1)
 	@cloc $(SRC_CORE)
 
-deps-update:
-	@type pur >/dev/null 2>&1 || (echo "Run '$(PIP) install pur' first." >&2 ; exit 1)
-	@pur -r requirements.txt
-
 deps-install:
-	@type $(PIP) >/dev/null 2>&1 || (echo "Run 'curl https://bootstrap.pypa.io/get-pip.py|sudo python3' first." >&2 ; exit 1)
-	@$(PIP) install -r requirements.txt
-
-deps-create:
-	@type pipreqs >/dev/null 2>&1 || (echo "Run '$(PIP) install pipreqs' first." >&2 ; exit 1)
-	@pipreqs --use-local --force .
+	@type $(PIPENV) >/dev/null 2>&1 || (echo "Run 'brew install pipenv' first." >&2 ; exit 1)
+	@$(PIPENV) install
 
 feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
