@@ -72,6 +72,13 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_due()
         self.assertEqual(1, len(tasks))
 
+    def test_anonymize(self):
+        """Test anonymized tasks."""
+        tasks = self.things3.get_today()
+        self.assertIn("Today Todo", tasks.pop())
+        self.things3.ANONYMIZE = True
+        tasks = self.things3.get_today()
+        self.assertNotIn("Today Todo", tasks.pop())
 
 if __name__ == '__main__':
     unittest.main()
