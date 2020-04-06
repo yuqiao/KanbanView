@@ -15,6 +15,7 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import sqlite3
+from random import shuffle
 from os.path import expanduser
 from os import environ
 
@@ -29,6 +30,9 @@ class Things3():
         else environ.get('TAG_WAITING')
     tag_mit = "MIT" if not environ.get('TAG_MIT') \
         else environ.get('TAG_MIT')
+
+    # Basic config
+    ANONYMIZE = bool(environ.get('ANONYMIZE'))
 
     # Database info
     FILE_SQLITE = '~/Library/Containers/'\
@@ -78,6 +82,27 @@ class Things3():
         self.tag_waiting = tag_waiting
         self.cursor = sqlite3.connect(self.database).cursor()
         self.json = json
+
+    @staticmethod
+    def anonymize(string):
+        """Scramble text."""
+        string = list(string)
+        shuffle(string)
+        string = ''.join(string)
+        return string
+
+    def anonymize_tasks(self, tasks):
+        """Scramble output for screenshots."""
+        result = tasks
+        if self.ANONYMIZE:
+            result = []
+            for task in tasks:
+                task = list(task)
+                task[self.I_TITLE] = self.anonymize(str(task[self.I_TITLE]))
+                task[self.I_CONTEXT] = \
+                    self.anonymize(str(task[self.I_CONTEXT]))
+                result.append(task)
+        return result
 
     def get_inbox(self):
         """Get all tasks from the inbox."""
@@ -212,7 +237,10 @@ class Things3():
             WHERE """ + sql
 
         self.cursor.execute(sql)
-        return self.cursor.fetchall()
+        tasks = self.cursor.fetchall()
+        tasks = self.anonymize_tasks(tasks)
+
+        return tasks
 
     def convert_task_to_model(self, task):
         """Convert task to model."""

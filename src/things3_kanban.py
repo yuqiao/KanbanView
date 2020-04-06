@@ -15,27 +15,12 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import codecs
-from os import environ, getcwd
-from random import shuffle
+from os import getcwd
 from things3 import Things3
-
-# Basic config
-ANONYMIZE = bool(environ.get('ANONYMIZE'))
 
 # Basic variables
 FILE_HTML = getcwd() + '/kanban-static.html'
-
 THINGS3 = Things3()
-
-
-def anonymize(word):
-    """Scramble output for screenshots."""
-
-    if ANONYMIZE is True:
-        word = list(word)
-        shuffle(word)
-        word = ''.join(word)
-    return word
 
 
 def write_html_column(cssclass, file, header, rows):
@@ -47,11 +32,16 @@ def write_html_column(cssclass, file, header, rows):
                "</span></h2>")
 
     for row in rows:
-        task_uuid = str(row[0]) if row[0] is not None else ''
-        task_title = anonymize(str(row[1])) if row[1] is not None else ''
-        context_title = anonymize(str(row[2])) if row[2] is not None else ''
-        context_uuid = str(row[3]) if row[3] is not None else ''
-        deadline = str(row[4]) if row[4] is not None else ''
+        task_uuid = str(row[THINGS3.I_UUID]) \
+            if row[THINGS3.I_UUID] is not None else ''
+        task_title = str(row[THINGS3.I_TITLE]) \
+            if row[THINGS3.I_TITLE] is not None else ''
+        context_title = str(row[THINGS3.I_CONTEXT]) \
+            if row[THINGS3.I_CONTEXT] is not None else ''
+        context_uuid = str(row[THINGS3.I_CONTEXT_UUID]) \
+            if row[THINGS3.I_CONTEXT_UUID] is not None else ''
+        deadline = str(row[THINGS3.I_DUE]) \
+            if row[THINGS3.I_DUE] is not None else ''
 
         task_link = '<a href="things:///show?id=' + task_uuid + '">' + \
             task_title + '</a>' if task_uuid != '' else task_title
