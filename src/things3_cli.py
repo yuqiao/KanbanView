@@ -55,26 +55,7 @@ class Things3CLI():
         """Show warning that method is not yet implemented."""
         print("not implemented yet (see things.sh for a more complete CLI)")
 
-
-def main(args):
-    """ Main entry point of the app """
-    things3 = Things3()
-    things_cli = Things3CLI(args, things3)
-    command = args.command
-
-    if command in things3.functions:
-        func = things3.functions[command]
-        things_cli.print_tasks(func(things3))
-    elif command == "csv":
-        print("Deprecated: use --csv instead")
-    elif command == "feedback":
-        webbrowser.open(
-            'https://github.com/AlexanderWillner/KanbanView/issues')
-    else:
-        Things3CLI.print_unimplemented()
-
-
-if __name__ == "__main__":
+def arguments():
     PARSER = argparse.ArgumentParser(
         description='Simple read-only Thing 3 CLI.')
 
@@ -166,3 +147,27 @@ if __name__ == "__main__":
 
     ARGUMENTS = PARSER.parse_args()
     main(ARGUMENTS)
+
+def main(args=None):
+    """ Main entry point of the app """
+
+    if args is None:
+        arguments()
+    else:
+        things3 = Things3()
+        things_cli = Things3CLI(args, things3)
+        command = args.command
+
+        if command in things3.functions:
+            func = things3.functions[command]
+            things_cli.print_tasks(func(things3))
+        elif command == "csv":
+            print("Deprecated: use --csv instead")
+        elif command == "feedback":
+            webbrowser.open(
+                'https://github.com/AlexanderWillner/KanbanView/issues')
+        else:
+            Things3CLI.print_unimplemented()
+
+if __name__ == "__main__":
+    main()

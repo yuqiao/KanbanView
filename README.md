@@ -7,13 +7,21 @@
 
 # CLI, API, Web Service and Kanban for Things 3
 
-This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate. Star, fork and contribute to the repository or download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
+This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate.
 
 ![view2020](doc/view-2020.png)
 
+## Installation
+
+You've different options:
+
+1. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
+2. Download the command line tools: `pip3 install git+git://github.com/alexanderwillner/kanbanview.git#egg=KanbanView-2.0.1-py3.7`
+3. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
+
 ## Commands
 
-The available commands are listed by executing `make`:
+After downloading the command line tools or downloading the sources and executing `make install`, you've the tools `things-cli`, `things-api` and `things-kanban` in your path. Other available `make` commands are listed by executing `make`:
 
 ```bash
 $ make
@@ -35,6 +43,7 @@ Available commands:
  * open-server  - Open GUI in server mode.
  * kill-server  - Kill a running server.
  * app          - Create KanbanView App.
+ * install      - Install the library and command line tools.
  * test         - Run unit tests and test coverage.
  * doc          - Document code (pydoc).
  * clean        - Cleanup (e.g. pyc files).

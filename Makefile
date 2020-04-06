@@ -28,6 +28,7 @@ help:
 	@echo " * open-server  - Open GUI in server mode."
 	@echo " * kill-server  - Kill a running server."
 	@echo " * app          - Create KanbanView App."
+	@echo " * install      - Install the library and command line tools."
 	@echo " * test         - Run unit tests and test coverage."
 	@echo " * doc          - Document code (pydoc)."
 	@echo " * clean        - Cleanup (e.g. pyc files)."
@@ -56,6 +57,10 @@ kill-server:
 
 open-server:
 	@open $(DEST_SRV)
+
+install:
+	@python3 setup.py install
+	@echo "You can now use 'things-cli', 'things-api' and 'things-kanban'"
 
 test:
 	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
