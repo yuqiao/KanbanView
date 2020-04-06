@@ -63,7 +63,7 @@ $ ./src/things3_cli.py inbox
 It is also possible to get the information formatted as ```json``` strings:
 
 ```bash
-$ $ ./src/things3_cli.py --json next | jq
+$ ./src/things3_cli.py --json next | jq
 [
   {
     "uuid": "9CD92553-95D7-4CF2-B554-F1DE9F563018",
@@ -95,6 +95,10 @@ $ $ ./src/things3_cli.py --json next | jq
   }
 ]
 ```
+
+Further, you can export data as ```csv``` via `$ ./src/things3_cli.py --csv all > tasks.csv` and import the file into `Excel` via `File > Import > CSV file > Delimited / UTF-8 > Comma`:
+
+![Excel](doc/csv.png)
 
 However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh). Overall commands are:
 
