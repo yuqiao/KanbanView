@@ -5,7 +5,7 @@ py2app configuration file.
 from setuptools import setup
 
 APP = ['src/things3_app.py']
-DATA_FILES = ['resources',
+DATA_FILES = [('resources', ['resources/*']),
               'src/things3.py', 'src/things3_api.py']
 OPTIONS = {
         'argv_emulation': True,
