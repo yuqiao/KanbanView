@@ -64,7 +64,10 @@ install:
 
 test:
 	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
-	@coverage run --source . -m $(SRC_TEST).test_things3 || true
+	@coverage run --source . -m $(SRC_TEST).test_things3
+	@coverage run --source . -a -m $(SRC_TEST).test_things3_api
+	@coverage run --source . -a -m $(SRC_TEST).test_things3_cli
+	@coverage run --source . -a -m $(SRC_TEST).test_things3_kanban
 	@coverage report
 
 .PHONY: app

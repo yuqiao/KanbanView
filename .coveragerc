@@ -8,5 +8,5 @@ exclude_lines =
 omit =
     setup.py
     */__init__.py
-    src/*_*.py
+    src/*_app.py
     tests/*

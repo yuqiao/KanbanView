@@ -56,7 +56,7 @@ class Things3CLI():
         print("not implemented yet (see things.sh for a more complete CLI)")
 
 
-def arguments():
+def get_parser():
     """Create command line argument parser"""
     parser = argparse.ArgumentParser(
         description='Simple read-only Thing 3 CLI.')
@@ -147,17 +147,15 @@ def arguments():
         action="version",
         version="%(prog)s (version {version})".format(version=__version__))
 
-    args = parser.parse_args()
-    main(args)
+    return parser
 
 
-def main(args=None):
+def main(args=None, things3=Things3()):
     """ Main entry point of the app """
 
     if args is None:
-        arguments()
+        main(get_parser().parse_args())
     else:
-        things3 = Things3()
         things_cli = Things3CLI(args, things3)
         command = args.command
 
@@ -174,4 +172,4 @@ def main(args=None):
 
 
 if __name__ == "__main__":
-    main()
+    main(get_parser().parse_args())

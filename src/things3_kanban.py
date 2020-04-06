@@ -21,7 +21,7 @@ from things3 import Things3
 # Basic variables
 FILE_HTML = getcwd() + '/kanban-static.html'
 THINGS3 = Things3()
-
+TARGET = codecs.open(FILE_HTML, 'w', 'utf-8')
 
 def write_html_column(cssclass, file, header, rows):
     """Create a column in the output."""
@@ -106,14 +106,14 @@ def write_html_columns(file):
     write_html_column("color7", file, "Next", THINGS3.get_anytime())
 
 
-def main():
+def main(output):
     """Convert Things 3 database to Kanban HTML view."""
 
-    with codecs.open(FILE_HTML, 'w', 'utf-8') as file:
+    with output as file:
         write_html_header(file)
         write_html_columns(file)
         write_html_footer(file)
 
 
 if __name__ == "__main__":
-    main()
+    main(TARGET)
