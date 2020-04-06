@@ -86,21 +86,21 @@ clean:
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
-	@autopep8 -i -r $(SRC_CORE)
+	@autopep8 -i -r $(SRC_CORE) $(SRC_TEST)
 
 lint: code-style code-lint css-lint js-lint html-lint
 
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run '$(PIP) install pycodestyle' first." >&2 ; exit 1)
-	@pycodestyle --max-line-length=80 $(SRC_CORE)
+	@pycodestyle --max-line-length=80 $(SRC_CORE) $(SRC_TEST)
 
 code-lint:
 	@type pyflakes >/dev/null 2>&1 || (echo "Run '$(PIP) install pyflakes' first." >&2 ; exit 1)
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
-	@echo "PyFlakes:" ; pyflakes $(SRC_CORE)
-	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE)
-	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py
+	@echo "PyFlakes:" ; pyflakes $(SRC_CORE) $(SRC_TEST)
+	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST)
+	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)

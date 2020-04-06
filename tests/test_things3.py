@@ -4,13 +4,13 @@
 """Module documentation goes here."""
 
 import unittest
-import os
 from src.things3 import Things3
+
 
 class Things3Case(unittest.TestCase):
     """Class documentation goes here."""
-    
-    things3 = Things3(database = 'tests/Things.sqlite3')
+
+    things3 = Things3(database='tests/Things.sqlite3')
 
     def test_today(self):
         """Test Today."""
@@ -21,7 +21,7 @@ class Things3Case(unittest.TestCase):
         """Test Inbox."""
         tasks = self.things3.get_inbox()
         self.assertEqual(1, len(tasks))
-    
+
     def test_next(self):
         """Test Next."""
         tasks = self.things3.get_anytime()
@@ -31,17 +31,17 @@ class Things3Case(unittest.TestCase):
         """Test Backlog."""
         tasks = self.things3.get_someday()
         self.assertEqual(1, len(tasks))
-    
+
     def test_upcoming(self):
         """Test Upcoming."""
         tasks = self.things3.get_upcoming()
         self.assertEqual(3, len(tasks))
-    
+
     def test_waiting(self):
         """Test Waiting."""
         tasks = self.things3.get_waiting()
         self.assertEqual(1, len(tasks))
-    
+
     def test_mit(self):
         """Test MIT."""
         tasks = self.things3.get_mit()
@@ -71,6 +71,7 @@ class Things3Case(unittest.TestCase):
         """Test due tasks."""
         tasks = self.things3.get_due()
         self.assertEqual(1, len(tasks))
+
 
 if __name__ == '__main__':
     unittest.main()
