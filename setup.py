@@ -5,7 +5,7 @@ py2app configuration file.
 from setuptools import setup
 
 VERSION = "2.0.1"
-APP_NAME="KanbanView"
+APP_NAME = "KanbanView"
 APP = ['src/things3_app.py']
 DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.js"]),
@@ -35,7 +35,7 @@ setup(
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
     setup_requires=['py2app'],
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'things-cli = things3_cli:main',
             'things-api = things3_api:main',
