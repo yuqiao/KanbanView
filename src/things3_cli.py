@@ -55,98 +55,101 @@ class Things3CLI():
         """Show warning that method is not yet implemented."""
         print("not implemented yet (see things.sh for a more complete CLI)")
 
+
 def arguments():
-    PARSER = argparse.ArgumentParser(
+    """Create command line argument parser"""
+    parser = argparse.ArgumentParser(
         description='Simple read-only Thing 3 CLI.')
 
-    SUBPARSERS = PARSER.add_subparsers(help='One of the following commands:',
+    subparsers = parser.add_subparsers(help='One of the following commands:',
                                        metavar="command",
                                        required=True,
                                        dest="command")
-    SUBPARSERS.add_parser('inbox',
+    subparsers.add_parser('inbox',
                           help='Shows all inbox tasks')
-    SUBPARSERS.add_parser('today',
+    subparsers.add_parser('today',
                           help='Shows all todays tasks')
-    SUBPARSERS.add_parser('upcoming',
+    subparsers.add_parser('upcoming',
                           help='Shows all upcoming tasks')
-    SUBPARSERS.add_parser('next',
+    subparsers.add_parser('next',
                           help='Shows all next tasks')
-    SUBPARSERS.add_parser('someday',
+    subparsers.add_parser('someday',
                           help='Shows all someday tasks')
-    SUBPARSERS.add_parser('completed',
+    subparsers.add_parser('completed',
                           help='Shows all completed tasks')
-    SUBPARSERS.add_parser('cancelled',
+    subparsers.add_parser('cancelled',
                           help='Shows all cancelled tasks')
-    SUBPARSERS.add_parser('trashed',
+    subparsers.add_parser('trashed',
                           help='Shows all trashed tasks')
-    SUBPARSERS.add_parser('feedback',
+    subparsers.add_parser('feedback',
                           help='Give feedback')
-    SUBPARSERS.add_parser('all',
+    subparsers.add_parser('all',
                           help='Shows all tasks')
-    SUBPARSERS.add_parser('csv',
+    subparsers.add_parser('csv',
                           help='Exports all tasks as CSV')
-    SUBPARSERS.add_parser('due',
+    subparsers.add_parser('due',
                           help='Shows all tasks with due dates')
-    SUBPARSERS.add_parser('headings',
+    subparsers.add_parser('headings',
                           help='Shows all headings')
-    SUBPARSERS.add_parser('hours',
+    subparsers.add_parser('hours',
                           help='Shows how many hours have been planned today')
-    SUBPARSERS.add_parser('ical',
+    subparsers.add_parser('ical',
                           help='Shows all tasks ordered by due date as iCal')
-    SUBPARSERS.add_parser('logbook',
+    subparsers.add_parser('logbook',
                           help='Shows all tasks completed today')
-    SUBPARSERS.add_parser('mostClosed',
+    subparsers.add_parser('mostClosed',
                           help='Shows days on which most tasks were closed')
-    SUBPARSERS.add_parser('mostCancelled',
+    subparsers.add_parser('mostCancelled',
                           help='Shows days on which most tasks were cancelled')
-    SUBPARSERS.add_parser('mostTrashed',
+    subparsers.add_parser('mostTrashed',
                           help='Shows days on which most tasks were trashed')
-    SUBPARSERS.add_parser('mostCreated',
+    subparsers.add_parser('mostCreated',
                           help='Shows days on which most tasks were created')
-    SUBPARSERS.add_parser('mostTasks',
+    subparsers.add_parser('mostTasks',
                           help='Shows projects that have most tasks')
-    SUBPARSERS.add_parser('mostCharacters',
+    subparsers.add_parser('mostCharacters',
                           help='Shows tasks that have most characters')
-    SUBPARSERS.add_parser('nextish',
+    subparsers.add_parser('nextish',
                           help='Shows all nextish tasks')
-    SUBPARSERS.add_parser('old',
+    subparsers.add_parser('old',
                           help='Shows all old tasks')
-    SUBPARSERS.add_parser('projects',
+    subparsers.add_parser('projects',
                           help='Shows all projects')
-    SUBPARSERS.add_parser('repeating',
+    subparsers.add_parser('repeating',
                           help='Shows all repeating tasks')
-    SUBPARSERS.add_parser('schedule',
+    subparsers.add_parser('schedule',
                           help='Schedules an event using a template')
-    SUBPARSERS.add_parser('search',
+    subparsers.add_parser('search',
                           help='Searches for a specific task')
-    SUBPARSERS.add_parser('stat',
+    subparsers.add_parser('stat',
                           help='Provides a number of statistics')
-    SUBPARSERS.add_parser('statcsv',
+    subparsers.add_parser('statcsv',
                           help='Exports some statistics as CSV')
-    SUBPARSERS.add_parser('subtasks',
+    subparsers.add_parser('subtasks',
                           help='Shows all subtasks')
-    SUBPARSERS.add_parser('tag',
+    subparsers.add_parser('tag',
                           help='Shows all tasks with the waiting for tag')
-    SUBPARSERS.add_parser('tags',
+    subparsers.add_parser('tags',
                           help='Shows all tags ordered by their usage')
-    SUBPARSERS.add_parser('waiting',
+    subparsers.add_parser('waiting',
                           help='Shows all tasks with the waiting for tag')
 
-    PARSER.add_argument("-j", "--json",
+    parser.add_argument("-j", "--json",
                         action="store_true", default=False,
                         help="output as JSON", dest="json")
 
-    PARSER.add_argument("-c", "--csv",
+    parser.add_argument("-c", "--csv",
                         action="store_true", default=False,
                         help="output as CSV", dest="csv")
 
-    PARSER.add_argument(
+    parser.add_argument(
         "--version",
         action="version",
         version="%(prog)s (version {version})".format(version=__version__))
 
-    ARGUMENTS = PARSER.parse_args()
-    main(ARGUMENTS)
+    args = parser.parse_args()
+    main(args)
+
 
 def main(args=None):
     """ Main entry point of the app """
@@ -168,6 +171,7 @@ def main(args=None):
                 'https://github.com/AlexanderWillner/KanbanView/issues')
         else:
             Things3CLI.print_unimplemented()
+
 
 if __name__ == "__main__":
     main()
