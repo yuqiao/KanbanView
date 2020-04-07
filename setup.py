@@ -6,16 +6,18 @@ from setuptools import setup
 
 VERSION = "2.0.1"
 APP_NAME = "KanbanView"
-APP = ['src/things3_app.py']
+APP = ['bin/things-app.py']
 DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
               ('resources', ["resources/kanban.html"]),
               ('resources', ["resources/favicon.ico"]),
-              'src/things3.py',
-              'src/things3_api.py',
-              'src/things3_app.py',
-              'src/things3_cli.py']
+              ('things3', ["things3/things3.py"]),
+              ('things3', ["things3/things3_api.py"]),
+              ('things3', ["things3/things3_cli.py"]),
+              ('things3', ["things3/things3_app.py"]),
+              ('things3', ["things3/__init__.py"])
+            ]
 OPTIONS = {
         'argv_emulation': True,
         'plist': {'CFBundleName': APP_NAME,
@@ -37,9 +39,9 @@ setup(
     setup_requires=['py2app'],
     entry_points={
         'console_scripts': [
-            'things-cli = things3_cli:main',
-            'things-api = things3_api:main',
-            'things-kanban = things3_app:main'
+            'things-cli = things3.things3_cli:main',
+            'things-api = things3.things3_api:main',
+            'things-kanban = things3.things3_app:main'
             ]
     }
 )

@@ -28,7 +28,7 @@ $ make
 CLI, API and Web Service for Things3.
 
 Configuration:
- * Static Kanban : src/kanban-static.html
+ * Static Kanban : kanban-static.html
  * Dynamic Kanban: http://localhost:8088/kanban.html
 
 Avaliable environment variables:
@@ -42,6 +42,7 @@ Available commands:
  * open         - Open GUI in static mode.
  * open-server  - Open GUI in server mode.
  * kill-server  - Kill a running server.
+ * cli          - Run code in cli mode (use 'args' for arguments).
  * app          - Create KanbanView App.
  * install      - Install the library and command line tools.
  * test         - Run unit tests and test coverage.
@@ -55,8 +56,6 @@ Available commands:
  * html-lint    - Check HTML file lints (tidy).
  * code-count   - Count code lines (cloc).
  * deps-install - Install dependencies (see requirements.txt).
- * deps-update  - Update dependencies (pur).
- * deps-create  - Create dependencies (pipreqs).
  * feedback     - Create a GitHub issue.
 ```
 
@@ -65,14 +64,14 @@ Available commands:
 The CLI allows you to access the Things3 database via the comand line:
 
 ```bash
-$ ./src/things3_cli.py inbox
+$ things-cli inbox
  -  Inbox Todo  ( None )
 ```
 
 It is also possible to get the information formatted as ```json``` strings:
 
 ```bash
-$ ./src/things3_cli.py --json next | jq
+$ things-cli --json next | jq
 [
   {
     "uuid": "9CD92553-95D7-4CF2-B554-F1DE9F563018",
@@ -105,14 +104,14 @@ $ ./src/things3_cli.py --json next | jq
 ]
 ```
 
-Further, you can export data as ```csv``` via `$ ./src/things3_cli.py --csv all > tasks.csv` and import the file into `Excel` via `File > Import > CSV file > Delimited / UTF-8 > Comma`:
+Further, you can export data as ```csv``` via `$ things-cli --csv all > tasks.csv` and import the file into `Excel` via `File > Import > CSV file > Delimited / UTF-8 > Comma`:
 
 ![Excel](doc/csv.png)
 
 However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh). Overall commands are:
 
 ```bash
-$ ./src/things3_cli.py -h
+$ things-cli -h
 usage: things3_cli.py [-h] [-j] [-c] [--version] command ...
 
 Simple read-only Thing 3 CLI.

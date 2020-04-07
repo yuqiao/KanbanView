@@ -4,7 +4,7 @@
 """Module documentation goes here."""
 
 import unittest
-from src.things3 import Things3
+from things3.things3 import Things3
 
 
 class Things3Case(unittest.TestCase):

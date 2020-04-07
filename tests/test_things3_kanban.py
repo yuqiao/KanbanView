@@ -5,8 +5,8 @@
 
 import unittest
 import io
-import src.things3_kanban
-from src.things3 import Things3
+import things3.things3_kanban as things3_kanban
+from things3.things3 import Things3
 
 
 class Things3KanbanCase(unittest.TestCase):
@@ -16,14 +16,15 @@ class Things3KanbanCase(unittest.TestCase):
 
     class CustomStringIO(io.StringIO):
         """Do not close output for testing."""
+
         def close(self):
             pass
 
     def test_today(self):
         """Test Today."""
         output = self.CustomStringIO()
-        src.things3_kanban.THINGS3 = self.things3
-        src.things3_kanban.main(output)
+        things3_kanban.THINGS3 = self.things3
+        things3_kanban.main(output)
         self.assertIn("Today Todo", output.getvalue())
 
 

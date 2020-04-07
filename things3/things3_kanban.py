@@ -16,7 +16,7 @@ __status__ = "Development"
 
 import codecs
 from os import getcwd
-from things3 import Things3
+from things3.things3 import Things3
 
 # Basic variables
 FILE_HTML = getcwd() + '/kanban-static.html'

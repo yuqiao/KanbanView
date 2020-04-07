@@ -1,7 +1,8 @@
-MAIN=things3_kanban.py
-SERVER=things3_api.py
+MAIN=things3_kanban
+SERVER=things3_api
 SERVER_PORT=8088
-SRC_CORE=src
+CLI=things3_cli
+SRC_CORE=things3
 SRC_TEST=tests
 DEST=kanban-static.html
 DEST_SRV=http://localhost:$(SERVER_PORT)/kanban.html
@@ -28,6 +29,7 @@ help:
 	@echo " * open         - Open GUI in static mode."
 	@echo " * open-server  - Open GUI in server mode."
 	@echo " * kill-server  - Kill a running server."
+	@echo " * cli          - Run code in cli mode (use 'args' for arguments)."
 	@echo " * app          - Create KanbanView App."
 	@echo " * install      - Install the library and command line tools."
 	@echo " * test         - Run unit tests and test coverage."
@@ -41,17 +43,18 @@ help:
 	@echo " * html-lint    - Check HTML file lints (tidy)."
 	@echo " * code-count   - Count code lines (cloc)."
 	@echo " * deps-install - Install dependencies (see requirements.txt)."
-	@echo " * deps-update  - Update dependencies (pur)."
-	@echo " * deps-create  - Create dependencies (pipreqs)."
 	@echo " * feedback     - Create a GitHub issue."
 
+cli:
+	@$(PYTHON) -m $(SRC_CORE).$(CLI) $(args)
+
 run:
-	@$(PYTHON) $(SRC_CORE)/$(MAIN)
+	@$(PYTHON) -m $(SRC_CORE).$(MAIN)
 	@open $(DEST)
 
 run-server:
 	@(sleep 3 ; open "$(DEST_SRV)") &
-	@$(PYTHON) $(SRC_CORE)/$(SERVER)
+	@$(PYTHON) -m $(SRC_CORE).$(SERVER)
 
 kill-server:
 	@lsof -nti:$(SERVER_PORT) | xargs kill
@@ -65,10 +68,11 @@ install:
 
 test:
 	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
-	@coverage run --source . -m $(SRC_TEST).test_things3
-	@coverage run --source . -a -m $(SRC_TEST).test_things3_api
-	@coverage run --source . -a -m $(SRC_TEST).test_things3_cli
-	@coverage run --source . -a -m $(SRC_TEST).test_things3_kanban
+	@coverage erase
+	@coverage run -a -m $(SRC_TEST).test_things3
+	@coverage run -a -m $(SRC_TEST).test_things3_api
+	@coverage run -a -m $(SRC_TEST).test_things3_cli
+	@coverage run -a -m $(SRC_TEST).test_things3_kanban
 	@coverage report
 
 .PHONY: app
@@ -81,7 +85,7 @@ app: clean
 
 .PHONY: doc
 doc:
-	@$(PYDOC) src.things3
+	@$(PYDOC) $(SRC_CORE).things3
 
 .PHONY: open
 open:
@@ -90,7 +94,8 @@ open:
 .PHONY: clean
 clean:
 	@rm -f $(DEST)
-	@rm -f $(SRC_CORE)/*.pyc
+	@find . -name \*.pyc -delete
+	@find . -name __pycache__ -delete
 	@rm -rf build dist *.egg-info
 
 auto-style:

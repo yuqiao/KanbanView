@@ -17,7 +17,7 @@ __status__ = "Development"
 from os import sys, getcwd
 from wsgiref.simple_server import make_server
 import falcon
-from things3 import Things3
+from things3.things3 import Things3
 
 PORT = 8088
 APP = falcon.App()

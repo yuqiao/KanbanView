@@ -5,8 +5,8 @@
 
 import unittest
 from dataclasses import dataclass
-from src.things3_api import ThingsAPI, ThingsGUI
-from src.things3 import Things3
+from things3.things3_api import ThingsAPI, ThingsGUI
+from things3.things3 import Things3
 
 
 class Things3APICase(unittest.TestCase):

@@ -14,12 +14,12 @@ __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
 
+import sys
 import argparse
 import json
 import csv
-import sys
 import webbrowser
-from things3 import Things3
+from things3.things3 import Things3
 
 
 class Things3CLI():
@@ -61,7 +61,7 @@ def get_parser():
     parser = argparse.ArgumentParser(
         description='Simple read-only Thing 3 CLI.')
 
-    subparsers = parser.add_subparsers(help='One of the following commands:',
+    subparsers = parser.add_subparsers(help='',
                                        metavar="command",
                                        required=True,
                                        dest="command")

@@ -20,7 +20,7 @@ from os import system
 from threading import Thread
 from time import sleep
 import webbrowser
-import things3_api
+import things3.things3_api
 
 
 FILE = "kanban.html"
@@ -29,16 +29,18 @@ FILE = "kanban.html"
 def open_browser():
     """Delay opening the browser."""
     sleep(2)
-    webbrowser.open('http://localhost:%s/%s' % (things3_api.PORT, FILE))
+    webbrowser.open('http://localhost:%s/%s' %
+                    (things3.things3_api.PORT, FILE))
 
 
 def main():
     """Run the app."""
     # kill possible zombie processes; can't use psutil in py2app context
-    system('lsof -nti:' + str(things3_api.PORT) + ' | xargs kill -9 ; sleep 1')
+    system('lsof -nti:' + str(things3.things3_api.PORT) +
+           ' | xargs kill -9 ; sleep 1')
 
     try:
-        httpd = things3_api.setup()
+        httpd = things3.things3_api.setup()
         Thread(target=open_browser).start()
         httpd.serve_forever()
     except KeyboardInterrupt:

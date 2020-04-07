@@ -6,8 +6,8 @@
 import unittest
 import io
 import sys
-import src.things3_cli
-from src.things3 import Things3
+import things3.things3_cli as things3_cli
+from things3.things3 import Things3
 
 
 class Things3CLICase(unittest.TestCase):
@@ -17,12 +17,12 @@ class Things3CLICase(unittest.TestCase):
 
     def test_today(self):
         """Test Today."""
-        args = src.things3_cli.get_parser().parse_args(['today'])
+        args = things3_cli.get_parser().parse_args(['today'])
         new_out = io.StringIO()
         old_out = sys.stdout
         try:
             sys.stdout = new_out
-            src.things3_cli.main(args, self.things3)
+            things3_cli.main(args, self.things3)
         finally:
             sys.stdout = old_out
         self.assertIn("Today Todo", new_out.getvalue())
