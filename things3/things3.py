@@ -24,7 +24,6 @@ class Things3():
     """Simple read-only API for Things 3."""
     # Variables
     database = None
-    cursor = None
     json = False
     tag_waiting = "Waiting" if not environ.get('TAG_WAITING') \
         else environ.get('TAG_WAITING')
@@ -80,7 +79,6 @@ class Things3():
         self.database = expanduser(database)
         self.tag_mit = tag_mit
         self.tag_waiting = tag_waiting
-        self.cursor = sqlite3.connect(self.database).cursor()
         self.json = json
 
     @staticmethod
@@ -236,8 +234,9 @@ class Things3():
                 TMTag TAG ON TAGS.tags = TAG.uuid
             WHERE """ + sql
 
-        self.cursor.execute(sql)
-        tasks = self.cursor.fetchall()
+        cursor = sqlite3.connect(self.database).cursor()
+        cursor.execute(sql)
+        tasks = cursor.fetchall()
         tasks = self.anonymize_tasks(tasks)
 
         return tasks
