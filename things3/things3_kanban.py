@@ -8,8 +8,8 @@ from __future__ import print_function
 __author__ = "Luc Beaulieu and Alexander Willner"
 __copyright__ = "Copyright 2018 Luc Beaulieu / 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
-__license__ = "unknown"
-__version__ = "2.0.0"
+__license__ = "Apache License 2.0"
+__version__ = "2.0.1"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
