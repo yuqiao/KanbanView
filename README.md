@@ -77,7 +77,7 @@ $ things-cli --json next | jq
     "uuid": "9CD92553-95D7-4CF2-B554-F1DE9F563018",
     "title": "Due Todo",
     "context": "Next Project",
-    "context_uuid": "DED787E0-874A-4783-8F0F-0A02F87F8419",
+   "context_uuid": "DED787E0-874A-4783-8F0F-0A02F87F8419",
     "due": "2152-08-28"
   },
   {

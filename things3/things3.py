@@ -30,9 +30,7 @@ class Things3():
         else environ.get('TAG_WAITING')
     tag_mit = "MIT" if not environ.get('TAG_MIT') \
         else environ.get('TAG_MIT')
-
-    # Basic config
-    ANONYMIZE = bool(environ.get('ANONYMIZE'))
+    anonymize = bool(environ.get('ANONYMIZE'))
 
     # Database info
     FILE_SQLITE = '~/Library/Containers/'\
@@ -84,7 +82,7 @@ class Things3():
         self.json = json
 
     @staticmethod
-    def anonymize(string):
+    def anonymize_string(string):
         """Scramble text."""
         string = list(string)
         shuffle(string)
@@ -94,13 +92,13 @@ class Things3():
     def anonymize_tasks(self, tasks):
         """Scramble output for screenshots."""
         result = tasks
-        if self.ANONYMIZE:
+        if self.anonymize:
             result = []
             for task in tasks:
                 task = list(task)
-                task[self.I_TITLE] = self.anonymize(str(task[self.I_TITLE]))
+                task[self.I_TITLE] = self.anonymize_string(str(task[self.I_TITLE]))
                 task[self.I_CONTEXT] = \
-                    self.anonymize(str(task[self.I_CONTEXT]))
+                    self.anonymize_string(str(task[self.I_CONTEXT]))
                 result.append(task)
         return result
 

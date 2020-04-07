@@ -76,7 +76,7 @@ class Things3Case(unittest.TestCase):
         """Test anonymized tasks."""
         tasks = self.things3.get_today()
         self.assertIn("Today Todo", tasks.pop())
-        self.things3.ANONYMIZE = True
+        self.things3.anonymize = True
         tasks = self.things3.get_today()
         self.assertNotIn("Today Todo", tasks.pop())
 
