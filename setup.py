@@ -6,7 +6,7 @@ from setuptools import setup
 
 VERSION = "2.0.1"
 APP_NAME = "KanbanView"
-APP = ['bin/things-app.py']
+APP = ['bin/things-app']
 DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
