@@ -228,6 +228,9 @@ The Kanban Application allows you to visualize the Things3 database following th
 
 The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```: `make run`.
 
-The **dynamic** version runs a web application at [http://localhost:8088/kanban.html](http://localhost:8088/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`.
+The **dynamic** version runs a web application at [http://localhost:8088/kanban.html](http://localhost:8088/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`. With this, you can also access the data on a Windows machine:
 
-The **KanbanView.app** version encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder: `xattr -rd com.apple.quarantine /Applications/KanbanView.app`
+![view2020](doc/view-2020-ie.png)
+
+The **KanbanView.app** version (see first screenshot on the page) encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder: `xattr -rd com.apple.quarantine /Applications/KanbanView.app`
+
