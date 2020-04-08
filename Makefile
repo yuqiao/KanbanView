@@ -1,4 +1,5 @@
 MAIN=things3_kanban
+APP=things3_app
 SERVER=things3_api
 SERVER_PORT=8088
 CLI=things3_cli
@@ -25,10 +26,11 @@ help:
 	@echo ""
 	@echo "Available commands:"
 	@echo " * run          - Run code in static mode."
-	@echo " * run-server   - Run code in server mode."
 	@echo " * open         - Open GUI in static mode."
-	@echo " * open-server  - Open GUI in server mode."
-	@echo " * kill-server  - Kill a running server."
+	@echo " * run-api      - Run code in api mode."	
+	@echo " * open-api     - Open GUI in api mode in the browser."
+	@echo " * kill-api     - Kill code in api mode."
+	@echo " * run-app      - Run code in app mode."
 	@echo " * cli          - Run code in cli mode (use 'args' for arguments)."
 	@echo " * app          - Create KanbanView App."
 	@echo " * install      - Install the library and command line tools."
@@ -45,22 +47,27 @@ help:
 	@echo " * deps-install - Install dependencies (see requirements.txt)."
 	@echo " * feedback     - Create a GitHub issue."
 
-cli:
-	@$(PYTHON) -m $(SRC_CORE).$(CLI) $(args)
-
 run:
 	@$(PYTHON) -m $(SRC_CORE).$(MAIN)
+	@echo "File created: $(DEST)"
+
+open:
 	@open $(DEST)
 
-run-server:
-	@(sleep 1 ; open "$(DEST_SRV)") &
+run-api:
 	@$(PYTHON) -m $(SRC_CORE).$(SERVER)
 
-kill-server:
+open-api:
+	@open $(DEST_SRV)
+
+kill-api:
 	@lsof -nti:$(SERVER_PORT) | xargs kill
 
-open-server:
-	@open $(DEST_SRV)
+run-app:
+	@$(PYTHON) -m $(SRC_CORE).$(APP)
+
+cli:
+	@$(PYTHON) -m $(SRC_CORE).$(CLI) $(args)
 
 install:
 	@python3 setup.py install
@@ -77,7 +84,7 @@ test:
 
 .PHONY: app
 app: clean
-	@$(PYTHON) setup.py py2app -s --iconfile 'resources/icon.icns'
+	@$(PYTHON) setup.py py2app -A -s
 	@hdiutil create dist/tmp.dmg -ov -volname "KanbanView" -fs HFS+ -srcfolder "dist"
 	@hdiutil convert dist/tmp.dmg -format UDZO -o dist/KanbanView.dmg
 	@rm dist/tmp.dmg
@@ -86,10 +93,6 @@ app: clean
 .PHONY: doc
 doc:
 	@$(PYDOC) $(SRC_CORE).things3
-
-.PHONY: open
-open:
-	@open $(DEST)
 
 .PHONY: clean
 clean:

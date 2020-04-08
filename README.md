@@ -46,14 +46,15 @@ Configuration:
 Avaliable environment variables:
  * THINGSDB    - Path to database
  * TAG_WAITING - Tag for tasks you are waiting for
- * TAG_MIT     - Tag for most important tasks
+ * TAG_MIT     - Tag for most important tassk
 
 Available commands:
  * run          - Run code in static mode.
- * run-server   - Run code in server mode.
  * open         - Open GUI in static mode.
- * open-server  - Open GUI in server mode.
- * kill-server  - Kill a running server.
+ * run-api      - Run code in api mode.
+ * open-api     - Open GUI in api mode in the browser.
+ * kill-api     - Kill code in api mode.
+ * run-app      - Run code in app mode.
  * cli          - Run code in cli mode (use 'args' for arguments).
  * app          - Create KanbanView App.
  * install      - Install the library and command line tools.

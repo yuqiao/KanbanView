@@ -19,10 +19,10 @@ function get_rows(rows) {
         var context = row.context;
 
         if (row.uuid !== null) {
-            task = `<a href='things:///show?id=${row.uuid}'>${row.title}</a>`;
+            task = `<a href='things:///show?id=${row.uuid}' target='_blank'>${row.title}</a>`;
         }
         if (row.context_uuid !== null) {
-            context = `<a href='things:///show?id=${row.context_uuid}'>` +
+            context = `<a href='things:///show?id=${row.context_uuid}' target='_blank'>` +
             `${row.context}</a>`;
         }
         if (row.context !== null) {

@@ -17,13 +17,13 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('things3', ["things3/things3_cli.py"]),
               ('things3', ["things3/things3_app.py"]),
               ('things3', ["things3/__init__.py"])
-            ]
+             ]
 OPTIONS = {
         'argv_emulation': True,
+        'iconfile':'resources/icon.icns',
         'plist': {'CFBundleName': APP_NAME,
                   'CFBundleDisplayName': APP_NAME,
                   'CFBundleGetInfoString': APP_NAME,
-                  'LSBackgroundOnly': True,
                   'CFBundleIdentifier': "ws.willner.kanbanview",
                   'CFBundleVersion': VERSION,
                   'CFBundleShortVersionString': VERSION,
