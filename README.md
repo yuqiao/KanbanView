@@ -12,6 +12,17 @@ This repository contains a simple read-only CLI, API and Web Service for [Things
 
 ![view2020](doc/view-2020.png)
 
+## ToC
+
+- [CLI, API, Web Service and Kanban for Things 3](#cli-api-web-service-and-kanban-for-things-3)
+  - [ToC](#toc)
+  - [Installation](#installation)
+  - [Commands](#commands)
+  - [Command Line Interface (CLI)](#command-line-interface-cli)
+  - [Application Programming Interface  (API)](#application-programming-interface-api)
+  - [Web Service](#web-service)
+  - [Kanban Application](#kanban-application)
+
 ## Installation
 
 You've different options:
