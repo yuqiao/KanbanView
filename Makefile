@@ -70,7 +70,7 @@ cli:
 	@$(PYTHON) -m $(SRC_CORE).$(CLI) $(args)
 
 install:
-	@python3 setup.py install
+	@$(PYTHON) setup.py install
 	@echo "You can now use 'things-cli', 'things-api' and 'things-kanban'"
 
 test:
@@ -84,7 +84,7 @@ test:
 
 .PHONY: app
 app: clean
-	@$(PYTHON) setup.py py2app -A -s
+	@$(PYTHON) setup.py py2app -s
 	@hdiutil create dist/tmp.dmg -ov -volname "KanbanView" -fs HFS+ -srcfolder "dist"
 	@hdiutil convert dist/tmp.dmg -format UDZO -o dist/KanbanView.dmg
 	@rm dist/tmp.dmg
