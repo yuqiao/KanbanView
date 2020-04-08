@@ -39,7 +39,7 @@ help:
 	@echo " * clean        - Cleanup (e.g. pyc files)."
 	@echo " * auto-style   - Automatially style code (autopep8)."
 	@echo " * code-style   - Check code style (pycodestyle)."
-	@echo " * code-lint    - Check code lints (pyflakes, pyline, flake8)."
+	@echo " * code-lint    - Check code lints (mypy, pylint, flake8)."
 	@echo " * css-lint     - Check CSS styke lints (csslint)."
 	@echo " * js-lint      - Check JS code lints (jslint)."
 	@echo " * html-lint    - Check HTML file lints (tidy)."
