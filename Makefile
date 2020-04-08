@@ -117,8 +117,7 @@ code-lint:
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
 	@type mypy >/dev/null 2>&1 || (echo "Run '$(PIP) install mypy' first." >&2 ; exit 1)
 	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST)
-	@echo "Mypy:" ; mypy $(SRC_CORE)
-	@echo "Mypy:" ; mypy $(SRC_TEST)
+	@echo "Mypy:" ; mypy $(SRC_CORE) $(SRC_TEST)
 	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py
 
 css-lint:
@@ -143,3 +142,9 @@ deps-install:
 
 feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
+
+pre-commit:
+	@make kill-api run-api &
+	@make clean test auto-style lint run args="today" cli open-api app kill-api
+	@open dist/KanbanView.app
+	@git status
