@@ -33,7 +33,7 @@ class Things3():
 
     # Database info
     FILE_SQLITE = '~/Library/Containers/'\
-                  'com.culturedcode.ThingsMac.beta/Data/Library/'\
+                  'com.culturedcode.ThingsMac/Data/Library/'\
                   'Application Support/Cultured Code/Things/Things.sqlite3'\
         if not environ.get('THINGSDB') else environ.get('THINGSDB')
     TASKTABLE = "TMTask"
