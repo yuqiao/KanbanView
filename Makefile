@@ -149,7 +149,9 @@ feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
 
 pre-commit:
-	@make kill-api run-api &
-	@make deps-install clean test install uninstall auto-style lint run args="today" cli open-api app kill-api
+	@make kill-api
+	@make deps-install clean test install uninstall auto-style
+	@make run-api &
+	@make lint run args="today" cli open-api app kill-api
 	@open dist/KanbanView.app
 	@git status
