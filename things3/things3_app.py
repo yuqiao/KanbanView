@@ -18,17 +18,19 @@ __status__ = "Development"
 import sys
 from os import system
 from threading import Thread
-import webbrowser
+import webview  # type: ignore
+import objc  # type: ignore # pylint: disable=unused-import # noqa F401
+import pkg_resources.py2_warn  # type: ignore # pylint: disable=unused-import # noqa F401
 import things3.things3_api as things3_api
 
 
-FILE = "kanban.html"
-
-
-def open_browser():
+def open_api():
     """Delay opening the browser."""
-    webbrowser.open('http://localhost:%s/%s' %
-                    (things3_api.PORT, FILE))
+    things3_api.APP.run(port=things3_api.PORT)
+
+
+FILE = "kanban.html"
+THREAD = Thread(target=open_api)
 
 
 def main():
@@ -37,11 +39,19 @@ def main():
     system('lsof -nti:' + str(things3_api.PORT) +
            ' | xargs kill -9')
 
+    webview.create_window(
+        title='KanbanView for Things 3',
+        url=f'http://localhost:{things3_api.PORT}/{FILE}',
+        width=1024,
+        min_size=(1024, 600),
+        frameless=True)
+
     try:
-        Thread(target=open_browser).start()
-        things3_api.APP.run(port=things3_api.PORT)
+        THREAD.start()
+        webview.start()
     except KeyboardInterrupt:
         print("Shutting down...")
+        THREAD.join()
         sys.exit(0)
 
 
