@@ -155,3 +155,7 @@ pre-commit:
 	@make lint run args="today" cli open-api app kill-api
 	@open dist/KanbanView.app
 	@git status
+
+upload: clean
+	@python3 setup.py sdist bdist_wheel
+	@python3 -m twine upload --repository-url https://upload.pypi.org/legacy/ dist/things3*

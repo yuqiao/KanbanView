@@ -10,25 +10,14 @@
 
 This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate.
 
-![view2020](doc/view-2020.png)
-
-## ToC
-
-- [CLI, API, Web Service and Kanban for Things 3](#cli-api-web-service-and-kanban-for-things-3)
-  - [ToC](#toc)
-  - [Installation](#installation)
-  - [Commands](#commands)
-  - [Command Line Interface (CLI)](#command-line-interface-cli)
-  - [Application Programming Interface  (API)](#application-programming-interface-api)
-  - [Web Service](#web-service)
-  - [Kanban Application](#kanban-application)
+![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020.png)
 
 ## Installation
 
 You've different options:
 
 1. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
-2. Download the command line tools: `pip3 install git+git://github.com/alexanderwillner/kanbanview.git#egg=KanbanView-2.1-py3.7`
+2. Install the library and command line tools: `pip3 install things3-api`
 3. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
 ## Commands
@@ -120,7 +109,7 @@ $ things-cli --json next | jq
 
 Further, you can export data as ```csv``` via `$ things-cli --csv all > tasks.csv` and import the file into `Excel` via `File > Import > CSV file > Delimited / UTF-8 > Comma`:
 
-![Excel](doc/csv.png)
+![Excel](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/csv.png)
 
 However, the CLI is only in a beginning state. The original ```bash``` based version can be found at [another GitHub repo](http://github.com/alexanderwillner/things.sh). Overall commands are:
 
@@ -231,7 +220,7 @@ The **static** version creates a snapshot of the current status and writes an HT
 
 The **dynamic** version runs a web application at [http://localhost:8088/kanban.html](http://localhost:8088/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`. With this, you can also access the data on a Windows machine:
 
-![view2020](doc/view-2020-ie.png)
+![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-ie.png)
 
 The **KanbanView.app** version (see first screenshot on the page) encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder: `xattr -rd com.apple.quarantine /Applications/KanbanView.app`
 
