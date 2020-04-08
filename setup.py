@@ -4,7 +4,7 @@ py2app configuration file.
 
 from setuptools import setup
 
-VERSION = "2.0.1"
+VERSION = "2.1"
 APP_NAME = "KanbanView"
 APP = ['bin/things-app']
 DATA_FILES = [('resources', ["resources/logo.png"]),
