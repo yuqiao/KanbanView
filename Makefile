@@ -100,6 +100,7 @@ clean:
 	@find . -name \*.pyc -delete
 	@find . -name __pycache__ -delete
 	@rm -rf build dist *.egg-info
+	@rm -rf .mypy_cache/
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
