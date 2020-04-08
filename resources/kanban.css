@@ -30,8 +30,11 @@ html, body{
   height: 100%;
   overflow: auto;
   overflow-x: hidden;
-  -ms-overflow-style: none;
   padding: 0;
+}
+
+.column {
+  -ms-overflow-style: none;
 }
 
 .column::-webkit-scrollbar {
