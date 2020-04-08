@@ -53,7 +53,7 @@ run:
 	@open $(DEST)
 
 run-server:
-	@(sleep 3 ; open "$(DEST_SRV)") &
+	@(sleep 1 ; open "$(DEST_SRV)") &
 	@$(PYTHON) -m $(SRC_CORE).$(SERVER)
 
 kill-server:

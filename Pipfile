@@ -13,7 +13,7 @@ pyflakes = "*"
 pylint = "*"
 flake8 = "*"
 python-coveralls = "*"
-falcon = "*"
+Flask = "*"
 
 [requires]
 python_version = "*"

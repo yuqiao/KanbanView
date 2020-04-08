@@ -94,7 +94,8 @@ class Things3():
             result = []
             for task in tasks:
                 task = list(task)
-                task[self.I_TITLE] = self.anonymize_string(str(task[self.I_TITLE]))
+                task[self.I_TITLE] = \
+                    self.anonymize_string(str(task[self.I_TITLE]))
                 task[self.I_CONTEXT] = \
                     self.anonymize_string(str(task[self.I_CONTEXT]))
                 result.append(task)

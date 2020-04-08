@@ -23,6 +23,7 @@ OPTIONS = {
         'plist': {'CFBundleName': APP_NAME,
                   'CFBundleDisplayName': APP_NAME,
                   'CFBundleGetInfoString': APP_NAME,
+                  'LSBackgroundOnly': True,
                   'CFBundleIdentifier': "ws.willner.kanbanview",
                   'CFBundleVersion': VERSION,
                   'CFBundleShortVersionString': VERSION,

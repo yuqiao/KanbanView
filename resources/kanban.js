@@ -84,22 +84,14 @@ var makeRequest = function (url, method) {
     });
 };
 
-function refresh() {
-    // fix promises to make sure the order is correct
-    makeRequest("api/backlog").then(function (data) {
-        add("color1", "Backlog", data);})
-    .then(makeRequest("api/upcoming").then(function (data) {
-        add("color5", "Upcoming", data);}))
-    .then(makeRequest("api/waiting").then(function (data) {
-        add("color3", "Waiting", data);}))
-    .then(makeRequest("api/inbox").then(function (data) {
-        add("color4", "Inbox", data);}))
-    .then(makeRequest("api/mit").then(function (data) {
-        add("color2", "MIT", data);}))
-    .then(makeRequest("api/today").then(function (data) {
-        add("color6", "Today", data);}))
-    .then(makeRequest("api/next").then(function (data) {
-        add("color7", "Next", data);}));
+async function refresh() {
+    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data);})
+    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data);})
+    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data);})
+    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data);})
+    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data);})
+    await makeRequest("api/today").then(function (data) {add("color6", "Today", data);})
+    await makeRequest("api/next").then(function (data) {add("color7", "Next", data);})
 }
 
 window.onfocus = refresh;
