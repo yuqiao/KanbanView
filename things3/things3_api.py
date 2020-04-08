@@ -14,7 +14,8 @@ __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
 
-from os import sys, getcwd
+import sys
+from os import getcwd
 import json
 from flask import Flask
 from flask import Response
