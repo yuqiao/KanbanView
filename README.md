@@ -58,6 +58,7 @@ Available commands:
  * cli          - Run code in cli mode (use 'args' for arguments).
  * app          - Create KanbanView App.
  * install      - Install the library and command line tools.
+ * uninstall    - Remove the library and command line tools.
  * test         - Run unit tests and test coverage.
  * doc          - Document code (pydoc).
  * clean        - Cleanup (e.g. pyc files).

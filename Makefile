@@ -34,6 +34,7 @@ help:
 	@echo " * cli          - Run code in cli mode (use 'args' for arguments)."
 	@echo " * app          - Create KanbanView App."
 	@echo " * install      - Install the library and command line tools."
+	@echo " * uninstall    - Remove the library and command line tools."
 	@echo " * test         - Run unit tests and test coverage."
 	@echo " * doc          - Document code (pydoc)."
 	@echo " * clean        - Cleanup (e.g. pyc files)."
@@ -72,6 +73,10 @@ cli:
 install:
 	@$(PYTHON) setup.py install
 	@echo "You can now use 'things-cli', 'things-api' and 'things-kanban'"
+
+uninstall:
+	@$(PIP) uninstall -y KanbanView
+
 
 test:
 	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
@@ -145,6 +150,6 @@ feedback:
 
 pre-commit:
 	@make kill-api run-api &
-	@make clean test auto-style lint run args="today" cli open-api app kill-api
+	@make deps-install clean test install uninstall auto-style lint run args="today" cli open-api app kill-api
 	@open dist/KanbanView.app
 	@git status
