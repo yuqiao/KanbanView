@@ -27,11 +27,17 @@ html, body{
   display: flex;
   flex: 1;
   flex-direction: column;
-  height:100%;
-  overflow:auto;
-  overflow-x:hidden;
-  padding:0;
+  height: 100%;
+  overflow: auto;
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+  padding: 0;
 }
+
+.column::-webkit-scrollbar {
+  display: none;
+}
+
 
 .column:nth-child(even) {background: #eee}
 .column:nth-child(odd) {background: #ddd}
