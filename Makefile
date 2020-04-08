@@ -112,11 +112,12 @@ code-style:
 	@pycodestyle --max-line-length=80 $(SRC_CORE) $(SRC_TEST)
 
 code-lint:
-	@type pyflakes >/dev/null 2>&1 || (echo "Run '$(PIP) install pyflakes' first." >&2 ; exit 1)
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
-	@echo "PyFlakes:" ; pyflakes $(SRC_CORE) $(SRC_TEST)
+	@type mypy >/dev/null 2>&1 || (echo "Run '$(PIP) install mypy' first." >&2 ; exit 1)
 	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST)
+	@echo "Mypy:" ; mypy $(SRC_CORE)
+	@echo "Mypy:" ; mypy $(SRC_TEST)
 	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py
 
 css-lint:
