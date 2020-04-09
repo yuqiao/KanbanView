@@ -15,12 +15,7 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
               ('resources', ["resources/kanban.html"]),
-              ('resources', ["resources/favicon.ico"]),
-              ('things3', ["things3/things3.py"]),
-              ('things3', ["things3/things3_api.py"]),
-              ('things3', ["things3/things3_cli.py"]),
-              ('things3', ["things3/things3_app.py"]),
-              ('things3', ["things3/__init__.py"])
+              ('resources', ["resources/favicon.ico"])
              ]
 OPTIONS = {
         'argv_emulation': True,
