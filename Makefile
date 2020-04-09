@@ -89,7 +89,7 @@ test:
 
 .PHONY: app
 app: clean
-	@$(PYTHON) setup.py py2app -s
+	@$(PYTHON) setup.py py2app
 	@hdiutil create dist/tmp.dmg -ov -volname "KanbanView" -fs HFS+ -srcfolder "dist"
 	@hdiutil convert dist/tmp.dmg -format UDZO -o dist/KanbanView.dmg
 	@rm dist/tmp.dmg
