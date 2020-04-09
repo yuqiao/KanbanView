@@ -20,6 +20,10 @@ You've different options:
 2. Install the library and command line tools: `pip3 install things3-api`
 3. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
+## Application
+
+The **KanbanView.app** version (see screenshot above) encapsulates the scripts into an easy to use standalone macOS bundle. Note: when you've downloaded the file, as the App is not digitally signed, you need to `right click` on the icon and then select `Open` to start KanbanView for the first time.
+
 ## Commands
 
 After downloading the command line tools or downloading the sources and executing `make install`, you've the tools `things-cli`, `things-api` and `things-kanban` in your path. Other available `make` commands are listed by executing `make`:
@@ -222,4 +226,3 @@ The **dynamic** version runs a web application at [http://localhost:8088/kanban.
 
 ![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-ie.png)
 
-The **KanbanView.app** version (see first screenshot on the page) encapsulates the **dynamic** version in a macOS bundle. Note: when you download the file, as the App is not digitally signed, you need to `right click` on the icon and then select `Open` to start KanbanView.
