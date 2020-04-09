@@ -222,5 +222,4 @@ The **dynamic** version runs a web application at [http://localhost:8088/kanban.
 
 ![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-ie.png)
 
-The **KanbanView.app** version (see first screenshot on the page) encapsulates the **dynamic** version in a macOS bundle (alpha). Note: when you download the pre-compiled binary, as the App is not digitally signed, you need to execute the following command once, after you've copied the bundle to the Applications folder: `xattr -rd com.apple.quarantine /Applications/KanbanView.app`
-
+The **KanbanView.app** version (see first screenshot on the page) encapsulates the **dynamic** version in a macOS bundle. Note: when you download the file, as the App is not digitally signed, you need to `right click` on the icon and then select `Open` to start KanbanView.
