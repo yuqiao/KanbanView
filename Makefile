@@ -109,7 +109,7 @@ clean:
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
-	@autopep8 -i -r $(SRC_CORE) $(SRC_TEST)
+	@autopep8 -i -r $(SRC_CORE) $(SRC_TEST) setup.py
 
 lint: code-style code-lint css-lint js-lint html-lint
 
@@ -121,9 +121,9 @@ code-lint:
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
 	@type mypy >/dev/null 2>&1 || (echo "Run '$(PIP) install mypy' first." >&2 ; exit 1)
-	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST)
-	@echo "Mypy:" ; mypy $(SRC_CORE) $(SRC_TEST)
-	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py
+	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST) setup.py
+	@echo "Mypy:" ; mypy $(SRC_CORE) $(SRC_TEST) setup.py
+	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py setup.py
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
