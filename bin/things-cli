@@ -3,4 +3,4 @@
 import things3.things3_cli
 
 if __name__ == '__main__':
-    things3.things3_cli.main()
+    things3.things3_cli.Things3CLI().main()

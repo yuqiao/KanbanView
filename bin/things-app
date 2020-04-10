@@ -3,4 +3,4 @@
 import things3.things3_app
 
 if __name__ == '__main__':
-    things3.things3_app.main()
+    things3.things3_app.Things3App().main()

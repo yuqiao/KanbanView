@@ -15,6 +15,7 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import sqlite3
+import sys
 from random import shuffle
 from os import environ
 import getpass
@@ -75,7 +76,7 @@ class Things3():
                  tag_waiting='Waiting',
                  tag_mit='MIT',
                  json=False):
-        self.database = database
+        self.database = database if database is not None else self.FILE_SQLITE
         self.tag_mit = tag_mit
         self.tag_waiting = tag_waiting
         self.json = json
@@ -128,7 +129,7 @@ class Things3():
             " AND (TASK.startDate NOT NULL " + \
             "      OR TASK.recurrenceRule NOT NULL)" + \
             " AND (TAGS.tags NOT IN (SELECT uuid FROM " + self.TAGTABLE + \
-            " WHERE title='" + self.tag_waiting + "') OR TAGS.tags IS NULL)" + \
+            " WHERE title='" + self.tag_waiting + "') OR TAGS.tags IS NULL)" +\
             " ORDER BY TASK.startdate, TASK.todayIndex"
         return self.get_rows(query)
 
@@ -148,13 +149,18 @@ class Things3():
             f" AND ( " + \
             f" TASK.area NOT NULL " + \
             f" OR " + \
-            f" TASK.project in (SELECT uuid FROM TMTask WHERE uuid=TASK.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
+            f" TASK.project in " + \
+            f"  (SELECT uuid FROM TMTask WHERE uuid=TASK.project " + \
+            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
             f" OR " + \
             f" TASK.actionGroup in " + \
-            f" (SELECT uuid FROM {self.TASKTABLE} heading WHERE uuid=TASK.actionGroup " + \
+            f" (SELECT uuid FROM {self.TASKTABLE} heading " + \
+            f"  WHERE uuid=TASK.actionGroup " + \
             f" AND {self.ISSTARTED} " + \
             f" AND {self.ISNOTTRASHED} " + \
-            f" AND heading.project in (SELECT uuid FROM TMTask WHERE uuid=heading.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
+            f" AND heading.project in " + \
+            f"  (SELECT uuid FROM TMTask WHERE uuid=heading.project " + \
+            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
             f" ))" + \
             " ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
@@ -165,13 +171,18 @@ class Things3():
             f" AND ( " + \
             f" TASK.area NOT NULL " + \
             f" OR " + \
-            f" TASK.project in (SELECT uuid FROM TMTask WHERE uuid=TASK.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
+            f" TASK.project in " + \
+            f"  (SELECT uuid FROM TMTask WHERE uuid=TASK.project " + \
+            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
             f" OR " + \
             f" TASK.actionGroup in " + \
-            f" (SELECT uuid FROM {self.TASKTABLE} heading WHERE uuid=TASK.actionGroup " + \
+            f" (SELECT uuid FROM {self.TASKTABLE} heading " + \
+            f"  WHERE uuid=TASK.actionGroup " + \
             f" AND {self.ISSTARTED} " + \
             f" AND {self.ISNOTTRASHED} " + \
-            f" AND heading.project in (SELECT uuid FROM TMTask WHERE uuid=heading.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
+            f" AND heading.project in " + \
+            f"  (SELECT uuid FROM TMTask WHERE uuid=heading.project " + \
+            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
             f" ))" + \
             " ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
@@ -252,12 +263,16 @@ class Things3():
                 TMTag TAG ON TAGS.tags = TAG.uuid
             WHERE """ + sql
 
-        cursor = sqlite3.connect(self.database).cursor()
-        cursor.execute(sql)
-        tasks = cursor.fetchall()
-        tasks = self.anonymize_tasks(tasks)
-
-        return tasks
+        try:
+            cursor = sqlite3.connect(self.database).cursor()
+            cursor.execute(sql)
+            tasks = cursor.fetchall()
+            tasks = self.anonymize_tasks(tasks)
+            return tasks
+        except sqlite3.OperationalError as error:
+            print(f"Could not query the database at: {self.database}.")
+            print(f"Details: {error}.")
+            sys.exit(2)
 
     def convert_task_to_model(self, task):
         """Convert task to model."""

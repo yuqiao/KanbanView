@@ -5,8 +5,8 @@
 
 from __future__ import print_function
 
-__author__ = "Luc Beaulieu and Alexander Willner"
-__copyright__ = "Copyright 2018 Luc Beaulieu / 2020 Alexander Willner"
+__author__ = "Alexander Willner"
+__copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
 __version__ = "2.1.2"
@@ -90,7 +90,7 @@ def write_html_footer(file):
             </div>
           </article>
         <footer class="footer"><br />
-        Copyright &copy;2018 Luc Beaulieu / 2020 Alexander Willner
+        Copyright &copy;2020 Alexander Willner
         </footer></body></html>"""
     file.write(message)
 

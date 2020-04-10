@@ -6,8 +6,8 @@
 from __future__ import print_function
 
 # pylint: disable=duplicate-code
-__author__ = "Luc Beaulieu and Alexander Willner"
-__copyright__ = "Copyright 2018 Luc Beaulieu / 2020 Alexander Willner"
+__author__ = "Alexander Willner"
+__copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
 __version__ = "2.1.2"
@@ -24,36 +24,44 @@ import pkg_resources.py2_warn  # type: ignore # pylint: disable=unused-import # 
 import things3.things3_api as things3_api
 
 
-def open_api():
-    """Delay opening the browser."""
-    things3_api.APP.run(port=things3_api.PORT)
+class Things3App():
+    """App wrapper for simple read-only API for Things 3."""
 
+    database = None
+    FILE = "kanban.html"
 
-FILE = "kanban.html"
-THREAD = Thread(target=open_api)
+    def open_api(self):
+        """Delay opening the browser."""
+        print(f"Using database 2: {self.database}")
+        things3_api.Things3API(database=self.database).main()
 
+    def __init__(self, database=None):
+        self.database = database
 
-def main():
-    """Run the app."""
-    # kill possible zombie processes; can't use psutil in py2app context
-    system('lsof -nti:' + str(things3_api.PORT) +
-           ' | xargs kill -9')
+    def main(self):
+        """Run the app."""
+        # kill possible zombie processes; can't use psutil in py2app context
+        system('lsof -nti:' + str(things3_api.Things3API.PORT) +
+               ' | xargs kill -9')
 
-    webview.create_window(
-        title='KanbanView for Things 3',
-        url=f'http://localhost:{things3_api.PORT}/{FILE}',
-        width=1024,
-        min_size=(1024, 600),
-        frameless=True)
+        print(f"Using database 1: {self.database}")
 
-    try:
-        THREAD.start()
-        webview.start()
-    except KeyboardInterrupt:
-        print("Shutting down...")
-        THREAD.join()
-        sys.exit(0)
+        webview.create_window(
+            title='KanbanView for Things 3',
+            url=f'http://localhost:{things3_api.Things3API.PORT}/{self.FILE}',
+            width=1024,
+            min_size=(1024, 600),
+            frameless=True)
+
+        thread = Thread(target=self.open_api)
+        try:
+            thread.start()
+            webview.start()
+        except KeyboardInterrupt:
+            print("Shutting down...")
+            thread.join()
+            sys.exit(0)
 
 
 if __name__ == "__main__":
-    main()
+    Things3App().main()
