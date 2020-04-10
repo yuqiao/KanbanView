@@ -151,9 +151,10 @@ feedback:
 
 pre-commit:
 	@make kill-api
-	@make deps-install clean test install uninstall auto-style
-	@make run-api &
-	@make lint run args="today" cli open-api app kill-api
+	@make deps-install install uninstall clean test auto-style 
+	@THINGSDB=tests/Things.sqlite3 make run-api &
+	@THINGSDB=tests/Things.sqlite3 make run open args="today" cli open-api lint kill-api app
+	@THINGSDB=tests/Things.sqlite3 make run-app &
 	@open dist/KanbanView.app
 	@git status
 
