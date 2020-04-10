@@ -16,8 +16,8 @@ __status__ = "Development"
 
 import sqlite3
 from random import shuffle
-from os.path import expanduser
 from os import environ
+import getpass
 
 
 class Things3():
@@ -32,9 +32,10 @@ class Things3():
     anonymize = bool(environ.get('ANONYMIZE'))
 
     # Database info
-    FILE_SQLITE = '~/Library/Containers/'\
-                  'com.culturedcode.ThingsMac/Data/Library/'\
-                  'Application Support/Cultured Code/Things/Things.sqlite3'\
+    FILE_DB = '/Library/Containers/'\
+              'com.culturedcode.ThingsMac/Data/Library/'\
+              'Application Support/Cultured Code/Things/Things.sqlite3'
+    FILE_SQLITE = '/Users/' + getpass.getuser() + FILE_DB \
         if not environ.get('THINGSDB') else environ.get('THINGSDB')
     TASKTABLE = "TMTask"
     AREATABLE = "TMArea"
@@ -74,7 +75,7 @@ class Things3():
                  tag_waiting='Waiting',
                  tag_mit='MIT',
                  json=False):
-        self.database = expanduser(database)
+        self.database = database
         self.tag_mit = tag_mit
         self.tag_waiting = tag_waiting
         self.json = json
