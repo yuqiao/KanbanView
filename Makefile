@@ -75,7 +75,7 @@ install:
 	@echo "You can now use 'things-cli', 'things-api' and 'things-kanban'"
 
 uninstall:
-	@$(PIP) uninstall -y KanbanView
+	@$(PIP) uninstall -y things3-api
 
 
 test:
@@ -106,6 +106,7 @@ clean:
 	@find . -name __pycache__ -delete
 	@rm -rf build dist *.egg-info
 	@rm -rf .mypy_cache/
+	@rm -f .coverage
 
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
