@@ -25,7 +25,7 @@ class Things3Case(unittest.TestCase):
     def test_next(self):
         """Test Next."""
         tasks = self.things3.get_anytime()
-        self.assertEqual(4, len(tasks))
+        self.assertEqual(6, len(tasks))
 
     def test_backlog(self):
         """Test Backlog."""

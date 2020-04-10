@@ -127,6 +127,8 @@ class Things3():
         query = self.ISOPENTASK + " AND " + self.ISPOSTPONED + \
             " AND (TASK.startDate NOT NULL " + \
             "      OR TASK.recurrenceRule NOT NULL)" + \
+            " AND (TAGS.tags NOT IN (SELECT uuid FROM " + self.TAGTABLE + \
+            " WHERE title='" + self.tag_waiting + "') OR TAGS.tags IS NULL)" + \
             " ORDER BY TASK.startdate, TASK.todayIndex"
         return self.get_rows(query)
 
@@ -141,20 +143,36 @@ class Things3():
     def get_mit(self):
         """Get most important tasks."""
         query = self.ISOPENTASK + " AND " + self.ISSTARTED + \
-            " AND PROJECT.status = 0 " \
             " AND TAGS.tags=(SELECT uuid FROM " + self.TAGTABLE + \
             " WHERE title='" + self.tag_mit + "')" + \
+            f" AND ( " + \
+            f" TASK.area NOT NULL " + \
+            f" OR " + \
+            f" TASK.project in (SELECT uuid FROM TMTask WHERE uuid=TASK.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
+            f" OR " + \
+            f" TASK.actionGroup in " + \
+            f" (SELECT uuid FROM {self.TASKTABLE} heading WHERE uuid=TASK.actionGroup " + \
+            f" AND {self.ISSTARTED} " + \
+            f" AND {self.ISNOTTRASHED} " + \
+            f" AND heading.project in (SELECT uuid FROM TMTask WHERE uuid=heading.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
+            f" ))" + \
             " ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
     def get_anytime(self):
         """Get anytime tasks."""
         query = self.ISOPENTASK + " AND " + self.ISSTARTED + \
-            " AND TASK.startdate is NULL" + \
-            " AND (TASK.area NOT NULL OR TASK.project in " + \
-            "(SELECT uuid FROM " + self.TASKTABLE + \
-            " WHERE uuid=TASK.project AND start=1" + \
-            " AND trashed=0))" + \
+            f" AND ( " + \
+            f" TASK.area NOT NULL " + \
+            f" OR " + \
+            f" TASK.project in (SELECT uuid FROM TMTask WHERE uuid=TASK.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
+            f" OR " + \
+            f" TASK.actionGroup in " + \
+            f" (SELECT uuid FROM {self.TASKTABLE} heading WHERE uuid=TASK.actionGroup " + \
+            f" AND {self.ISSTARTED} " + \
+            f" AND {self.ISNOTTRASHED} " + \
+            f" AND heading.project in (SELECT uuid FROM TMTask WHERE uuid=heading.project AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
+            f" ))" + \
             " ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
