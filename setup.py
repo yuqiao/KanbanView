@@ -18,7 +18,7 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/favicon.ico"])
               ]
 OPTIONS = {
-    'argv_emulation': True,
+    'argv_emulation': False,
     'iconfile': 'resources/icon.icns',
     'plist': {'CFBundleName': APP_NAME,
               'CFBundleDisplayName': APP_NAME,
