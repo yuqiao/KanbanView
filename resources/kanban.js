@@ -61,6 +61,7 @@ function add(color, title, data) {
     if (document.getElementById(title) !== null) {
         replace_content(title, fragment);
     } else {
+        document.getElementById('loading').style.display = "none";
         add_content(fragment);
     }
 }
@@ -85,13 +86,13 @@ var makeRequest = function (url, method) {
 };
 
 async function refresh() {
-    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data);})
-    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data);})
-    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data);})
-    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data);})
-    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data);})
-    await makeRequest("api/today").then(function (data) {add("color6", "Today", data);})
-    await makeRequest("api/next").then(function (data) {add("color7", "Next", data);})
+    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/today").then(function (data) {add("color6", "Today", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/next").then(function (data) {add("color7", "Next", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
 }
 
 window.onfocus = refresh;

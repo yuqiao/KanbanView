@@ -75,3 +75,12 @@ a { color: #333; text-decoration: none; }
 .color5 {background:#2DB4B2;}
 .color6 {background:#37C57A;}
 .color7 {background:#1297FF;}
+
+.loading {
+  font-size:xx-large;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  vertical-align: middle;
+  width: 100%;
+}
