@@ -14,8 +14,7 @@ VERSION = "2.1.2"
 DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
-              ('resources', ["resources/kanban.html"]),
-              ('resources', ["resources/favicon.ico"])
+              ('resources', ["resources/kanban.html"])
               ]
 OPTIONS = {
     'argv_emulation': False,
