@@ -8,4 +8,4 @@ __pycache__
 .coverage
 .mypy_cache/
 appstore
-
+bin/things-appstore
