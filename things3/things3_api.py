@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.1.2"
+__version__ = "2.2.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -31,7 +31,6 @@ class Things3API():
     things3 = None
 
     # @APP.route('/<url>')
-
     def on_get(self, url):
         """Handles other GET requests"""
         filename = self.PATH + url
@@ -53,7 +52,6 @@ class Things3API():
         return Response(response=data, content_type=content_type)
 
     # @APP.route('/api/<command>')
-
     def api(self, command):
         """Return database as JSON strings."""
         if command in self.things3.functions:

@@ -10,7 +10,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.1.2"
+__version__ = "2.2.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -56,7 +56,7 @@ class Things3App():
         thread = Process(target=self.open_api)
         try:
             thread.start()
-            webview.start() # blocking
+            webview.start()  # blocking
             thread.terminate()
             thread.join()
         except KeyboardInterrupt:
@@ -64,6 +64,7 @@ class Things3App():
             thread.terminate()
             thread.join()
             sys.exit(0)
+
 
 if __name__ == "__main__":
     Things3App().main()

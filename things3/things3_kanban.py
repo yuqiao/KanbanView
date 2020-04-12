@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.1.2"
+__version__ = "2.2.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -74,8 +74,10 @@ def write_html_header(file):
         <body>
           <header>
             <a href="https://kanbanview.app" title="visit product page">
-              <img class="logo bright" src="./resources/logo.png" alt="logo for bright theme">
-              <img class="logo dark" src="./resources/logo-dark.png" alt="logo for dark theme" style="display: none;">
+              <img class="logo bright" src="./resources/logo.png"
+                alt="logo for bright theme">
+              <img class="logo dark" src="./resources/logo-dark.png"
+                alt="logo for dark theme" style="display: none;">
             </a>
           </header>
           <article class='some-page-wrapper'>

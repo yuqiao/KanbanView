@@ -10,8 +10,9 @@ AUTHOR = "Alexander Willner"
 AUTHOR_MAIL = "alex@willner.ws"
 DESCRIPTON = "A simple read-only CLI, API and Web Service for Things 3"
 URL = "https://github.com/alexanderwillner/kanbanview"
-VERSION = "2.1.2"
+VERSION = "2.2.0"
 DATA_FILES = [('resources', ["resources/logo.png"]),
+              ('resources', ["resources/logo-dark.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
               ('resources', ["resources/kanban.html"])
