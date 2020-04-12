@@ -151,7 +151,7 @@ deps-install:
 feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
 
-pre-commit:
+pre-commit: png jpg
 	@make kill-api
 	@make deps-install install uninstall clean test auto-style 
 	@THINGSDB=tests/Things.sqlite3 make run-api &
@@ -159,6 +159,16 @@ pre-commit:
 	@THINGSDB=tests/Things.sqlite3 make run-app &
 	@open dist/KanbanView.app
 	@git status
+
+png:
+	@type optipng >/dev/null 2>&1 || (echo "Run 'brew install optipng' first." >&2 ; exit 1)
+	@echo "Optimizing PNG..."
+	@find . -iname "*.png" -exec optipng -silent {} \;
+
+jpg:
+	@type jpegoptim >/dev/null 2>&1 || (echo "Run 'brew install jpegoptim' first." >&2 ; exit 1)
+	@echo "Optimizing JPG..."
+	@find . -iname "*.jpg" -exec jpegoptim -q {} \;
 
 upload: clean
 	@python3 setup.py sdist bdist_wheel
