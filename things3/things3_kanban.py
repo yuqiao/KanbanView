@@ -73,8 +73,9 @@ def write_html_header(file):
 
         <body>
           <header>
-            <a href="#" onclick="refresh();" title="click to refresh">
-              <img class="logo" src="./resources/logo.png" alt="logo">
+            <a href="https://kanbanview.app" title="visit product page">
+              <img class="logo bright" src="./resources/logo.png" alt="logo for bright theme">
+              <img class="logo dark" src="./resources/logo-dark.png" alt="logo for dark theme" style="display: none;">
             </a>
           </header>
           <article class='some-page-wrapper'>

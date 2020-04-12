@@ -56,7 +56,12 @@ html, body{
     margin: 15px;
     padding: 10px;
     word-wrap: break-word;
+    transition: background .3s ease-in-out;
 }
+.box:hover {
+    background: #eee;
+}
+
 
 h2 { color: white; margin:0; padding:15px;}
 h2 .size {float: right; padding-right: 10px;}
@@ -83,4 +88,45 @@ a { color: #333; text-decoration: none; }
   top: 50%;
   vertical-align: middle;
   width: 100%;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  html, body, .footer, .box {
+    background:#222;
+    color: #fff;
+  }
+  .box {
+    box-shadow: 2px 2px #333;
+    opacity: .85;
+  }
+  .box:hover {
+    opacity: 1;
+    background: #666;
+  }
+  
+  h2, a { color: #eee; }
+  .dark {
+    display: block !important;
+    opacity: .85;
+    transition: opacity .5s ease-in-out;
+  }
+  img:hover {
+    opacity: 1;
+  }
+  .bright { display: none;}
+  .column:nth-child(even) {background: #444;}
+  .column:nth-child(odd) {background: #333;}
+  
+  .hasProject {background-color: #393;}
+  .hasNoProject {background-color: #993;}
+  .hasDeadline {background-color: #933;}
+
+  .color1 {background:#423085;}
+  .color2 {background:#1C6C68;}
+  .color3 {background:#4B585F;}
+  .color4 {background:#9E500F;}
+  .color5 {background:#420043;}
+  .color6 {background:#217944;}
+  .color7 {background:#0F54A3;}
 }
