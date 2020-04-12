@@ -17,7 +17,7 @@ __status__ = "Development"
 
 import sys
 from os import system
-from threading import Thread
+from multiprocessing import Process
 import webview  # type: ignore
 import objc  # type: ignore # pylint: disable=unused-import # noqa F401
 import pkg_resources.py2_warn  # type: ignore # pylint: disable=unused-import # noqa F401
@@ -53,15 +53,17 @@ class Things3App():
             min_size=(1024, 600),
             frameless=True)
 
-        thread = Thread(target=self.open_api)
+        thread = Process(target=self.open_api)
         try:
             thread.start()
-            webview.start()
+            webview.start() # blocking
+            thread.terminate()
+            thread.join()
         except KeyboardInterrupt:
             print("Shutting down...")
+            thread.terminate()
             thread.join()
             sys.exit(0)
-
 
 if __name__ == "__main__":
     Things3App().main()
