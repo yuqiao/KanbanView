@@ -45,17 +45,17 @@ function get_rows(rows) {
     return fragment;
 }
 
-function setup_html_column(cssclass, header, number) {
+function setup_html_column(cssclass, header, number, query) {
     return "<div class='column' id='"+header+"'>" +
                "  <div class=''>" +
-               "     <h2 class='" + cssclass + "'>" + header +
+               "     <a href='things:///show?" + query + "' target='_blank'><h2 class='" + cssclass + "'>" + header +
                "         <span class='size'>" + number + "</span>" +
-               "     </h2>";
+               "     </h2></a>";
 }
 
-function add(color, title, data) {
+function add(color, title, data, query) {
     var rows = JSON.parse(data.response);
-    var fragment = setup_html_column(color, title, rows.length);
+    var fragment = setup_html_column(color, title, rows.length, query);
     fragment += get_rows(rows);
     fragment += "</div></div>";
     if (document.getElementById(title) !== null) {
@@ -86,13 +86,13 @@ var makeRequest = function (url, method) {
 };
 
 async function refresh() {
-    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/today").then(function (data) {add("color6", "Today", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/next").then(function (data) {add("color7", "Next", data);}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data, "id=someday");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data, "id=upcoming");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data, "query=Waiting");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data, "id=inbox");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data, "query=MIT");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/today").then(function (data) {add("color6", "Today", data, "id=today");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/next").then(function (data) {add("color7", "Next", data, "id=anytime");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
 }
 
 window.onfocus = refresh;
