@@ -34,7 +34,7 @@ CLI, API and Web Service for Things3.
 
 Configuration:
  * Static Kanban : kanban-static.html
- * Dynamic Kanban: http://localhost:8088/kanban.html
+ * Dynamic Kanban: http://localhost:15000/kanban.html
 
 Avaliable environment variables:
  * THINGSDB    - Path to database
@@ -198,13 +198,13 @@ The web service allows you to access the Things3 database via a web service:
 ```bash
 $ make run-server
 Starting up...
-Serving API at http://localhost:8088/api/{command}
+Serving API at http://localhost:15000/api/{command}
 ```
 
 Via ```curl``` you can browse the ```json``` data via command line:
 
 ```bash
-$ curl -s http://localhost:8088/api/today | jq
+$ curl -s http://localhost:15000/api/today | jq
 [
   {
     "uuid": "D7D879D2-5A2D-48AA-AF8A-AADCEC228D2B",
@@ -222,7 +222,7 @@ The Kanban Application allows you to visualize the Things3 database following th
 
 The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```: `make run`.
 
-The **dynamic** version runs a web application at [http://localhost:8088/kanban.html](http://localhost:8088/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`. With this, you can also access the data on a Windows machine:
+The **dynamic** version runs a web application at [http://localhost:15000/kanban.html](http://localhost:15000/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`. With this, you can also access the data on a Windows machine:
 
 ![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-ie.png)
 
