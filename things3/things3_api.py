@@ -19,18 +19,18 @@ from os import getcwd
 import json
 from flask import Flask
 from flask import Response
+from werkzeug.serving import make_server
 from things3.things3 import Things3
 
 
 class Things3API():
     """API Wrapper for the simple read-only API for Things 3."""
 
-    PORT = 8088
-    APP = Flask(__name__)
+    HOST = 'localhost'
+    PORT = 15000
     PATH = getcwd() + '/resources/'
     things3 = None
 
-    # @APP.route('/<url>')
     def on_get(self, url):
         """Handles other GET requests"""
         filename = self.PATH + url
@@ -51,7 +51,6 @@ class Things3API():
             data = source.read()
         return Response(response=data, content_type=content_type)
 
-    # @APP.route('/api/<command>')
     def api(self, command):
         """Return database as JSON strings."""
         if command in self.things3.functions:
@@ -67,15 +66,19 @@ class Things3API():
 
     def __init__(self, database=None):
         self.things3 = Things3(database=database)
+        self.flask = Flask(__name__)
+        self.flask.add_url_rule('/api/<command>', view_func=self.api)
+        self.flask.add_url_rule('/<url>', view_func=self.on_get)
+        self.flask.app_context().push()
+        self.flask_context = None
 
     def main(self):
         """"Main function."""
-        print("Starting up...")
+        print(f"Serving at http://{self.HOST}:{self.PORT} ...")
 
         try:
-            self.APP.add_url_rule('/api/<command>', view_func=self.api)
-            self.APP.add_url_rule('/<url>', view_func=self.on_get)
-            self.APP.run(port=self.PORT)
+            self.flask_context = make_server(self.HOST, self.PORT, self.flask)
+            self.flask_context.serve_forever()
         except KeyboardInterrupt:
             print("Shutting down...")
             sys.exit(0)

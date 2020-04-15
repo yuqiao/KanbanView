@@ -16,8 +16,9 @@ __email__ = "alex@willner.ws"
 __status__ = "Development"
 
 import sys
+import signal
 from os import system
-from multiprocessing import Process
+from threading import Thread
 import webview  # type: ignore
 import objc  # type: ignore # pylint: disable=unused-import # noqa F401
 import pkg_resources.py2_warn  # type: ignore # pylint: disable=unused-import # noqa F401
@@ -29,14 +30,22 @@ class Things3App():
 
     database = None
     FILE = "kanban.html"
+    api = None
+    api_thread = None
 
     def open_api(self):
         """Delay opening the browser."""
         print(f"Using database 2: {self.database}")
-        things3_api.Things3API(database=self.database).main()
+        self.api.main()
 
     def __init__(self, database=None):
         self.database = database
+        self.api = things3_api.Things3API(database=self.database)
+
+    def sigterm_handler(self, _signo, _stack_frame):
+        """Make sure the server shuts down."""
+        print("Sigterm...")
+        self.api.flask_context.shutdown()
 
     def main(self):
         """Run the app."""
@@ -44,25 +53,29 @@ class Things3App():
         system('lsof -nti:' + str(things3_api.Things3API.PORT) +
                ' | xargs kill -9')
 
+        # Make sure the server shuts down
+        signal.signal(signal.SIGTERM, self.sigterm_handler)
+
         print(f"Using database 1: {self.database}")
 
         webview.create_window(
-            title='KanbanView for Things 3',
-            url=f'http://localhost:{things3_api.Things3API.PORT}/{self.FILE}',
+            title='KanbanView',
+            url=f'http://{things3_api.Things3API.HOST}:' +
+            f'{things3_api.Things3API.PORT}/{self.FILE}',
             width=1024,
             min_size=(1024, 600),
             frameless=True)
+        self.api_thread = Thread(target=self.open_api)
 
-        thread = Process(target=self.open_api)
         try:
-            thread.start()
+            self.api_thread.start()
             webview.start()  # blocking
-            thread.terminate()
-            thread.join()
+            self.api.flask_context.shutdown()
+            self.api_thread.join()
         except KeyboardInterrupt:
             print("Shutting down...")
-            thread.terminate()
-            thread.join()
+            self.api.flask_context.shutdown()
+            self.api_thread.join()
             sys.exit(0)
 
 
