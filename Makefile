@@ -3,7 +3,7 @@
 MAIN=things3_kanban
 APP=things3_app
 SERVER=things3_api
-SERVER_PORT=8088
+SERVER_PORT=15000
 CLI=things3_cli
 SRC_CORE=things3
 SRC_TEST=tests
@@ -153,7 +153,7 @@ feedback:
 
 pre-commit: png jpg
 	@make kill-api
-	@make deps-install install uninstall clean test auto-style 
+	@make deps-install install uninstall clean test auto-style
 	@THINGSDB=tests/Things.sqlite3 make run-api &
 	@THINGSDB=tests/Things.sqlite3 make run open args="today" cli open-api lint kill-api app
 	@THINGSDB=tests/Things.sqlite3 make run-app &
