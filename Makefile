@@ -114,7 +114,7 @@ auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
 	@autopep8 -i -r $(SRC_CORE) $(SRC_TEST) setup.py
 
-lint: code-style code-lint css-lint js-lint html-lint
+lint: auto-style code-style code-lint css-lint html-lint
 
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run '$(PIP) install pycodestyle' first." >&2 ; exit 1)
