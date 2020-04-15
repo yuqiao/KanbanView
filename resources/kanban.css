@@ -55,8 +55,8 @@ html, body{
     font-size:15px;
     margin: 15px;
     padding: 10px;
-    word-wrap: break-word;
     transition: background .3s ease-in-out;
+    word-wrap: break-word;
 }
 .box:hover {
     background: #eee;
@@ -101,8 +101,8 @@ a { color: #333; text-decoration: none; }
     opacity: .85;
   }
   .box:hover {
-    opacity: 1;
     background: #666;
+    opacity: 1;
   }
   
   h2, a { color: #eee; }
