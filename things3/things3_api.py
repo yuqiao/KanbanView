@@ -84,5 +84,10 @@ class Things3API():
             sys.exit(0)
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for CLI installation"""
     Things3API().main()
+
+
+if __name__ == "__main__":
+    main()

@@ -169,5 +169,10 @@ class Things3CLI():
                 Things3CLI.print_unimplemented()
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for CLI installation"""
     Things3CLI().main()
+
+
+if __name__ == "__main__":
+    main()

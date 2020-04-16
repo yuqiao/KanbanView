@@ -64,7 +64,7 @@ class Things3App():
             f'{things3_api.Things3API.PORT}/{self.FILE}',
             width=1024,
             min_size=(1024, 600),
-            frameless=True)
+            frameless=False)
         self.api_thread = Thread(target=self.open_api)
 
         try:
@@ -79,5 +79,10 @@ class Things3App():
             sys.exit(0)
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for CLI installation"""
     Things3App().main()
+
+
+if __name__ == "__main__":
+    main()
