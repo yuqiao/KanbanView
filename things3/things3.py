@@ -38,27 +38,33 @@ class Things3():
               'Application Support/Cultured Code/Things/Things.sqlite3'
     FILE_SQLITE = '/Users/' + getpass.getuser() + FILE_DB \
         if not environ.get('THINGSDB') else environ.get('THINGSDB')
-    TASKTABLE = "TMTask"
-    AREATABLE = "TMArea"
-    TAGTABLE = "TMTag"
-    TASKTAGTABLE = "TMTaskTag"
-    ISNOTTRASHED = "TASK.trashed = 0"
-    ISTRASHED = "TASK.trashed = 1"
-    ISOPEN = "TASK.status = 0"
-    ISNOTSTARTED = "TASK.start = 0"
-    ISCANCELLED = "TASK.status = 2"
-    ISCOMPLETED = "TASK.status = 3"
-    ISSTARTED = "TASK.start = 1"
-    ISPOSTPONED = "TASK.start = 2"
-    ISTASK = "TASK.type = 0"
-    ISPROJECT = "TASK.type = 1"
-    ISHEADING = "TASK.type = 2"
-    ISOPENTASK = ISTASK + " AND " + ISNOTTRASHED + " AND " + ISOPEN
-    DATECREATE = "creationDate"
-    DATEMOD = "userModificationDate"
-    DATEDUE = "dueDate"
-    DATESTART = "unixepoch"
-    DATESTOP = "stopDate"
+
+    TABLE_TASK = "TMTask"
+    TABLE_AREA = "TMArea"
+    TABLE_TAG = "TMTag"
+    TABLE_TASKTAG = "TMTaskTag"
+    DATE_CREATE = "creationDate"
+    DATE_MOD = "userModificationDate"
+    DATE_DUE = "dueDate"
+    DATE_START = "startDate"
+    DATE_STOP = "stopDate"
+    IS_INBOX = "start = 0"
+    IS_ANYTIME = "start = 1"
+    IS_SOMEDAY = "start = 2"
+    IS_SCHEDULED = f"{DATE_START} IS NOT NULL"
+    IS_NOT_SCHEDULED = f"{DATE_START} IS NULL"
+    IS_DUE = f"{DATE_DUE} IS NOT NULL"
+    IS_NOT_DUE = f"{DATE_DUE} IS NULL"
+    IS_RECURRING = "recurrenceRule IS NOT NULL"
+    IS_NOT_RECURRING = "recurrenceRule IS NULL"
+    IS_TASK = "type = 0"
+    IS_PROJECT = "type = 1"
+    IS_HEADING = "type = 2"
+    IS_TRASHED = "trashed = 1"
+    IS_NOT_TRASHED = "trashed = 0"
+    IS_OPEN = "status = 0"
+    IS_CANCELLED = "status = 2"
+    IS_DONE = "status = 3"
 
     # Query Index
     I_UUID = 0
@@ -105,117 +111,116 @@ class Things3():
 
     def get_inbox(self):
         """Get all tasks from the inbox."""
-        query = self.ISOPENTASK + " AND " + self.ISNOTSTARTED + \
-            " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_INBOX} " + \
+                f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
     def get_today(self):
         """Get all tasks from the today list."""
-        query = self.ISOPENTASK + " AND " + self.ISSTARTED + \
-            " AND TASK.startdate is NOT NULL" + \
-            " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_ANYTIME} AND " + \
+                f" TASK.{self.IS_SCHEDULED} " + \
+                f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
     def get_someday(self):
         """Get someday tasks."""
-        query = self.ISOPENTASK + " AND " + self.ISPOSTPONED + \
-            " AND TASK.startdate IS NULL AND TASK.recurrenceRule IS NULL" + \
-            " ORDER BY TASK.duedate DESC, TASK.creationdate DESC"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_SOMEDAY} AND " + \
+                f" TASK.{self.IS_NOT_SCHEDULED} AND " + \
+                f" TASK.{self.IS_NOT_RECURRING} " + \
+                f" ORDER BY TASK.duedate DESC, TASK.creationdate DESC"
         return self.get_rows(query)
 
     def get_upcoming(self):
         """Get upcoming tasks."""
-        query = self.ISOPENTASK + " AND " + self.ISPOSTPONED + \
-            " AND (TASK.startDate NOT NULL " + \
-            "      OR TASK.recurrenceRule NOT NULL)" + \
-            " AND (TAGS.tags NOT IN (SELECT uuid FROM " + self.TAGTABLE + \
-            " WHERE title='" + self.tag_waiting + "') OR TAGS.tags IS NULL)" +\
-            " ORDER BY TASK.startdate, TASK.todayIndex"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_SOMEDAY} AND " + \
+                f" TASK.{self.IS_SCHEDULED} AND " + \
+                f" TASK.{self.IS_NOT_RECURRING} " + \
+                f" ORDER BY TASK.startdate, TASK.todayIndex"
         return self.get_rows(query)
 
     def get_waiting(self):
         """Get waiting tasks."""
-        query = self.ISOPENTASK + \
-            " AND TAGS.tags=(SELECT uuid FROM " + self.TAGTABLE + \
-            " WHERE title='" + self.tag_waiting + "')" + \
-            " ORDER BY TASK.duedate DESC , TASK.todayIndex"
-        return self.get_rows(query)
+        return self.get_tag(self.tag_waiting)
 
     def get_mit(self):
         """Get most important tasks."""
-        query = self.ISOPENTASK + " AND " + self.ISSTARTED + \
-            " AND TAGS.tags=(SELECT uuid FROM " + self.TAGTABLE + \
-            " WHERE title='" + self.tag_mit + "')" + \
-            f" AND ( " + \
-            f" TASK.area NOT NULL " + \
-            f" OR " + \
-            f" TASK.project in " + \
-            f"  (SELECT uuid FROM TMTask WHERE uuid=TASK.project " + \
-            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
-            f" OR " + \
-            f" TASK.actionGroup in " + \
-            f" (SELECT uuid FROM {self.TASKTABLE} heading " + \
-            f"  WHERE uuid=TASK.actionGroup " + \
-            f" AND {self.ISSTARTED} " + \
-            f" AND {self.ISNOTTRASHED} " + \
-            f" AND heading.project in " + \
-            f"  (SELECT uuid FROM TMTask WHERE uuid=heading.project " + \
-            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
-            f" ))" + \
-            " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+        return self.get_tag(self.tag_mit)
+
+    def get_tag(self, tag):
+        """Get task with specific tag"""
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TAGS.tags=(SELECT uuid FROM {self.TABLE_TAG} " + \
+                f"              WHERE title='{tag}'" + \
+                f"           )" + \
+                f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
     def get_anytime(self):
         """Get anytime tasks."""
-        query = self.ISOPENTASK + " AND " + self.ISSTARTED + \
-            f" AND ( " + \
-            f" TASK.area NOT NULL " + \
-            f" OR " + \
-            f" TASK.project in " + \
-            f"  (SELECT uuid FROM TMTask WHERE uuid=TASK.project " + \
-            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED}) " + \
-            f" OR " + \
-            f" TASK.actionGroup in " + \
-            f" (SELECT uuid FROM {self.TASKTABLE} heading " + \
-            f"  WHERE uuid=TASK.actionGroup " + \
-            f" AND {self.ISSTARTED} " + \
-            f" AND {self.ISNOTTRASHED} " + \
-            f" AND heading.project in " + \
-            f"  (SELECT uuid FROM TMTask WHERE uuid=heading.project " + \
-            f"   AND {self.ISSTARTED} AND {self.ISNOTTRASHED})" + \
-            f" ))" + \
-            " ORDER BY TASK.duedate DESC , TASK.todayIndex"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_ANYTIME} AND " + \
+                f" TASK.{self.IS_NOT_SCHEDULED} AND " + \
+                f" (" + \
+                f"  (PROJECT.title IS NULL OR (" + \
+                f"      PROJECT.{self.IS_ANYTIME} AND " + \
+                f"      PROJECT.{self.IS_NOT_SCHEDULED})) OR " + \
+                f"  HEADING.{self.IS_ANYTIME}" + \
+                f" ) " + \
+                f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
 
     def get_completed(self):
         """Get completed tasks."""
-        query = self.ISNOTTRASHED + " AND " + self.ISTASK + \
-            " AND " + self.ISCOMPLETED + \
-            " ORDER BY TASK." + self.DATESTOP
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_DONE} " + \
+                f" ORDER BY TASK.{self.DATE_STOP}"
         return self.get_rows(query)
 
     def get_cancelled(self):
         """Get cancelled tasks."""
-        query = self.ISNOTTRASHED + " AND " + self.ISTASK + \
-            " AND " + self.ISCANCELLED + \
-            " ORDER BY TASK." + self.DATESTOP
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_CANCELLED} " + \
+                f" ORDER BY TASK.{self.DATE_STOP}"
         return self.get_rows(query)
 
     def get_trashed(self):
         """Get trashed tasks."""
-        query = self.ISTRASHED + " AND " + self.ISTASK + \
-            " ORDER BY TASK." + self.DATESTOP
+        query = f" TASK.{self.IS_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} " + \
+                f" ORDER BY TASK.{self.DATE_STOP}"
         return self.get_rows(query)
 
     def get_all(self):
         """Get all tasks."""
-        query = self.ISNOTTRASHED + " AND " + self.ISTASK
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK}"
         return self.get_rows(query)
 
     def get_due(self):
         """Get due tasks."""
-        query = self.ISOPENTASK + " AND TASK.dueDate NOT NULL" + \
-            " ORDER BY TASK.dueDate"
+        query = f" TASK.{self.IS_NOT_TRASHED} AND " + \
+                f" TASK.{self.IS_TASK} AND " + \
+                f" TASK.{self.IS_OPEN} AND " + \
+                f" TASK.{self.IS_DUE} " + \
+                f" ORDER BY TASK.{self.DATE_DUE}"
         return self.get_rows(query)
 
     @staticmethod
