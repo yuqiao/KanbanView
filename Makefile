@@ -151,12 +151,15 @@ deps-install:
 feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
 
-pre-commit: png jpg
-	@make kill-api
-	@make deps-install install uninstall clean test auto-style
-	@THINGSDB=tests/Things.sqlite3 make run-api &
-	@THINGSDB=tests/Things.sqlite3 make run open args="today" cli open-api lint kill-api app
-	@THINGSDB=tests/Things.sqlite3 make run-app &
+pre-commit:
+	@make clean kill-api
+	@make auto-style lint
+	@make deps-install install 
+	@THINGSDB=resources/demo.sqlite3 things-cli inbox
+	@make uninstall clean test png jpg
+	@THINGSDB=resources/demo.sqlite3 make run-api &
+	@THINGSDB=resources/demo.sqlite3 make run open args="today" cli open-api app kill-api
+	@THINGSDB=resources/demo.sqlite3 make run-app &
 	@open dist/KanbanView.app
 	@git status
 
