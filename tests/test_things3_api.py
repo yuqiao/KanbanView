@@ -10,7 +10,7 @@ from things3 import things3_api
 class Things3APICase(unittest.TestCase):
     """Class documentation goes here."""
 
-    things3_api = things3_api.Things3API(database='tests/Things.sqlite3')
+    things3_api = things3_api.Things3API(database='resources/demo.sqlite3')
 
     def test_today(self):
         """Test Today."""
