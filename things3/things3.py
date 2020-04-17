@@ -363,7 +363,7 @@ class Things3():
                 TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
             LEFT OUTER JOIN
                 TMTag TAG ON TAGS.tags = TAG.uuid
-            WHERE 
+            WHERE
                 """ + sql
 
         try:
