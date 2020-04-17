@@ -210,6 +210,7 @@ class Things3():
                 TASK.{self.IS_NOT_TRASHED} AND
                 TASK.{self.IS_TASK} AND
                 TASK.{self.IS_OPEN} AND
+                TASK.{self.IS_NOT_RECURRING} AND
                 TAGS.tags=(SELECT uuid FROM {self.TABLE_TAG}
                              WHERE title='{tag}'
                           )

@@ -76,12 +76,12 @@ class Things3Case(unittest.TestCase):
     def test_trashed(self):
         """Test trashed tasks."""
         tasks = self.things3.get_trashed()
-        self.assertEqual(9, len(tasks))
+        self.assertEqual(10, len(tasks))
 
     def test_all(self):
         """Test all tasks."""
         tasks = self.things3.get_all()
-        self.assertEqual(53, len(tasks))
+        self.assertEqual(54, len(tasks))
 
     def test_due(self):
         """Test due tasks."""
