@@ -15,7 +15,8 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/logo-dark.png"]),
               ('resources', ["resources/kanban.js"]),
               ('resources', ["resources/kanban.css"]),
-              ('resources', ["resources/kanban.html"])
+              ('resources', ["resources/kanban.html"]),
+              ('resources', ["resources/demo.sqlite3"])
               ]
 OPTIONS = {
     'argv_emulation': False,
@@ -25,7 +26,8 @@ OPTIONS = {
               'CFBundleGetInfoString': APP_NAME,
               'CFBundleIdentifier': "ws.willner.kanbanview",
               'CFBundleVersion': VERSION,
-              'CFBundleShortVersionString': VERSION,
+              'LSApplicationCategoryType': "public.app-category.productivity",
+              'LSMinimumSystemVersion': "10.13.0",
               'NSHumanReadableCopyright': 'Copyright 2020 ' + AUTHOR},
     'optimize': '2'
 }
