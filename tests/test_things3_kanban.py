@@ -12,7 +12,7 @@ from things3.things3 import Things3
 class Things3KanbanCase(unittest.TestCase):
     """Class documentation goes here."""
 
-    things3 = Things3(database='tests/Things.sqlite3')
+    things3 = Things3(database='resources/demo.sqlite3')
 
     class CustomStringIO(io.StringIO):
         """Do not close output for testing."""
@@ -25,7 +25,7 @@ class Things3KanbanCase(unittest.TestCase):
         output = self.CustomStringIO()
         things3_kanban.THINGS3 = self.things3
         things3_kanban.main(output)
-        self.assertIn("Today Todo", output.getvalue())
+        self.assertIn("Today MIT", output.getvalue())
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ import things3.things3_cli as things3_cli
 class Things3CLICase(unittest.TestCase):
     """Class documentation goes here."""
 
-    things3_cli = things3_cli.Things3CLI(database='tests/Things.sqlite3')
+    things3_cli = things3_cli.Things3CLI(database='resources/demo.sqlite3')
 
     def test_today(self):
         """Test Today."""
@@ -24,7 +24,7 @@ class Things3CLICase(unittest.TestCase):
             self.things3_cli.main(args)
         finally:
             sys.stdout = old_out
-        self.assertIn("Today Todo", new_out.getvalue())
+        self.assertIn("Today MIT", new_out.getvalue())
 
 
 if __name__ == '__main__':
