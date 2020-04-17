@@ -177,9 +177,10 @@ class Things3():
                 f" TASK.{self.IS_ANYTIME} AND " + \
                 f" TASK.{self.IS_NOT_SCHEDULED} AND " + \
                 f" (" + \
-                f"  ((PROJECT.title IS NULL AND HEADING.title IS NULL) OR (" + \
+                f"  (PROJECT.title IS NULL OR (" + \
                 f"      PROJECT.{self.IS_ANYTIME} AND " + \
-                f"      PROJECT.{self.IS_NOT_SCHEDULED}))" + \
+                f"      PROJECT.{self.IS_NOT_SCHEDULED})) OR " + \
+                f"  HEADING.{self.IS_ANYTIME}" + \
                 f" ) " + \
                 f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
