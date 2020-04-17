@@ -102,6 +102,7 @@ def write_html_columns(file):
     """Write HTML columns."""
 
     write_html_column("color1", file, "Backlog", THINGS3.get_someday())
+    write_html_column("color8", file, "Grooming", THINGS3.get_cleanup())
     write_html_column("color5", file, "Upcoming", THINGS3.get_upcoming())
     write_html_column("color3", file, "Waiting", THINGS3.get_waiting())
     write_html_column("color4", file, "Inbox", THINGS3.get_inbox())

@@ -87,12 +87,16 @@ class Things3CLI():
                               help='Exports tasks as CSV')
         subparsers.add_parser('due',
                               help='Shows tasks with due dates')
+        subparsers.add_parser('empty',
+                              help='Shows projects that are empty')
         subparsers.add_parser('headings',
                               help='Shows headings')
         subparsers.add_parser('hours',
                               help='Shows hours planned today')
         subparsers.add_parser('ical',
                               help='Shows tasks ordered by due date as iCal')
+        subparsers.add_parser('lint',
+                              help='Shows tasks that float around')
         subparsers.add_parser('logbook',
                               help='Shows tasks completed today')
         subparsers.add_parser('mostClosed',

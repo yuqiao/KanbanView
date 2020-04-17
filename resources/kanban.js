@@ -17,12 +17,13 @@ function get_rows(rows) {
         var css_class = "hasNoProject";
         var task = row.title;
         var context = row.context;
+        var uuid = 0;
 
         if (row.uuid !== null) {
-            task = `<a href='things:///show?id=${row.uuid}' target='_blank'>${row.title}</a>`;
+            task = `<a draggable='false' href='things:///show?id=${row.uuid}' target='_blank'>${row.title}</a>`;
         }
         if (row.context_uuid !== null) {
-            context = `<a href='things:///show?id=${row.context_uuid}' target='_blank'>` +
+            context = `<a draggable='false' href='things:///show?id=${row.context_uuid}' target='_blank'>` +
             `${row.context}</a>`;
         }
         if (row.context !== null) {
@@ -36,7 +37,7 @@ function get_rows(rows) {
             row.due = "";
         }
 
-        fragment += "<div class='box'>" + task +
+        fragment += `<div class='box' draggable='false' ondragstart='onDragStart(event);' id='${row.uuid}'>` + task +
                     "<div class='deadline'>" + row.due + "</div>" +
                     "<div class='area " + css_class + "'>" +
                     context + "</div>" +
@@ -45,17 +46,17 @@ function get_rows(rows) {
     return fragment;
 }
 
-function setup_html_column(cssclass, header, number, query) {
-    return "<div class='column' id='"+header+"'>" +
+function setup_html_column(cssclass, header, number, query, help) {
+    return "<div class='column' ondrop='onDrop(event);' ondragleave='onDragLeave(event);' ondragover='onDragOver(event);' id='"+header+"' title='"+help+"'>" +
                "  <div class=''>" +
-               "     <a href='things:///show?" + query + "' target='_blank'><h2 class='" + cssclass + "'>" + header +
+               "     <a draggable='false' href='things:///show?" + query + "' target='_blank'><h2 class='" + cssclass + "'>" + header +
                "         <span class='size'>" + number + "</span>" +
                "     </h2></a>";
 }
 
-function add(color, title, data, query) {
+function add(color, title, data, query, help) {
     var rows = JSON.parse(data.response);
-    var fragment = setup_html_column(color, title, rows.length, query);
+    var fragment = setup_html_column(color, title, rows.length, query, help);
     fragment += get_rows(rows);
     fragment += "</div></div>";
     if (document.getElementById(title) !== null) {
@@ -86,13 +87,69 @@ var makeRequest = function (url, method) {
 };
 
 async function refresh() {
-    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data, "id=someday");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data, "id=upcoming");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data, "query=Waiting");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data, "id=inbox");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data, "query=MIT");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/today").then(function (data) {add("color6", "Today", data, "id=today");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
-    await makeRequest("api/next").then(function (data) {add("color7", "Next", data, "id=anytime");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/backlog").then(function (data) {add("color1", "Backlog", data, "id=someday", "tasks in someday projects");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/cleanup").then(function (data) {add("color8", "Grooming", data, "id=empty", "empty projects, tasks with no parent, items with tag 'Cleanup'");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/upcoming").then(function (data) {add("color5", "Upcoming", data, "id=upcoming", "scheduled tasks");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/waiting").then(function (data) {add("color3", "Waiting", data, "query=Waiting", "tasks with the tag 'Waiting'");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/inbox").then(function (data) {add("color4", "Inbox", data, "id=inbox", "tasks in the inbox");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/mit").then(function (data) {add("color2", "MIT", data, "query=MIT", "most important tasks with the tag 'MIT'");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/today").then(function (data) {add("color6", "Today", data, "id=today", "tasks for today");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+    await makeRequest("api/next").then(function (data) {add("color7", "Next", data, "id=anytime", "anytime tasks that are not in today");}).catch(function (result) { document.getElementById('loading').innerHTML = 'Error: ' + (result.statusText || 'no reply from database');})
+}
+
+function onDragStart(event) {
+  event
+    .dataTransfer
+    .setData('text/plain', event.target.id);
+
+    event
+    .currentTarget
+    .style
+    .border = '2px solid green';
+}
+
+function onDragOver(event) {
+  event.preventDefault();
+  event
+    .currentTarget
+    .style
+    .border = '2px solid red';
+}
+
+function onDragLeave(event) {
+    event.preventDefault();
+    event
+    .currentTarget
+    .style
+    .border = '0';
+}
+
+function onDrop(event) {
+    event.preventDefault();
+    event
+    .currentTarget
+    .style
+    .border = '0';
+    
+    const id = event
+    .dataTransfer
+    .getData('text');
+
+  const draggableElement = document.getElementById(id);
+  const dropzone = event.target;
+  
+  draggableElement
+    .style
+    .border = '0';
+
+  dropzone.appendChild(draggableElement);
+
+  event
+    .dataTransfer
+    .clearData();
+    
+    console.log(dropzone.id)
+    //refresh();
 }
 
 window.onfocus = refresh;

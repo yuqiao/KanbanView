@@ -21,15 +21,19 @@ from os import environ
 import getpass
 
 
+# pylint: disable=R0904
 class Things3():
     """Simple read-only API for Things 3."""
     # Variables
+    debug = False
     database = None
     json = False
     tag_waiting = "Waiting" if not environ.get('TAG_WAITING') \
         else environ.get('TAG_WAITING')
     tag_mit = "MIT" if not environ.get('TAG_MIT') \
         else environ.get('TAG_MIT')
+    tag_cleanup = "Cleanup" if not environ.get('TAG_CLEANUP') \
+        else environ.get('TAG_CLEANUP')
     anonymize = bool(environ.get('ANONYMIZE'))
 
     # Database info
@@ -318,6 +322,45 @@ class Things3():
                 """
         return self.get_rows(query)
 
+    def get_lint(self):
+        """Get tasks that float around"""
+        query = f"""
+            TASK.{self.IS_NOT_TRASHED} AND
+            TASK.{self.IS_OPEN} AND
+            TASK.{self.IS_TASK} AND
+            (TASK.{self.IS_SOMEDAY} OR TASK.{self.IS_ANYTIME}) AND
+            TASK.project IS NULL AND
+            TASK.area IS NULL AND
+            TASK.actionGroup IS NULL
+            """
+        return self.get_rows(query)
+
+    def get_empty_projects(self):
+        """Get projects that are empty"""
+        query = f"""
+            TASK.{self.IS_NOT_TRASHED} AND
+            TASK.{self.IS_OPEN} AND
+            TASK.{self.IS_PROJECT}
+            GROUP BY TASK.uuid
+            HAVING
+                (SELECT COUNT(uuid)
+                 FROM TMTask
+                 WHERE
+                   project = TASK.uuid AND
+                   {self.IS_NOT_TRASHED} AND
+                   {self.IS_OPEN}
+                ) = 0
+            """
+        return self.get_rows(query)
+
+    def get_cleanup(self):
+        """Tasks and projects that need work."""
+        result = []
+        result.extend(self.get_lint())
+        result.extend(self.get_empty_projects())
+        result.extend(self.get_tag(self.tag_cleanup))
+        return result
+
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""
@@ -366,11 +409,17 @@ class Things3():
             WHERE
                 """ + sql
 
+        if self.debug is True:
+            print(sql)
+
         try:
             cursor = sqlite3.connect(self.database).cursor()
             cursor.execute(sql)
             tasks = cursor.fetchall()
             tasks = self.anonymize_tasks(tasks)
+            if self.debug:
+                for task in tasks:
+                    print(task)
             return tasks
         except sqlite3.OperationalError as error:
             print(f"Could not query the database at: {self.database}.")
@@ -411,4 +460,7 @@ class Things3():
         "trashed": get_trashed,
         "all": get_all,
         "due": get_due,
+        "lint": get_lint,
+        "empty": get_empty_projects,
+        "cleanup": get_cleanup
     }

@@ -88,6 +88,21 @@ class Things3Case(unittest.TestCase):
         tasks = self.things3.get_due()
         self.assertEqual(1, len(tasks))
 
+    def test_lint(self):
+        """Test tasks that should be cleaned up."""
+        tasks = self.things3.get_lint()
+        self.assertEqual(4, len(tasks))
+
+    def test_empty_projects(self):
+        """Test projects that are emptÿ."""
+        tasks = self.things3.get_empty_projects()
+        self.assertEqual(1, len(tasks))
+
+    def test_cleanup(self):
+        """Test tasks that should be cleaned up."""
+        tasks = self.things3.get_cleanup()
+        self.assertEqual(6, len(tasks))
+
     def test_anonymize(self):
         """Test anonymized tasks."""
         tasks = self.things3.get_today()
