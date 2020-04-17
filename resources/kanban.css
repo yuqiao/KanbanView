@@ -92,6 +92,81 @@ a { color: #333; text-decoration: none; }
 }
 
 
+/* ---------------------------------------- */
+.onoffswitch {
+    float:right; 
+    margin: 1em;
+    position: relative;
+    top:30px;
+    width: 94px;
+}
+.onoffswitch {
+    -moz-user-select:none;
+    -ms-user-select: none;
+    -webkit-user-select:none;
+}
+.onoffswitch-checkbox {
+    display: none;
+}
+.onoffswitch-label {
+    border: 2px solid #999999;
+    border-radius: 16px;
+    cursor: pointer;
+    display: block;
+    overflow: hidden;
+}
+.onoffswitch-inner {
+    display: block;
+    margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+    width: 200%;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+    box-sizing: border-box;
+    color: white;
+    display: block;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    height: 22px; 
+    line-height: 22px;
+    padding: 0;
+    width: 50%;
+}
+.onoffswitch-inner:before {
+    background-color: #AAAAAA;
+    color: #FFFFFF;
+    content: "Tasks";
+    padding-left: 10px;
+}
+.onoffswitch-inner:after {
+    background-color: #EEEEEE;
+    color: #999999;
+    content: "Projects";
+    padding-right: 10px;
+    text-align: right;
+}
+.onoffswitch-switch {
+    background: #FFFFFF;
+    border: 2px solid #999999;
+    border-radius: 16px;
+    bottom: 0;
+    display: block;
+    margin: 3px;
+    position: absolute;
+    right: 68px;
+    top: 0;
+    transition: all 0.3s ease-in 0s; 
+    width: 16px;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+    right: 0; 
+}
+/* ---------------------------------------- */
+
 @media (prefers-color-scheme: dark) {
   html, body, .footer, .box {
     background:#222;
@@ -107,14 +182,6 @@ a { color: #333; text-decoration: none; }
   }
   
   h2, a { color: #eee; }
-  .dark {
-    display: block !important;
-    opacity: .85;
-    transition: opacity .5s ease-in-out;
-  }
-  img:hover {
-    opacity: 1;
-  }
   .bright { display: none;}
   .column:nth-child(even) {background: #444;}
   .column:nth-child(odd) {background: #333;}

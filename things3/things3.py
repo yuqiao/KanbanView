@@ -448,6 +448,14 @@ class Things3():
             model.append(self.convert_task_to_model(task))
         return model
 
+    # pylint: disable=C0103
+    def toggle_mode(self):
+        """Hack to switch to project view"""
+        if self.IS_TASK == "type = 1":
+            self.IS_TASK = "type = 0"
+        else:
+            self.IS_TASK = "type = 1"
+
     functions = {
         "inbox": get_inbox,
         "today": get_today,

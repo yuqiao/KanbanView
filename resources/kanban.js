@@ -152,5 +152,9 @@ function onDrop(event) {
     //refresh();
 }
 
+async function switchView(event) {
+    await makeRequest("api/togglemode").then(refresh())
+}
+
 window.onfocus = refresh;
 window.onload = refresh;

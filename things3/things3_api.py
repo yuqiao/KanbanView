@@ -64,10 +64,16 @@ class Things3API():
         return Response(response=data, content_type='application/json',
                         status=404)
 
+    def api_toggle(self):
+        """Toggle between task and project view"""
+        self.things3.toggle_mode()
+        return Response(status=200)
+
     def __init__(self, database=None):
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
+        self.flask.add_url_rule('/api/togglemode', view_func=self.api_toggle)
         self.flask.add_url_rule('/<url>', view_func=self.on_get)
         self.flask.app_context().push()
         self.flask_context = None

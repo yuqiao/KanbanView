@@ -72,14 +72,21 @@ def write_html_header(file):
         </head>
 
         <body>
-          <header>
-            <a href="https://kanbanview.app" title="visit product page">
-              <img class="logo bright" src="./resources/logo.png"
-                alt="logo for bright theme">
-              <img class="logo dark" src="./resources/logo-dark.png"
-                alt="logo for dark theme" style="display: none;">
-            </a>
-          </header>
+            <header>
+                <a href="https://kanbanview.app" title="visit product page" target="_blank">
+                <picture id="app">
+                    <source class="logo" srcset="resources/logo-dark.png" media="(prefers-color-scheme: dark)">
+                    <img class="logo" src="resources/logo.png" alt="logo">
+                </picture>
+                </a>
+                <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="switchView();">
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"><!----></span>
+                    <span class="onoffswitch-switch"><!----></span>
+                </label>
+            </div>
+            </header>
           <article class='some-page-wrapper'>
             <div class='row'>
         """

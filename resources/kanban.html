@@ -10,10 +10,19 @@
 </head>
 <body>
   <header>
-    <a href="https://kanbanview.app" title="visit product page">
-      <img class="logo bright" src="logo.png" alt="logo for bright theme">
-      <img class="logo dark" src="logo-dark.png" alt="logo for dark theme" style="display: none;">
+    <a href="https://kanbanview.app" title="visit product page" target="_blank">
+      <picture id="app">
+          <source class="logo" srcset="logo-dark.png" media="(prefers-color-scheme: dark)">
+          <img class="logo" src="logo.png" alt="logo">
+      </picture>
     </a>
+    <div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="switchView();">
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"><!----></span>
+        <span class="onoffswitch-switch"><!----></span>
+    </label>
+  </div>
   </header>
   <article class='some-page-wrapper'>
     <div class='row' id="content">
