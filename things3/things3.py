@@ -179,8 +179,12 @@ class Things3():
                 f" (" + \
                 f"  (PROJECT.title IS NULL OR (" + \
                 f"      PROJECT.{self.IS_ANYTIME} AND " + \
-                f"      PROJECT.{self.IS_NOT_SCHEDULED})) OR " + \
-                f"  HEADING.{self.IS_ANYTIME}" + \
+                f"      PROJECT.{self.IS_NOT_SCHEDULED})" + \
+                f"  ) AND " + \
+                f"  (HEADPROJ.title IS NULL OR (" + \
+                f"    HEADPROJ.{self.IS_ANYTIME} AND " + \
+                f"    HEADPROJ.{self.IS_NOT_SCHEDULED})" + \
+                f"  )" + \
                 f" ) " + \
                 f" ORDER BY TASK.duedate DESC , TASK.todayIndex"
         return self.get_rows(query)
@@ -262,6 +266,8 @@ class Things3():
                 TMArea AREA ON TASK.area = AREA.uuid
             LEFT OUTER JOIN
                 TMTask HEADING ON TASK.actionGroup = HEADING.uuid
+            LEFT OUTER JOIN
+                TMTask HEADPROJ ON HEADING.project = HEADPROJ.uuid
             LEFT OUTER JOIN
                 TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
             LEFT OUTER JOIN

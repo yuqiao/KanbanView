@@ -46,7 +46,7 @@ class Things3Case(unittest.TestCase):
     def test_next(self):
         """Test Next."""
         tasks = self.things3.get_anytime()
-        self.assertEqual(28, len(tasks))
+        self.assertEqual(30, len(tasks))
 
     # def test_backlog(self):
     #     """Test Backlog."""
@@ -76,12 +76,12 @@ class Things3Case(unittest.TestCase):
     def test_trashed(self):
         """Test trashed tasks."""
         tasks = self.things3.get_trashed()
-        self.assertEqual(8, len(tasks))
+        self.assertEqual(9, len(tasks))
 
     def test_all(self):
         """Test all tasks."""
         tasks = self.things3.get_all()
-        self.assertEqual(49, len(tasks))
+        self.assertEqual(53, len(tasks))
 
     def test_due(self):
         """Test due tasks."""
