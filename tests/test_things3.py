@@ -81,7 +81,7 @@ class Things3Case(unittest.TestCase):
     def test_all(self):
         """Test all tasks."""
         tasks = self.things3.get_all()
-        self.assertEqual(54, len(tasks))
+        self.assertEqual(55, len(tasks))
 
     def test_due(self):
         """Test due tasks."""
@@ -96,12 +96,12 @@ class Things3Case(unittest.TestCase):
     def test_empty_projects(self):
         """Test projects that are emptÿ."""
         tasks = self.things3.get_empty_projects()
-        self.assertEqual(1, len(tasks))
+        self.assertEqual(2, len(tasks))
 
     def test_cleanup(self):
         """Test tasks that should be cleaned up."""
         tasks = self.things3.get_cleanup()
-        self.assertEqual(6, len(tasks))
+        self.assertEqual(7, len(tasks))
 
     def test_anonymize(self):
         """Test anonymized tasks."""

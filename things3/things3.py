@@ -341,15 +341,17 @@ class Things3():
         query = f"""
             TASK.{self.IS_NOT_TRASHED} AND
             TASK.{self.IS_OPEN} AND
-            TASK.{self.IS_PROJECT}
+            TASK.{self.IS_PROJECT} AND
+            (TASK.{self.IS_ANYTIME} OR TASK.{self.IS_SCHEDULED})
             GROUP BY TASK.uuid
             HAVING
                 (SELECT COUNT(uuid)
-                 FROM TMTask
+                 FROM TMTask AS PROJECT_TASK
                  WHERE
-                   project = TASK.uuid AND
-                   {self.IS_NOT_TRASHED} AND
-                   {self.IS_OPEN}
+                   PROJECT_TASK.project = TASK.uuid AND
+                   PROJECT_TASK.{self.IS_NOT_TRASHED} AND
+                   PROJECT_TASK.{self.IS_OPEN} AND
+                   PROJECT_TASK.{self.IS_ANYTIME}
                 ) = 0
             """
         return self.get_rows(query)
