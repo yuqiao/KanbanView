@@ -12,20 +12,41 @@ This repository contains a simple read-only CLI, API and Web Service for [Things
 
 ![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020.png)
 
-![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark.png)
-
 ## Installation
 
-You've different options:
+To support the development, consider to buy the pre-compiled binary from the AppStore:
 
-1. Get the KanbanView App [from the AppStore](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app) and support the developments.
+[![AppStore](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/download_appstore-black.png)](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app)
+
+Besides this, you've different options:
+
 2. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
 3. Install the library and command line tools: `pip3 install things3-api`
 4. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
 ## Application
 
-The **KanbanView.app** version (see screenshot above) encapsulates the scripts into an easy to use standalone macOS bundle. Note: when you've downloaded the file not [from the AppStore](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app), as the App is not digitally signed then, you need to `right click` on the icon and then select `Open` to start KanbanView for the first time.
+The **KanbanView.app** version encapsulates the scripts into an easy to use standalone macOS bundle. Note: when you've downloaded the file not [from the AppStore](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app), as the App is not digitally signed then, you need to `right click` on the icon and then select `Open` to start KanbanView for the first time.
+
+Dark mode:
+
+![dark-mode](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark.png)
+
+Types of tasks:
+
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-types.png)
+
+History of task actions:
+
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-stats.png)
+
+Universe view on the projects:
+
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-universe.png)
+
+How many minutes are scheduled for today:
+
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-minutes.png)
 
 ## Commands
 
