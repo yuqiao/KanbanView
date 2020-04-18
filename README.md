@@ -26,7 +26,13 @@ Besides this, you've different options:
 
 ## Application
 
-The **KanbanView.app** version encapsulates the scripts into an easy to use standalone macOS bundle. Note: when you've downloaded the file not [from the AppStore](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app), as the App is not digitally signed then, you need to `right click` on the icon and then select `Open` to start KanbanView for the first time.
+The Kanban Application allows you to visualize the Things3 database following the Kanban approach (focused on tasks or on projects). It also includes some visualizations. There are different implementations of the application available.
+
+The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```: `make run`.
+
+The **dynamic** version runs a web application at [http://localhost:15000/kanban.html](http://localhost:15000/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-api`.
+
+The **app** version runs a macOS application via `make run-app`. You can also create a compiled bundle **KanbanView.app** version that encapsulates the scripts into an easy to use standalone macOS application. 
 
 Dark mode:
 
@@ -239,14 +245,4 @@ $ curl -s http://localhost:15000/api/today | jq
   }
 ]
 ```
-
-## Kanban Application
-
-The Kanban Application allows you to visualize the Things3 database following the Kanban approach. There are different implementations of the application available.
-
-The **static** version creates a snapshot of the current status and writes an HTML file to ```kanban-static.html```: `make run`.
-
-The **dynamic** version runs a web application at [http://localhost:15000/kanban.html](http://localhost:15000/kanban.html) and updates the GUI via JavaScript automatically using the **Web Service**: `make run-server`. With this, you can also access the data on a Windows machine:
-
-![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-ie.png)
 
