@@ -19,7 +19,7 @@ import argparse
 import json
 import csv
 import webbrowser
-import argcomplete
+import argcomplete  # type: ignore
 from things3.things3 import Things3
 
 
@@ -38,8 +38,9 @@ class Things3CLI():
         if self.print_json:
             print(json.dumps(tasks))
         elif self.print_csv:
-            fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'due',
-                          'created', 'modified', 'started', 'stopped']
+            fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'size',
+                          'type', 'due', 'created', 'modified', 'started',
+                          'stopped']
             writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(tasks)
