@@ -15,9 +15,11 @@ class Things3CLICase(unittest.TestCase):
     things3_cli = things3_cli.Things3CLI(database='resources/demo.sqlite3')
 
     def test_methods(self):
-        for command in self.things3_cli.get_parser()._subparsers._actions[1].choices:
+        """Invoke all commands."""
+        parser = self.things3_cli.get_parser()
+        for command in parser._subparsers._actions[1].choices:  # noqa # pylint: disable=protected-access
             if command != "feedback":
-                args = self.things3_cli.get_parser().parse_args([command])
+                args = parser.parse_args([command])
                 new_out = io.StringIO()
                 old_out = sys.stdout
                 try:
