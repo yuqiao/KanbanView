@@ -1,6 +1,6 @@
 -include appstore/Makefile
 
-VERSION=2.3.0
+VERSION=2.5.0dev
 MAIN=things3_kanban
 APP=things3_app
 SERVER=things3_api
@@ -114,8 +114,10 @@ clean:
 auto-style:
 	@type autopep8 >/dev/null 2>&1 || (echo "Run '$(PIP) install autopep8' first." >&2 ; exit 1)
 	@autopep8 -i -r $(SRC_CORE) $(SRC_TEST) setup.py
+	@type standard >/dev/null 2>&1 || (echo "Run 'npm install -g standard' first." >&2 ; exit 1)
+	@standard --fix resources/*.js
 
-lint: auto-style code-style code-lint css-lint html-lint
+lint: auto-style code-style code-lint js-lint html-lint css-lint
 
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run '$(PIP) install pycodestyle' first." >&2 ; exit 1)
@@ -134,8 +136,8 @@ css-lint:
 	@csslint --format=compact resources/*.css
 
 js-lint:
-	@type jslint >/dev/null 2>&1 || (echo "Run 'npm install -g jslint-node' first." >&2 ; exit 1)
-	@jslint resources/*.js || true
+	@type standard >/dev/null 2>&1 || (echo "Run 'npm install -g standard' first." >&2 ; exit 1)
+	@standard resources/*.js
 
 html-lint:
 	@type tidy >/dev/null 2>&1 || (echo "Run 'brew install tidy' first." >&2 ; exit 1)
