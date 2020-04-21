@@ -418,8 +418,8 @@ class Things3():
                 {self.TABLE_TASK} AS TASK
             WHERE
                TASK.{self.IS_NOT_TRASHED} AND
-                TASK.{self.IS_OPEN} AND
-                TASK.{self.IS_PROJECT}
+               TASK.{self.IS_OPEN} AND
+               TASK.{self.IS_PROJECT}
             GROUP BY TASK.uuid
             ORDER BY tasks DESC
             """
@@ -554,7 +554,19 @@ class Things3():
                 date(TASK.creationDate,"unixepoch") as created,
                 date(TASK.userModificationDate,"unixepoch") as modified,
                 date(TASK.startDate,"unixepoch") as started,
-                date(TASK.stopDate,"unixepoch") as stopped
+                date(TASK.stopDate,"unixepoch") as stopped,
+                (SELECT COUNT(uuid)
+                 FROM TMTask AS PROJECT_TASK
+                 WHERE
+                   PROJECT_TASK.project = TASK.uuid AND
+                   PROJECT_TASK.{self.IS_NOT_TRASHED} AND
+                   PROJECT_TASK.{self.IS_OPEN}
+                ) AS size,
+                CASE
+                    WHEN TASK.type = 0 THEN 'task'
+                    WHEN TASK.type = 1 THEN 'project'
+                    WHEN TASK.type = 2 THEN 'heading'
+                END AS type
             FROM
                 {self.TABLE_TASK} AS TASK
             LEFT OUTER JOIN

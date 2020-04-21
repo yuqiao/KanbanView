@@ -67,9 +67,13 @@ function rowsGet (rows) {
     var task = row.title
     var context = row.context
 
+    if (row.type === 'project') {
+      task = `${task} (${row.size})`
+    }
+
     if (row.uuid !== null) {
       task = `<a draggable='false' href='things:///show?id=${row.uuid}'
-                       target='_blank'>${row.title}
+                       target='_blank'>${task}
                     </a>`
     }
     if (row.context_uuid !== null) {
