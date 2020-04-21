@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.3.0"
+__version__ = "2.5.0dev"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -30,6 +30,7 @@ class Things3API():
     PORT = 15000
     PATH = getcwd() + '/resources/'
     things3 = None
+    harmonized = True
 
     def on_get(self, url):
         """Handles other GET requests"""
@@ -55,12 +56,11 @@ class Things3API():
         """Return database as JSON strings."""
         if command in self.things3.functions:
             func = self.things3.functions[command]
-            data = json.dumps(
-                self.things3.convert_tasks_to_model(func(self.things3)))
+            data = func(self.things3)
+            data = json.dumps(data)
             return Response(response=data, content_type='application/json')
 
-        data = json.dumps(self.things3.convert_tasks_to_model(
-            self.things3.get_not_implemented()))
+        data = json.dumps(self.things3.get_not_implemented())
         return Response(response=data, content_type='application/json',
                         status=404)
 
@@ -69,11 +69,30 @@ class Things3API():
         self.things3.toggle_mode()
         return Response(status=200)
 
+    def api_filter(self, mode, uuid):
+        """Filter view by specific modifiers"""
+        if mode == "area" and uuid != "":
+            self.things3.filter = f"TASK.area = '{uuid}' AND"
+        if mode == "project" and uuid != "":
+            self.things3.filter = f"""
+                (TASK.project = '{uuid}' OR HEADING.project = '{uuid}') AND
+                """
+        return Response(status=200)
+
+    def api_filter_reset(self):
+        """Reset filter modifiers"""
+        self.things3.filter = ""
+        return Response(status=200)
+
     def __init__(self, database=None):
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
         self.flask.add_url_rule('/api/togglemode', view_func=self.api_toggle)
+        self.flask.add_url_rule(
+            '/api/filter/<mode>/<uuid>', view_func=self.api_filter)
+        self.flask.add_url_rule('/api/filter/reset',
+                                view_func=self.api_filter_reset)
         self.flask.add_url_rule('/<url>', view_func=self.on_get)
         self.flask.app_context().push()
         self.flask_context = None
@@ -83,7 +102,8 @@ class Things3API():
         print(f"Serving at http://{self.HOST}:{self.PORT} ...")
 
         try:
-            self.flask_context = make_server(self.HOST, self.PORT, self.flask)
+            self.flask_context = make_server(
+                self.HOST, self.PORT, self.flask, True)
             self.flask_context.serve_forever()
         except KeyboardInterrupt:
             print("Shutting down...")

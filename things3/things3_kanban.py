@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.3.0"
+__version__ = "2.5.0dev"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -33,16 +33,16 @@ def write_html_column(cssclass, file, header, rows):
                "</span></h2>")
 
     for row in rows:
-        task_uuid = str(row[THINGS3.I_UUID]) \
-            if row[THINGS3.I_UUID] is not None else ''
-        task_title = str(row[THINGS3.I_TITLE]) \
-            if row[THINGS3.I_TITLE] is not None else ''
-        context_title = str(row[THINGS3.I_CONTEXT]) \
-            if row[THINGS3.I_CONTEXT] is not None else ''
-        context_uuid = str(row[THINGS3.I_CONTEXT_UUID]) \
-            if row[THINGS3.I_CONTEXT_UUID] is not None else ''
-        deadline = str(row[THINGS3.I_DUE]) \
-            if row[THINGS3.I_DUE] is not None else ''
+        task_uuid = str(row['uuid']) \
+            if row['uuid'] is not None else ''
+        task_title = str(row['title']) \
+            if row['title'] is not None else ''
+        context_title = str(row['context']) \
+            if row['context'] is not None else ''
+        context_uuid = str(row['context_uuid']) \
+            if row['context_uuid'] is not None else ''
+        deadline = str(row['due']) \
+            if row['due'] is not None else ''
 
         task_link = '<a href="things:///show?id=' + task_uuid + '">' + \
             task_title + '</a>' if task_uuid != '' else task_title
@@ -73,19 +73,14 @@ def write_html_header(file):
 
         <body>
             <header>
-                <a href="https://kanbanview.app" title="visit product page" target="_blank">
+                <a href="https://kanbanview.app"
+                    title="visit product page" target="_blank">
                 <picture id="app">
-                    <source class="logo" srcset="resources/logo-dark.png" media="(prefers-color-scheme: dark)">
+                    <source class="logo" srcset="resources/logo-dark.png"
+                        media="(prefers-color-scheme: dark)">
                     <img class="logo" src="resources/logo.png" alt="logo">
                 </picture>
                 </a>
-                <div class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick="switchView();">
-                <label class="onoffswitch-label" for="myonoffswitch">
-                    <span class="onoffswitch-inner"><!----></span>
-                    <span class="onoffswitch-switch"><!----></span>
-                </label>
-            </div>
             </header>
           <article class='some-page-wrapper'>
             <div class='row'>

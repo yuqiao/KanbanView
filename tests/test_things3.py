@@ -19,7 +19,7 @@ class Things3Case(unittest.TestCase):
         self.assertEqual(2, len(tasks))
         titles = []
         for task in tasks:
-            titles.append(task[1])
+            titles.append(task['title'])
         self.assertIn("Today MIT task without a project", titles)
         self.assertIn("Today items are shown here", titles)
 
@@ -29,7 +29,7 @@ class Things3Case(unittest.TestCase):
         self.assertEqual(3, len(tasks))
         titles = []
         for task in tasks:
-            titles.append(task[1])
+            titles.append(task['title'])
         self.assertIn("Currently Things 3 tasks are supported", titles)
         self.assertIn("This is a demo setup", titles)
         self.assertIn("New tasks are shown here", titles)
@@ -40,7 +40,7 @@ class Things3Case(unittest.TestCase):
         self.assertEqual(5, len(tasks))
         titles = []
         for task in tasks:
-            titles.append(task[1])
+            titles.append(task['title'])
         self.assertIn("Waiting for this...", titles)
 
     def test_next(self):
@@ -102,6 +102,21 @@ class Things3Case(unittest.TestCase):
         """Test tasks that should be cleaned up."""
         tasks = self.things3.get_cleanup()
         self.assertEqual(7, len(tasks))
+
+    def test_get_projects(self):
+        """Test get projects."""
+        projects = self.things3.get_projects()
+        self.assertEqual(7, len(projects))
+
+    def test_get_areas(self):
+        """Test get areas."""
+        areas = self.things3.get_areas()
+        self.assertEqual(1, len(areas))
+
+    def test_get_minutes_today(self):
+        """Test get minutes today."""
+        minutes = self.things3.get_minutes_today()
+        self.assertEqual([{'minutes': 35}], minutes)
 
     def test_anonymize(self):
         """Test anonymized tasks."""

@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.3.0"
+__version__ = "2.5.0dev"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -28,6 +28,7 @@ class Things3():
     debug = False
     database = None
     json = False
+    filter = ""
     tag_waiting = "Waiting" if not environ.get('TAG_WAITING') \
         else environ.get('TAG_WAITING')
     tag_mit = "MIT" if not environ.get('TAG_MIT') \
@@ -70,17 +71,6 @@ class Things3():
     IS_CANCELLED = "status = 2"
     IS_DONE = "status = 3"
 
-    # Query Index
-    I_UUID = 0
-    I_TITLE = 1
-    I_CONTEXT = 2
-    I_CONTEXT_UUID = 3
-    I_DUE = 4
-    I_CREATE = 5
-    I_MOD = 6
-    I_START = 7
-    I_STOP = 8
-
     def __init__(self,
                  database=FILE_SQLITE,
                  tag_waiting='Waiting',
@@ -94,24 +84,28 @@ class Things3():
     @staticmethod
     def anonymize_string(string):
         """Scramble text."""
+        if string is None:
+            return None
         string = list(string)
         shuffle(string)
         string = ''.join(string)
         return string
 
+    @staticmethod
+    def dict_factory(cursor, row):
+        """Convert SQL result into a dictionary"""
+        dictionary = {}
+        for idx, col in enumerate(cursor.description):
+            dictionary[col[0]] = row[idx]
+        return dictionary
+
     def anonymize_tasks(self, tasks):
         """Scramble output for screenshots."""
-        result = tasks
         if self.anonymize:
-            result = []
             for task in tasks:
-                task = list(task)
-                task[self.I_TITLE] = \
-                    self.anonymize_string(str(task[self.I_TITLE]))
-                task[self.I_CONTEXT] = \
-                    self.anonymize_string(str(task[self.I_CONTEXT]))
-                result.append(task)
-        return result
+                task['title'] = self.anonymize_string(task['title'])
+                task['context'] = self.anonymize_string(task['context'])
+        return tasks
 
     def get_inbox(self):
         """Get all tasks from the inbox."""
@@ -130,7 +124,11 @@ class Things3():
                 TASK.{self.IS_NOT_TRASHED} AND
                 TASK.{self.IS_TASK} AND
                 TASK.{self.IS_OPEN} AND
-                TASK.{self.IS_ANYTIME} AND
+                (TASK.{self.IS_ANYTIME} OR (
+                     TASK.{self.IS_SOMEDAY} AND
+                     TASK.{self.DATE_START} <= strftime('%s', 'now')
+                     )
+                ) AND
                 TASK.{self.IS_SCHEDULED} AND (
                     (
                         PROJECT.title IS NULL OR (
@@ -157,14 +155,10 @@ class Things3():
                 TASK.{self.IS_NOT_RECURRING} AND (
                     (
                         PROJECT.title IS NULL OR (
-                            PROJECT.{self.IS_ANYTIME} AND
-                            PROJECT.{self.IS_NOT_SCHEDULED} AND
                             PROJECT.{self.IS_NOT_TRASHED}
                         )
                     ) AND (
                         HEADPROJ.title IS NULL OR (
-                            HEADPROJ.{self.IS_ANYTIME} AND
-                            HEADPROJ.{self.IS_NOT_SCHEDULED} AND
                             HEADPROJ.{self.IS_NOT_TRASHED}
                         )
                     )
@@ -253,6 +247,26 @@ class Things3():
                 )
                 ORDER BY TASK.duedate DESC , TASK.todayIndex
                 """
+        if self.filter:
+            # ugly hack for Kanban task view on project
+            query = f"""
+                TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_TASK} AND
+                TASK.{self.IS_OPEN} AND
+                TASK.{self.IS_ANYTIME} AND
+                TASK.{self.IS_NOT_SCHEDULED} AND (
+                    (
+                        PROJECT.title IS NULL OR (
+                            PROJECT.{self.IS_NOT_TRASHED}
+                        )
+                    ) AND (
+                        HEADPROJ.title IS NULL OR (
+                            HEADPROJ.{self.IS_NOT_TRASHED}
+                        )
+                    )
+                )
+                ORDER BY TASK.duedate DESC , TASK.todayIndex
+                """
         return self.get_rows(query)
 
     def get_completed(self):
@@ -283,6 +297,35 @@ class Things3():
                 ORDER BY TASK.{self.DATE_STOP}
                 """
         return self.get_rows(query)
+
+    def get_projects(self):
+        """Get projects."""
+        query = f"""
+                SELECT
+                    TASK.uuid,
+                    TASK.title,
+                    NULL as context
+                FROM
+                    {self.TABLE_TASK} AS TASK
+                WHERE
+                    TASK.{self.IS_NOT_TRASHED} AND
+                    TASK.{self.IS_PROJECT} AND
+                    TASK.{self.IS_OPEN}
+                ORDER BY TASK.title
+                """
+        return self.execute_query(query)
+
+    def get_areas(self):
+        """Get areas."""
+        query = f"""
+            SELECT
+                AREA.uuid AS uuid,
+                AREA.title AS title
+            FROM
+                {self.TABLE_AREA} AS AREA
+            ORDER BY AREA.title
+            """
+        return self.execute_query(query)
 
     def get_all(self):
         """Get all tasks."""
@@ -356,6 +399,124 @@ class Things3():
             """
         return self.get_rows(query)
 
+    def get_largest_projects(self):
+        """Get projects that are empty"""
+        query = f"""
+            SELECT
+                TASK.uuid,
+                TASK.title AS title,
+                creationDate AS created,
+                userModificationDate AS modified,
+                (SELECT COUNT(uuid)
+                 FROM TMTask AS PROJECT_TASK
+                 WHERE
+                   PROJECT_TASK.project = TASK.uuid AND
+                   PROJECT_TASK.{self.IS_NOT_TRASHED} AND
+                   PROJECT_TASK.{self.IS_OPEN}
+                ) AS tasks
+            FROM
+                {self.TABLE_TASK} AS TASK
+            WHERE
+               TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_OPEN} AND
+                TASK.{self.IS_PROJECT}
+            GROUP BY TASK.uuid
+            ORDER BY tasks DESC
+            """
+        return self.execute_query(query)
+
+    def get_daystats(self):
+        """Get a history of task activities"""
+        days = 365
+        query = f"""
+                WITH RECURSIVE timeseries(x) AS (
+                    SELECT 0
+                    UNION ALL
+                    SELECT x+1 FROM timeseries
+                    LIMIT {days}
+                )
+                SELECT
+                    date(julianday("now", "-{days} days"),
+                         "+" || x || " days") as date,
+                    CREATED.TasksCreated as created,
+                    CLOSED.TasksClosed as completed,
+                    CANCELLED.TasksCancelled as cancelled,
+                    TRASHED.TasksTrashed as trashed
+                FROM timeseries
+                LEFT JOIN
+                    (SELECT COUNT(uuid) AS TasksCreated,
+                        date(creationDate,"unixepoch") AS DAY
+                        FROM {self.TABLE_TASK} AS TASK
+                        WHERE DAY NOT NULL
+                          AND TASK.{self.IS_TASK}
+                        GROUP BY DAY)
+                    AS CREATED ON CREATED.DAY = date
+                LEFT JOIN
+                    (SELECT COUNT(uuid) AS TasksCancelled,
+                        date(stopDate,"unixepoch") AS DAY
+                        FROM {self.TABLE_TASK} AS TASK
+                        WHERE DAY NOT NULL
+                          AND TASK.{self.IS_CANCELLED} AND TASK.{self.IS_TASK}
+                        GROUP BY DAY)
+                        AS CANCELLED ON CANCELLED.DAY = date
+                LEFT JOIN
+                    (SELECT COUNT(uuid) AS TasksTrashed,
+                        date(userModificationDate,"unixepoch") AS DAY
+                        FROM {self.TABLE_TASK} AS TASK
+                        WHERE DAY NOT NULL
+                          AND TASK.{self.IS_TRASHED} AND TASK.{self.IS_TASK}
+                        GROUP BY DAY)
+                        AS TRASHED ON TRASHED.DAY = date
+                LEFT JOIN
+                    (SELECT COUNT(uuid) AS TasksClosed,
+                        date(stopDate,"unixepoch") AS DAY
+                        FROM {self.TABLE_TASK} AS TASK
+                        WHERE DAY NOT NULL
+                          AND TASK.{self.IS_DONE} AND TASK.{self.IS_TASK}
+                        GROUP BY DAY)
+                        AS CLOSED ON CLOSED.DAY = date
+                """
+        return self.execute_query(query)
+
+    def get_minutes_today(self):
+        """Count the planned minutes for today."""
+        query = f"""
+                SELECT
+                    SUM(TAG.title) AS minutes
+                FROM
+                    {self.TABLE_TASK} AS TASK
+                LEFT OUTER JOIN
+                TMTask PROJECT ON TASK.project = PROJECT.uuid
+                LEFT OUTER JOIN
+                    TMArea AREA ON TASK.area = AREA.uuid
+                LEFT OUTER JOIN
+                    TMTask HEADING ON TASK.actionGroup = HEADING.uuid
+                LEFT OUTER JOIN
+                    TMTask HEADPROJ ON HEADING.project = HEADPROJ.uuid
+                LEFT OUTER JOIN
+                    TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
+                LEFT OUTER JOIN
+                    TMTag TAG ON TAGS.tags = TAG.uuid
+                WHERE
+                    printf("%d", TAG.title) = TAG.title AND
+                    TASK.{self.IS_NOT_TRASHED} AND
+                    TASK.{self.IS_TASK} AND
+                    TASK.{self.IS_OPEN} AND
+                    TASK.{self.IS_ANYTIME} AND
+                    TASK.{self.IS_SCHEDULED} AND (
+                        (
+                            PROJECT.title IS NULL OR (
+                                PROJECT.{self.IS_NOT_TRASHED}
+                            )
+                        ) AND (
+                            HEADPROJ.title IS NULL OR (
+                                HEADPROJ.{self.IS_NOT_TRASHED}
+                            )
+                        )
+                    )
+                """
+        return self.execute_query(query)
+
     def get_cleanup(self):
         """Tasks and projects that need work."""
         result = []
@@ -367,13 +528,12 @@ class Things3():
     @staticmethod
     def get_not_implemented():
         """Not implemented warning."""
-        return [["0", "not implemented", "no context", "0", "0", "0", "0",
-                 "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]]
+        return [{"title": "not implemented"}]
 
     def get_rows(self, sql):
         """Query Things database."""
 
-        sql = """
+        sql = f"""
             SELECT DISTINCT
                 TASK.uuid,
                 TASK.title,
@@ -381,42 +541,49 @@ class Things3():
                     WHEN AREA.title IS NOT NULL THEN AREA.title
                     WHEN PROJECT.title IS NOT NULL THEN PROJECT.title
                     WHEN HEADING.title IS NOT NULL THEN HEADING.title
-                END,
+                END AS context,
                 CASE
                     WHEN AREA.uuid IS NOT NULL THEN AREA.uuid
                     WHEN PROJECT.uuid IS NOT NULL THEN PROJECT.uuid
-                END,
+                END AS context_uuid,
                 CASE
                     WHEN TASK.recurrenceRule IS NULL
                     THEN date(TASK.dueDate,"unixepoch")
                 ELSE NULL
-                END,
-                date(TASK.creationDate,"unixepoch"),
-                date(TASK.userModificationDate,"unixepoch"),
-                date(TASK.startDate,"unixepoch"),
-                date(TASK.stopDate,"unixepoch")
+                END AS due,
+                date(TASK.creationDate,"unixepoch") as created,
+                date(TASK.userModificationDate,"unixepoch") as modified,
+                date(TASK.startDate,"unixepoch") as started,
+                date(TASK.stopDate,"unixepoch") as stopped
             FROM
-                TMTask AS TASK
+                {self.TABLE_TASK} AS TASK
             LEFT OUTER JOIN
-                TMTask PROJECT ON TASK.project = PROJECT.uuid
+                {self.TABLE_TASK} PROJECT ON TASK.project = PROJECT.uuid
             LEFT OUTER JOIN
-                TMArea AREA ON TASK.area = AREA.uuid
+                {self.TABLE_AREA} AREA ON TASK.area = AREA.uuid
             LEFT OUTER JOIN
-                TMTask HEADING ON TASK.actionGroup = HEADING.uuid
+                {self.TABLE_TASK} HEADING ON TASK.actionGroup = HEADING.uuid
             LEFT OUTER JOIN
-                TMTask HEADPROJ ON HEADING.project = HEADPROJ.uuid
+                {self.TABLE_TASK} HEADPROJ ON HEADING.project = HEADPROJ.uuid
             LEFT OUTER JOIN
-                TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
+                {self.TABLE_TASKTAG} TAGS ON TASK.uuid = TAGS.tasks
             LEFT OUTER JOIN
-                TMTag TAG ON TAGS.tags = TAG.uuid
+                {self.TABLE_TAG} TAG ON TAGS.tags = TAG.uuid
             WHERE
-                """ + sql
+                {self.filter}
+                {sql}
+                """
 
+        return self.execute_query(sql)
+
+    def execute_query(self, sql):
+        """Run the actual query"""
         if self.debug is True:
             print(sql)
-
         try:
-            cursor = sqlite3.connect(self.database).cursor()
+            connection = sqlite3.connect(self.database)
+            connection.row_factory = Things3.dict_factory
+            cursor = connection.cursor()
             cursor.execute(sql)
             tasks = cursor.fetchall()
             tasks = self.anonymize_tasks(tasks)
@@ -428,27 +595,6 @@ class Things3():
             print(f"Could not query the database at: {self.database}.")
             print(f"Details: {error}.")
             sys.exit(2)
-
-    def convert_task_to_model(self, task):
-        """Convert task to model."""
-        model = {'uuid': task[self.I_UUID],
-                 'title': task[self.I_TITLE],
-                 'context': task[self.I_CONTEXT],
-                 'context_uuid': task[self.I_CONTEXT_UUID],
-                 'due': task[self.I_DUE],
-                 'created': task[self.I_CREATE],
-                 'modified': task[self.I_MOD],
-                 'started': task[self.I_START],
-                 'stopped': task[self.I_STOP]
-                 }
-        return model
-
-    def convert_tasks_to_model(self, tasks):
-        """Convert tasks to model."""
-        model = []
-        for task in tasks:
-            model.append(self.convert_task_to_model(task))
-        return model
 
     # pylint: disable=C0103
     def toggle_mode(self):
@@ -469,9 +615,14 @@ class Things3():
         "completed": get_completed,
         "cancelled": get_cancelled,
         "trashed": get_trashed,
+        "projects": get_projects,
+        "areas": get_areas,
         "all": get_all,
         "due": get_due,
         "lint": get_lint,
         "empty": get_empty_projects,
-        "cleanup": get_cleanup
+        "cleanup": get_cleanup,
+        "top-proj": get_largest_projects,
+        "stats-day": get_daystats,
+        "stats-min-today": get_minutes_today
     }

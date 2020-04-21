@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.3.0"
+__version__ = "2.5.0dev"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -19,6 +19,7 @@ import argparse
 import json
 import csv
 import webbrowser
+import argcomplete
 from things3.things3 import Things3
 
 
@@ -35,17 +36,17 @@ class Things3CLI():
     def print_tasks(self, tasks):
         """Print a task."""
         if self.print_json:
-            print(json.dumps(self.things3.convert_tasks_to_model(tasks)))
+            print(json.dumps(tasks))
         elif self.print_csv:
             fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'due',
                           'created', 'modified', 'started', 'stopped']
             writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(self.things3.convert_tasks_to_model(tasks))
+            writer.writerows(tasks)
         else:
             for task in tasks:
-                title = task[self.things3.I_TITLE]
-                context = task[self.things3.I_CONTEXT]
+                title = task['title']
+                context = task['context']
                 print(' - ', title, ' (', context, ')')
 
     @classmethod
@@ -71,8 +72,8 @@ class Things3CLI():
                               help='Shows upcoming tasks')
         subparsers.add_parser('next',
                               help='Shows next tasks')
-        subparsers.add_parser('someday',
-                              help='Shows someday tasks')
+        subparsers.add_parser('backlog',
+                              help='Shows backlog tasks')
         subparsers.add_parser('completed',
                               help='Shows completed tasks')
         subparsers.add_parser('cancelled',
@@ -148,6 +149,8 @@ class Things3CLI():
             "--version",
             action="version",
             version="%(prog)s (version {version})".format(version=__version__))
+
+        argcomplete.autocomplete(parser)
 
         return parser
 

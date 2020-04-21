@@ -10,7 +10,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.3.0"
+__version__ = "2.5.0dev"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -62,8 +62,8 @@ class Things3App():
             title='KanbanView',
             url=f'http://{things3_api.Things3API.HOST}:' +
             f'{things3_api.Things3API.PORT}/{self.FILE}',
-            width=1024,
-            min_size=(1024, 600),
+            width=1280, height=650,
+            min_size=(1280, 650),
             frameless=True)
         self.api_thread = Thread(target=self.open_api)
 
