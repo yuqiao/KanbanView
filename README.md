@@ -34,9 +34,9 @@ The **dynamic** version runs a web application at [http://localhost:15000/kanban
 
 The **app** version runs a macOS application via `make run-app`. You can also create a compiled bundle **KanbanView.app** version that encapsulates the scripts into an easy to use standalone macOS application. 
 
-Dark mode:
+Dark mode with project mode enabled:
 
-![dark-mode](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark.png)
+![dark-mode](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-projects.png)
 
 Types of tasks:
 
@@ -44,11 +44,11 @@ Types of tasks:
 
 History of task actions:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-stats.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-stats.png)
 
 Universe view on the projects:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-universe.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-universe.png)
 
 How many minutes are scheduled for today:
 
