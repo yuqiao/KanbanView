@@ -19,30 +19,18 @@ import sys
 from random import shuffle
 from os import environ
 import getpass
+import configparser
+from pathlib import Path
 
 
 # pylint: disable=R0904
 class Things3():
     """Simple read-only API for Things 3."""
-    # Variables
-    debug = False
-    database = None
-    json = False
-    filter = ""
-    tag_waiting = "Waiting" if not environ.get('TAG_WAITING') \
-        else environ.get('TAG_WAITING')
-    tag_mit = "MIT" if not environ.get('TAG_MIT') \
-        else environ.get('TAG_MIT')
-    tag_cleanup = "Cleanup" if not environ.get('TAG_CLEANUP') \
-        else environ.get('TAG_CLEANUP')
-    anonymize = bool(environ.get('ANONYMIZE'))
 
     # Database info
     FILE_DB = '/Library/Containers/'\
               'com.culturedcode.ThingsMac/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'
-    FILE_SQLITE = '/Users/' + getpass.getuser() + FILE_DB \
-        if not environ.get('THINGSDB') else environ.get('THINGSDB')
 
     TABLE_TASK = "TMTask"
     TABLE_AREA = "TMArea"
@@ -73,15 +61,46 @@ class Things3():
     MODE_TASK = "type = 0"
     MODE_PROJECT = "type = 1"
 
+    # Variables
+    debug = False
+    user = getpass.getuser()
+    database = f"/Users/{user}/{FILE_DB}"
+    filter = ""
+    tag_waiting = "Waiting"
+    tag_mit = "MIT"
+    tag_cleanup = "Cleanup"
+    anonymize = False
+    config = configparser.ConfigParser()
+    config.read(str(Path.home()) + '/.kanbanviewrc')
+
+    # pylint: disable=R0913
     def __init__(self,
-                 database=FILE_SQLITE,
-                 tag_waiting='Waiting',
-                 tag_mit='MIT',
-                 json=False):
-        self.database = database if database is not None else self.FILE_SQLITE
-        self.tag_mit = tag_mit
-        self.tag_waiting = tag_waiting
-        self.json = json
+                 database=None,
+                 tag_waiting=None,
+                 tag_mit=None,
+                 tag_cleanup=None,
+                 anonymize=None):
+
+        self.tag_waiting = self.get_from_config(
+            self.config, tag_waiting, 'TAG_WAITING')
+        self.anonymize = self.get_from_config(
+            self.config, anonymize, 'ANONYMIZE')
+        self.tag_mit = self.get_from_config(self.config, tag_mit, 'TAG_MIT')
+        self.tag_cleanup = self.get_from_config(
+            self.config, tag_cleanup, 'TAG_CLEANUP')
+        self.database = self.get_from_config(self.config, database, 'THINGSDB')
+
+    @staticmethod
+    def get_from_config(config, variable, preference):
+        """Set variable. Priority: input, environment, config"""
+        result = None
+        if variable is not None:
+            result = variable
+        elif environ.get(preference):
+            result = environ.get(preference)
+        elif preference in config['DATABASE']:
+            result = config['DATABASE'][preference]
+        return result
 
     @staticmethod
     def anonymize_string(string):
