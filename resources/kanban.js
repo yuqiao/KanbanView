@@ -5,6 +5,7 @@
 var view = null
 var idxUUID = 'None'
 var canvas = document.getElementById('canvas')
+var mode = 'task'
 
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
 function kanbanShow () { document.getElementById('content').style.display = '' }
@@ -155,7 +156,7 @@ var requestParallel = function (url, method) {
       console.log('Error: ' + request.status)
     }
   }
-  request.open('GET', url, true)
+  request.open('GET', `${url}?mode=${mode}`, true)
   request.send()
 }
 
@@ -170,7 +171,7 @@ var requestSequencial = function (url, method) {
         reject(new Error(request.statusText))
       }
     }
-    request.open(method || 'GET', url, true)
+    request.open(method || 'GET', `${url}?mode=${mode}`, true)
     request.send()
   })
 }
@@ -248,8 +249,14 @@ function onDrop (event) { // eslint-disable-line no-unused-vars
   // refresh();
 }
 
-function switchView (event) { // eslint-disable-line no-unused-vars
-  requestParallel('api/togglemode', refresh)
+function switchMode (event) { // eslint-disable-line no-unused-vars
+  var taskMode = document.getElementById('mode').checked
+  if (taskMode === true) {
+    mode = 'task'
+  } else {
+    mode = 'project'
+  }
+  refresh()
 }
 
 function kanbanFilterChange (event) { // eslint-disable-line no-unused-vars

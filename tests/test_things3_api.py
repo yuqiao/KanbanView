@@ -27,10 +27,10 @@ class Things3APICase(unittest.TestCase):
         """Test toggle."""
         result = json.loads(self.things3_api.api("next").response[0])
         self.assertEqual(30, len(result))
-        self.things3_api.api_toggle()
+        self.things3_api.test_mode = "project"
         result = json.loads(self.things3_api.api("next").response[0])
         self.assertEqual(5, len(result))
-        self.things3_api.api_toggle()
+        self.things3_api.test_mode = "task"
         result = json.loads(self.things3_api.api("next").response[0])
         self.assertEqual(30, len(result))
 

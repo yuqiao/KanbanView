@@ -19,6 +19,7 @@ from os import getcwd
 import json
 from flask import Flask
 from flask import Response
+from flask import request
 from werkzeug.serving import make_server
 from things3.things3 import Things3
 
@@ -31,6 +32,7 @@ class Things3API():
     PATH = getcwd() + '/resources/'
     things3 = None
     harmonized = True
+    test_mode = "task"
 
     def on_get(self, url):
         """Handles other GET requests"""
@@ -52,22 +54,28 @@ class Things3API():
             data = source.read()
         return Response(response=data, content_type=content_type)
 
+    def mode_selector(self):
+        """Switch between project and task mode"""
+        try:
+            mode = request.args.get('mode')
+        except RuntimeError:
+            mode = 'task'
+        if mode == "project" or self.test_mode == "project":
+            self.things3.mode_project()
+
     def api(self, command):
         """Return database as JSON strings."""
         if command in self.things3.functions:
             func = self.things3.functions[command]
+            self.mode_selector()
             data = func(self.things3)
+            self.things3.mode_task()
             data = json.dumps(data)
             return Response(response=data, content_type='application/json')
 
         data = json.dumps(self.things3.get_not_implemented())
         return Response(response=data, content_type='application/json',
                         status=404)
-
-    def api_toggle(self):
-        """Toggle between task and project view"""
-        self.things3.toggle_mode()
-        return Response(status=200)
 
     def api_filter(self, mode, uuid):
         """Filter view by specific modifiers"""
@@ -88,7 +96,6 @@ class Things3API():
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
-        self.flask.add_url_rule('/api/togglemode', view_func=self.api_toggle)
         self.flask.add_url_rule(
             '/api/filter/<mode>/<uuid>', view_func=self.api_filter)
         self.flask.add_url_rule('/api/filter/reset',
