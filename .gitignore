@@ -9,3 +9,5 @@ __pycache__
 .mypy_cache/
 appstore
 bin/things-appstore
+things3/things3_appstore.py
+
