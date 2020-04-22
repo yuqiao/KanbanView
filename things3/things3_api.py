@@ -31,7 +31,6 @@ class Things3API():
     PORT = 15000
     PATH = getcwd() + '/resources/'
     things3 = None
-    harmonized = True
     test_mode = "task"
 
     def on_get(self, url):
