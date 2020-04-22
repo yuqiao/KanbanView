@@ -558,6 +558,7 @@ class Things3():
         result.extend(self.get_lint())
         result.extend(self.get_empty_projects())
         result.extend(self.get_tag(self.tag_cleanup))
+        result = [i for n, i in enumerate(result) if i not in result[n + 1:]]
         return result
 
     @staticmethod
