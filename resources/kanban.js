@@ -10,6 +10,8 @@ var mode = 'task'
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
 function kanbanShow () { document.getElementById('content').style.display = '' }
 
+const arrSum = arr => arr.reduce((a, b) => a + b, 0)
+
 function kanbanUpdate () {
   console.log('Updating kanban...')
   view = kanbanUpdate
@@ -331,8 +333,18 @@ async function statsShowDistribution () { // eslint-disable-line no-unused-vars
   })
   new Chart(ctx, { // eslint-disable-line no-new
     type: 'doughnut',
+    options: {
+      plugins: {
+        labels: {
+          render: 'percentage',
+          precision: 0,
+          position: 'outside',
+          arc: true
+        }
+      }
+    },
     data: {
-      labels: ['Backlog', 'Upcoming', 'Inbox', 'Today', 'Next'],
+      labels: [`Backlog (${backlog})`, `Upcoming (${upcoming})`, `Inbox  (${inbox})`, `Today (${today})`, `Next  (${next})`],
       datasets: [
         {
           label: '# of tasks',
@@ -506,28 +518,28 @@ async function statsShowHistory () { // eslint-disable-line no-unused-vars
         labels: labels,
         datasets: [
           {
-            label: 'created',
+            label: 'created (' + arrSum(created) + ')',
             data: created,
             backgroundColor: 'rgba(0, 119, 204, 0.5)',
             borderColor: 'rgba(0, 119, 204, 1)',
             borderWidth: 1
           },
           {
-            label: 'completed',
+            label: 'completed (' + arrSum(completed) + ')',
             data: completed,
             backgroundColor: 'rgba(0, 204, 119, 0.5)',
             borderColor: 'rgba(0, 204, 119, 1)',
             borderWidth: 1
           },
           {
-            label: 'cancelled',
+            label: 'cancelled (' + arrSum(cancelled) + ')',
             data: cancelled,
             backgroundColor: 'rgba(204, 119, 0, 0.5)',
             borderColor: 'rgba(204, 119, 0, 1)',
             borderWidth: 1
           },
           {
-            label: 'trashed',
+            label: 'trashed (' + arrSum(trashed) + ')',
             data: trashed,
             backgroundColor: 'rgba(204, 0, 119, 0.5)',
             borderColor: 'rgba(204, 0, 119, 1)',
@@ -536,6 +548,9 @@ async function statsShowHistory () { // eslint-disable-line no-unused-vars
         ]
       },
       options: {
+        plugins: {
+          labels: false
+        },
         scales: {
           xAxes: [
             {

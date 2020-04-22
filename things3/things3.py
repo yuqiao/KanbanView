@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.5.0.dev1"
+__version__ = "2.5.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -84,7 +84,7 @@ class Things3():
                  anonymize=None):
 
         cfg = self.get_from_config(self.config, tag_waiting, 'TAG_WAITING')
-        self.tag_waiting = cfg if cfg else self.tag_waiting            
+        self.tag_waiting = cfg if cfg else self.tag_waiting
 
         cfg = self.get_from_config(self.config, anonymize, 'ANONYMIZE')
         self.anonymize = cfg if cfg else self.anonymize

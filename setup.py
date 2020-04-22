@@ -10,7 +10,7 @@ AUTHOR = "Alexander Willner"
 AUTHOR_MAIL = "alex@willner.ws"
 DESCRIPTON = "A simple read-only CLI, API and Web Service for Things 3"
 URL = "https://github.com/alexanderwillner/kanbanview"
-VERSION = "2.5.0.dev1"
+VERSION = "2.5.0"
 DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/logo-dark.png"]),
               ('resources', ["resources/kanban.js"]),
@@ -18,7 +18,8 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/kanban.html"]),
               ('resources', ["resources/demo.sqlite3"]),
               ('resources', ["resources/chart.css"]),
-              ('resources', ["resources/chart.bundle.min.js"])
+              ('resources', ["resources/chart.bundle.min.js"]),
+              ('resources', ["resources/chartjs-plugin-labels.min.js"])
               ]
 OPTIONS = {
     'argv_emulation': False,
