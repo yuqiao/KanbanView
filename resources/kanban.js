@@ -69,6 +69,8 @@ function rowsGet (rows) {
     var cssClass = 'hasNoProject'
     var task = row.title
     var context = row.context
+    var due = ''
+    var started = ''
 
     if (row.type === 'project') {
       task = `${task} (${row.size})`
@@ -92,15 +94,19 @@ function rowsGet (rows) {
       row.context = 'No Context'
     }
     if (row.due !== null) {
+      due = `Due: ${row.due}`
       cssClass = 'hasDeadline'
-    } else {
-      row.due = ''
+    }
+    if (row.started !== null) {
+      started = `Start: ${row.started}`
+      cssClass = 'hasDeadline'
     }
 
     fragment += `<div class='box' draggable='false' 
                           ondragstart='onDragStart(event);' 
                           id='${row.uuid}'>${task}
-                        <div class='deadline'>${row.due}</div>
+                        <div class='deadline'>${started}</div>
+                        <div class='deadline'>${due}</div>
                         <div class='area ${cssClass}'>${context}</div>
                     </div>`
   })
