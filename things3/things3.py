@@ -70,6 +70,8 @@ class Things3():
     IS_OPEN = "status = 0"
     IS_CANCELLED = "status = 2"
     IS_DONE = "status = 3"
+    MODE_TASK = "type = 0"
+    MODE_PROJECT = "type = 1"
 
     def __init__(self,
                  database=FILE_SQLITE,
@@ -609,12 +611,14 @@ class Things3():
             sys.exit(2)
 
     # pylint: disable=C0103
-    def toggle_mode(self):
+    def mode_project(self):
         """Hack to switch to project view"""
-        if self.IS_TASK == "type = 1":
-            self.IS_TASK = "type = 0"
-        else:
-            self.IS_TASK = "type = 1"
+        self.IS_TASK = self.MODE_PROJECT
+
+    # pylint: disable=C0103
+    def mode_task(self):
+        """Hack to switch to project view"""
+        self.IS_TASK = self.MODE_TASK
 
     functions = {
         "inbox": get_inbox,
