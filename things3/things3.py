@@ -81,14 +81,20 @@ class Things3():
                  tag_cleanup=None,
                  anonymize=None):
 
-        self.tag_waiting = self.get_from_config(
-            self.config, tag_waiting, 'TAG_WAITING')
-        self.anonymize = self.get_from_config(
-            self.config, anonymize, 'ANONYMIZE')
-        self.tag_mit = self.get_from_config(self.config, tag_mit, 'TAG_MIT')
-        self.tag_cleanup = self.get_from_config(
-            self.config, tag_cleanup, 'TAG_CLEANUP')
-        self.database = self.get_from_config(self.config, database, 'THINGSDB')
+        cfg = self.get_from_config(self.config, tag_waiting, 'TAG_WAITING')
+        self.tag_waiting = cfg if cfg else self.tag_waiting            
+
+        cfg = self.get_from_config(self.config, anonymize, 'ANONYMIZE')
+        self.anonymize = cfg if cfg else self.anonymize
+
+        cfg = self.get_from_config(self.config, tag_mit, 'TAG_MIT')
+        self.tag_mit = cfg if cfg else self.tag_mit
+
+        cfg = self.get_from_config(self.config, tag_cleanup, 'TAG_CLEANUP')
+        self.tag_cleanup = cfg if cfg else self.tag_cleanup
+
+        cfg = self.get_from_config(self.config, database, 'THINGSDB')
+        self.database = cfg if cfg else self.database
 
     @staticmethod
     def get_from_config(config, variable, preference):
@@ -98,7 +104,7 @@ class Things3():
             result = variable
         elif environ.get(preference):
             result = environ.get(preference)
-        elif preference in config['DATABASE']:
+        elif 'DATABASE' in config and preference in config['DATABASE']:
             result = config['DATABASE'][preference]
         return result
 
