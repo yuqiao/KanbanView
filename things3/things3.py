@@ -58,6 +58,8 @@ class Things3():
     IS_OPEN = "status = 0"
     IS_CANCELLED = "status = 2"
     IS_DONE = "status = 3"
+    RECURRING_IS_NOT_PAUSED = "instanceCreationPaused = 0"
+    RECURRING_HAS_NEXT_STARTDATE = "nextInstanceStartDate IS NOT NULL"
     MODE_TASK = "type = 0"
     MODE_PROJECT = "type = 1"
 
@@ -412,7 +414,7 @@ class Things3():
             TASK.{self.IS_NOT_TRASHED} AND
             TASK.{self.IS_OPEN} AND
             TASK.{self.IS_PROJECT} AND
-            (TASK.{self.IS_ANYTIME} OR TASK.{self.IS_SCHEDULED})
+            TASK.{self.IS_ANYTIME}
             GROUP BY TASK.uuid
             HAVING
                 (SELECT COUNT(uuid)
@@ -421,7 +423,12 @@ class Things3():
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND
                    PROJECT_TASK.{self.IS_OPEN} AND
-                   PROJECT_TASK.{self.IS_ANYTIME}
+                   (PROJECT_TASK.{self.IS_ANYTIME} OR PROJECT_TASK.{self.IS_SCHEDULED} OR
+                      (PROJECT_TASK.{self.IS_RECURRING} AND
+                       PROJECT_TASK.{self.RECURRING_IS_NOT_PAUSED} AND
+                       PROJECT_TASK.{self.RECURRING_HAS_NEXT_STARTDATE}
+                      )
+                   )
                 ) = 0
             """
         return self.get_rows(query)
