@@ -28,7 +28,7 @@ def write_html_column(cssclass, file, header, rows):
     """Create a column in the output."""
 
     file.write("<div class='column'><div class=''>" +
-               "<h2 class='" + cssclass + "'>" + header +
+               "<h2 class='h2 " + cssclass + "'>" + header +
                "<span class='size'>" + str(len(rows)) +
                "</span></h2>")
 
