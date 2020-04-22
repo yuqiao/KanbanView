@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "Copyright 2020 Alexander Willner"
 __credits__ = ["Luc Beaulieu", "Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.5.0.dev0"
+__version__ = "2.5.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -28,7 +28,7 @@ def write_html_column(cssclass, file, header, rows):
     """Create a column in the output."""
 
     file.write("<div class='column'><div class=''>" +
-               "<h2 class='" + cssclass + "'>" + header +
+               "<h2 class='h2 " + cssclass + "'>" + header +
                "<span class='size'>" + str(len(rows)) +
                "</span></h2>")
 
