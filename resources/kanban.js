@@ -430,7 +430,7 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
     var chartData = []
 
     for (var i = 0; i < labels.length; i++) {
-      var chart = {
+      var chartDataset = {
         label: labels[i],
         backgroundColor: 'rgba(' + (r[i] / rMax) * 250 + ', 150, 0, 0.5)',
         borderColor: 'rgba(150, 150, 0, 1)',
@@ -446,7 +446,7 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
         ]
       }
 
-      chartData.push(chart)
+      chartData.push(chartDataset)
     }
 
     var dataset = { datasets: chartData }
@@ -469,7 +469,7 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
       }
     }
 
-    new Chart(ctx, { // eslint-disable-line no-new
+    const chart = new Chart(ctx, { // eslint-disable-line no-new
       type: 'bubble',
       data: dataset,
       options: options
