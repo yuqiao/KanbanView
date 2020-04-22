@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.5.0.dev0"
+__version__ = "2.5.0"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -19,30 +19,18 @@ import sys
 from random import shuffle
 from os import environ
 import getpass
+import configparser
+from pathlib import Path
 
 
 # pylint: disable=R0904
 class Things3():
     """Simple read-only API for Things 3."""
-    # Variables
-    debug = False
-    database = None
-    json = False
-    filter = ""
-    tag_waiting = "Waiting" if not environ.get('TAG_WAITING') \
-        else environ.get('TAG_WAITING')
-    tag_mit = "MIT" if not environ.get('TAG_MIT') \
-        else environ.get('TAG_MIT')
-    tag_cleanup = "Cleanup" if not environ.get('TAG_CLEANUP') \
-        else environ.get('TAG_CLEANUP')
-    anonymize = bool(environ.get('ANONYMIZE'))
 
     # Database info
     FILE_DB = '/Library/Containers/'\
               'com.culturedcode.ThingsMac/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'
-    FILE_SQLITE = '/Users/' + getpass.getuser() + FILE_DB \
-        if not environ.get('THINGSDB') else environ.get('THINGSDB')
 
     TABLE_TASK = "TMTask"
     TABLE_AREA = "TMArea"
@@ -70,18 +58,57 @@ class Things3():
     IS_OPEN = "status = 0"
     IS_CANCELLED = "status = 2"
     IS_DONE = "status = 3"
+    RECURRING_IS_NOT_PAUSED = "instanceCreationPaused = 0"
+    RECURRING_HAS_NEXT_STARTDATE = "nextInstanceStartDate IS NOT NULL"
     MODE_TASK = "type = 0"
     MODE_PROJECT = "type = 1"
 
+    # Variables
+    debug = False
+    user = getpass.getuser()
+    database = f"/Users/{user}/{FILE_DB}"
+    filter = ""
+    tag_waiting = "Waiting"
+    tag_mit = "MIT"
+    tag_cleanup = "Cleanup"
+    anonymize = False
+    config = configparser.ConfigParser()
+    config.read(str(Path.home()) + '/.kanbanviewrc')
+
+    # pylint: disable=R0913
     def __init__(self,
-                 database=FILE_SQLITE,
-                 tag_waiting='Waiting',
-                 tag_mit='MIT',
-                 json=False):
-        self.database = database if database is not None else self.FILE_SQLITE
-        self.tag_mit = tag_mit
-        self.tag_waiting = tag_waiting
-        self.json = json
+                 database=None,
+                 tag_waiting=None,
+                 tag_mit=None,
+                 tag_cleanup=None,
+                 anonymize=None):
+
+        cfg = self.get_from_config(self.config, tag_waiting, 'TAG_WAITING')
+        self.tag_waiting = cfg if cfg else self.tag_waiting
+
+        cfg = self.get_from_config(self.config, anonymize, 'ANONYMIZE')
+        self.anonymize = cfg if cfg else self.anonymize
+
+        cfg = self.get_from_config(self.config, tag_mit, 'TAG_MIT')
+        self.tag_mit = cfg if cfg else self.tag_mit
+
+        cfg = self.get_from_config(self.config, tag_cleanup, 'TAG_CLEANUP')
+        self.tag_cleanup = cfg if cfg else self.tag_cleanup
+
+        cfg = self.get_from_config(self.config, database, 'THINGSDB')
+        self.database = cfg if cfg else self.database
+
+    @staticmethod
+    def get_from_config(config, variable, preference):
+        """Set variable. Priority: input, environment, config"""
+        result = None
+        if variable is not None:
+            result = variable
+        elif environ.get(preference):
+            result = environ.get(preference)
+        elif 'DATABASE' in config and preference in config['DATABASE']:
+            result = config['DATABASE'][preference]
+        return result
 
     @staticmethod
     def anonymize_string(string):
@@ -387,7 +414,7 @@ class Things3():
             TASK.{self.IS_NOT_TRASHED} AND
             TASK.{self.IS_OPEN} AND
             TASK.{self.IS_PROJECT} AND
-            (TASK.{self.IS_ANYTIME} OR TASK.{self.IS_SCHEDULED})
+            TASK.{self.IS_ANYTIME}
             GROUP BY TASK.uuid
             HAVING
                 (SELECT COUNT(uuid)
@@ -396,7 +423,13 @@ class Things3():
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND
                    PROJECT_TASK.{self.IS_OPEN} AND
-                   PROJECT_TASK.{self.IS_ANYTIME}
+                   (PROJECT_TASK.{self.IS_ANYTIME} OR
+                    PROJECT_TASK.{self.IS_SCHEDULED} OR
+                      (PROJECT_TASK.{self.IS_RECURRING} AND
+                       PROJECT_TASK.{self.RECURRING_IS_NOT_PAUSED} AND
+                       PROJECT_TASK.{self.RECURRING_HAS_NEXT_STARTDATE}
+                      )
+                   )
                 ) = 0
             """
         return self.get_rows(query)
@@ -525,6 +558,7 @@ class Things3():
         result.extend(self.get_lint())
         result.extend(self.get_empty_projects())
         result.extend(self.get_tag(self.tag_cleanup))
+        result = [i for n, i in enumerate(result) if i not in result[n + 1:]]
         return result
 
     @staticmethod
