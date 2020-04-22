@@ -423,7 +423,8 @@ class Things3():
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND
                    PROJECT_TASK.{self.IS_OPEN} AND
-                   (PROJECT_TASK.{self.IS_ANYTIME} OR PROJECT_TASK.{self.IS_SCHEDULED} OR
+                   (PROJECT_TASK.{self.IS_ANYTIME} OR
+                    PROJECT_TASK.{self.IS_SCHEDULED} OR
                       (PROJECT_TASK.{self.IS_RECURRING} AND
                        PROJECT_TASK.{self.RECURRING_IS_NOT_PAUSED} AND
                        PROJECT_TASK.{self.RECURRING_HAS_NEXT_STARTDATE}
