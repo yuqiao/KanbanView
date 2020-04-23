@@ -50,10 +50,10 @@ body {
   border-right: 0.5px solid #666;
   display: flex;
   flex-basis: auto;
-  flex-grow: 1;
   flex-direction: column;
-  width: 200px;
+  flex-grow: 1;
   padding: 1em;
+  width: 200px;
 }
 
 .main-view-container {
@@ -83,9 +83,9 @@ body {
   flex-direction: column;
   height: 100%;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   padding: 0;
-  -webkit-overflow-scrolling: touch;
 }
 
 .stats {
@@ -209,27 +209,31 @@ a {
 }
 
 .active {
-  border-radius: 2px;
+  background-color: #666;
   background-color: rgba(150,150,150,0.3);
+  border-radius: 2px;
 }
 
 .listHeader {
   font-weight: bold;
-  margin-top: 2em;
   margin-bottom: 0.2em;
+  margin-top: 2em;
 }
 .sidelist {
   font-size: 12px;
-  background: transparent !important;
-  margin-left: 1em;
   height: 100%;
+  margin-left: 1em;
+}
+
+.sidelist:nth-child(odd) {
+  background-color: transparent;
 }
 
 .sidelist ul {
   list-style:none;
-  padding-inline-start: 1em;
-  margin:0;
   list-style-position: outside;
+  margin:0;
+  padding-left: 1em;
 }
 
 .sidelist ul li {
@@ -238,7 +242,7 @@ a {
 
 .sidelist li:before {
   content: "◉ ";
-  margin: 0px 0px 0px -10px;
+  margin: 0 0 0 -1.2em;
 }
  
 .loading {

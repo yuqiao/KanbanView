@@ -57,7 +57,9 @@ class Things3API():
             data = 'not found'
             content_type = 'text'
             status = 404
-        return Response(response=data, content_type=content_type, status=status)
+        return Response(response=data,
+                        content_type=content_type,
+                        status=status)
 
     def mode_selector(self):
         """Switch between project and task mode"""
@@ -79,7 +81,8 @@ class Things3API():
             return Response(response=data, content_type='application/json')
 
         data = json.dumps(self.things3.get_not_implemented())
-        return Response(response=data, content_type='application/json',
+        return Response(response=data,
+                        content_type='application/json',
                         status=404)
 
     def api_filter(self, mode, uuid):

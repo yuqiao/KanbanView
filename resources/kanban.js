@@ -598,8 +598,6 @@ $(document).ready(function () {
   })
 
   $(document).keydown(function (e) {
-    e.preventDefault()
-    // e.scrollIntoView()
     var liCount = $('li').length
     var curentActive = 0
 
@@ -613,12 +611,16 @@ $(document).ready(function () {
 
     if (e.keyCode === 37) { // left
       curentActive -= 1
+      e.preventDefault()
     } else if (e.keyCode === 39) { // right
       curentActive += 1
+      e.preventDefault()
     } if (e.keyCode === 38) { // top
       curentActive -= 1
+      e.preventDefault()
     } if (e.keyCode === 40) { // bott
       curentActive += 1
+      e.preventDefault()
     }
 
     if (curentActive === liCount) {
