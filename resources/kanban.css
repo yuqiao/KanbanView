@@ -39,6 +39,8 @@ body {
 .sidebar-container {
   border-top: 0.5px solid #d7d9da;
   display: flex;
+  flex-basis: auto;
+  flex-grow: 1;
   height: 100%;
   width: 100%;
 }
@@ -50,8 +52,7 @@ body {
   flex-basis: auto;
   flex-direction: column;
   flex-grow: 1;
-  height: 100%;
-  padding-top: 3em;
+  padding: 1em;
   width: 200px;
 }
 
@@ -82,6 +83,7 @@ body {
   flex-direction: column;
   height: 100%;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
   padding: 0;
 }
@@ -104,13 +106,11 @@ body {
   margin-right: 1.5em;
 }
 
-.column,
-.filter {
+.column {
   -ms-overflow-style: none;
 }
 
-.column::-webkit-scrollbar,
-.filter::-webkit-scrollbar {
+.column::-webkit-scrollbar {
   display: none;
 }
 
@@ -208,39 +208,43 @@ a {
   background: #6278d9;
 }
 
-.filtercolor {
-  background: #303030;
-  color: #ddd;
+.active {
+  background-color: #666;
+  background-color: rgba(150,150,150,0.3);
+  border-radius: 2px;
 }
 
-.filter {
-  border: 0;
-  color: #000;
+.listHeader {
+  font-weight: bold;
+  margin-bottom: 0.2em;
+  margin-top: 2em;
+}
+.sidelist {
   font-size: 12px;
   height: 100%;
-  overflow: auto;
-  overflow-x: hidden;
+  margin-left: 1em;
+}
+
+.sidelist:nth-child(odd) {
+  background-color: transparent;
+}
+
+.sidelist ul {
+  list-style:none;
+  list-style-position: outside;
+  margin:0;
   padding-left: 1em;
-  width: 100%;
 }
 
-textarea:focus,
-input:focus,
-select:focus {
-  outline: none;
+.sidelist ul li {
+  margin: 2px;
 }
 
-select,
-form {
-  background: transparent;
-  box-sizing: border-box;
-  height: 80%;
-  margin-right: 1em;
-  margin-top: 2em;
-  outline: none;
-  overflow: hidden;
+.sidelist li:before {
+  content: "◉ ";
+  margin: 0 0 0 -1.2em;
 }
-
+ 
 .loading {
   font-size: xx-large;
   position: absolute;
@@ -374,8 +378,7 @@ form {
   .box,
   .canvas,
   .sidebar,
-  .header,
-  .filter {
+  .header {
     background-color: #222;
     color: #fff;
   }
