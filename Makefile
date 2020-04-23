@@ -117,7 +117,7 @@ auto-style:
 	@type standard >/dev/null 2>&1 || (echo "Run 'npm install -g standard' first." >&2 ; exit 1)
 	@standard --fix resources/*.js
 
-lint: auto-style code-style code-lint js-lint html-lint css-lint
+lint: auto-style code-style code-lint js-lint css-lint
 
 code-style:
 	@type pycodestyle >/dev/null 2>&1 || (echo "Run '$(PIP) install pycodestyle' first." >&2 ; exit 1)
@@ -133,7 +133,7 @@ code-lint:
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
-	@csslint --format=compact resources/*.css
+	@csslint --format=compact resources/kanban.css
 
 js-lint:
 	@type standard >/dev/null 2>&1 || (echo "Run 'npm install -g standard' first." >&2 ; exit 1)
@@ -141,7 +141,7 @@ js-lint:
 
 html-lint:
 	@type tidy >/dev/null 2>&1 || (echo "Run 'brew install tidy' first." >&2 ; exit 1)
-	@tidy -qe resources/*.html
+	@tidy -qe --mute --mute MISSING_ENDTAG_BEFORE,DISCARDING_UNEXPECTED,TRIM_EMPTY_ELEMENT resources/*.html
 
 code-count:
 	@type cloc >/dev/null 2>&1 || (echo "Run 'brew install cloc' first." >&2 ; exit 1)
@@ -159,7 +159,7 @@ pre-commit:
 	@make auto-style lint
 	@make deps-install install 
 	@THINGSDB=resources/demo.sqlite3 things-cli inbox
-	@make uninstall clean test png jpg
+	@make uninstall clean test jpg
 	@THINGSDB=resources/demo.sqlite3 make run-api &
 	@THINGSDB=resources/demo.sqlite3 make run open args="today" cli open-api app kill-api
 	@THINGSDB=resources/demo.sqlite3 make run-app &

@@ -10,4 +10,6 @@ __pycache__
 appstore
 bin/things-appstore
 things3/things3_appstore.py
+node_modules/
+package-lock.json
 

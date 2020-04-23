@@ -1,4 +1,6 @@
-/* global XMLHttpRequest, Chart */
+/* global Chart */
+/* eslint-env jquery */
+/* eslint-env browser */
 
 'use strict'
 
@@ -12,23 +14,32 @@ function kanbanShow () { document.getElementById('content').style.display = '' }
 
 const arrSum = arr => arr.reduce((a, b) => a + b, 0)
 
+function isElementInViewport (el) {
+  if (typeof jQuery === 'function' && el instanceof jQuery) { el = el[0] }
+  var rect = el.getBoundingClientRect()
+  return (
+    rect.top >= document.getElementById('header').offsetHeight &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+  )
+}
+
 function kanbanUpdate () {
-  console.log('Updating kanban...')
   view = kanbanUpdate
   statsHide()
   kanbanShow()
   if (canvas == null) {
-    console.log('Requesting data...')
-    requestParallel('api/areas', function (data) { contentReset('areas'); optionsAdd(data, 'areas') })
-    requestParallel('api/projects', function (data) { contentReset('projects'); optionsAdd(data, 'projects') })
-    requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i') })
-    requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't') })
-    requestParallel('api/waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w') })
-    requestParallel('api/mit', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm') })
-    requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u') })
-    requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, 'id=empty', 'empty projects, tasks with no parent, items with tag "Cleanup"', '') })
-    requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n') })
-    requestParallel('api/backlog', function (data) { rowsAdd('color1', 'Backlog', data, 'id=someday', 'tasks in someday projects', 'b') })
+    requestParallel('api/areas', function (data) { optionsAdd(data, 'areas') })
+    requestParallel('api/projects', function (data) { optionsAdd(data, 'projects') })
+    requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i', 'inbox') })
+    requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't', 'star') })
+    requestParallel('api/waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w', 'clock') })
+    requestParallel('api/mit', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm', 'exclamation-triangle') })
+    requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
+    requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, 'id=empty', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
+    requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
+    requestParallel('api/backlog', function (data) { rowsAdd('color1', 'Backlog', data, 'id=someday', 'tasks in someday projects', 'b', 'paperclip') })
   }
 }
 
@@ -38,19 +49,25 @@ function contentReset (id) {
 }
 
 function optionAdd (list, title, uuid) {
-  var entry = document.createElement('option')
-  entry.setAttribute('value', uuid)
-  if (idxUUID === uuid) { entry.setAttribute('selected', 'selected') }
-  entry.innerHTML = title
-  list.appendChild(entry)
+  var li = document.createElement('li')
+  li.innerHTML = title
+
+  var a = document.createElement('a')
+  a.href = '#'
+  a.setAttribute('id', uuid)
+  a.onclick = function () { highlight(event); kanbanFilterChange(this) }
+  a.appendChild(li)
+  list.appendChild(a)
 }
 
 function optionsAdd (data, id) {
   var filter = document.getElementById(id)
-  var items = JSON.parse(data.response)
-  items.forEach(function (item) {
-    optionAdd(filter, '&nbsp;&nbsp;&nbsp;○ ' + item.title, item.uuid)
-  })
+  if (filter.childNodes.length === 0) {
+    var items = JSON.parse(data.response)
+    items.forEach(function (item) {
+      optionAdd(filter, item.title, item.uuid)
+    })
+  }
 }
 
 function contentAdd (req) {
@@ -123,7 +140,7 @@ function columnAddPreview (cssclass, header) {
             </div>`
 }
 
-function rowsAdd (color, title, data, query, help, shortcut) {
+function rowsAdd (color, title, data, query, help, shortcut, icon) {
   var rows = JSON.parse(data.response)
   var rowHTML = rowsGet(rows)
   var fragment = `
@@ -138,7 +155,7 @@ function rowsAdd (color, title, data, query, help, shortcut) {
                     target='_blank'
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
-                    <h2 class='h2 ${color}'>${title}
+                    <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}
                         <span class='size'>${rows.length}</span>
                     </h2>
                 </a>
@@ -185,15 +202,6 @@ var requestSequencial = function (url, method) {
 }
 
 function refresh () {
-  var idx = document.getElementById('filter').selectedIndex
-  console.log('Refresh: ', idx)
-  if (idx >= 0) {
-    var func = document.getElementById('filter').options[idx].dataset.function
-    if (func != null) {
-      return eval(func).call() // eslint-disable-line no-eval
-    }
-  }
-  console.log('View is null: ', view == null)
   if (view != null) {
     view()
   } else {
@@ -268,23 +276,18 @@ function switchMode (event) { // eslint-disable-line no-unused-vars
 }
 
 function kanbanFilterChange (event) { // eslint-disable-line no-unused-vars
-  var idx = document.getElementById('filter').selectedIndex
-  if (idx >= 0) {
-    var option = document.getElementById('filter').options[idx]
-    var uuid = option.value
-    var filterType = option.parentNode.dataset.ctx
-    if (uuid != null) {
-      idxUUID = uuid
-      console.log('Index: ', idx, idxUUID, filterType)
+  var uuid = event.id
+  var filterType = event.parentNode.dataset.ctx
+  if (uuid != null) {
+    idxUUID = uuid
 
-      if (idxUUID !== 'None' && filterType != null) {
-        requestParallel('api/filter/' + filterType + '/' + idxUUID, refresh)
-      } else {
-        idxUUID = 'None'
-        kanbanFilterReset()
-      }
-      kanbanUpdate()
+    if (idxUUID !== 'None' && filterType != null) {
+      requestParallel('api/filter/' + filterType + '/' + idxUUID, refresh)
+    } else {
+      idxUUID = 'None'
+      kanbanFilterReset()
     }
+    kanbanUpdate()
   }
 }
 
@@ -575,6 +578,60 @@ async function statsShowHistory () { // eslint-disable-line no-unused-vars
   })
 }
 
+function highlight (event) {
+  $('#listContainer').find('*').removeClass('active')
+  $('#' + event.currentTarget.id + ' :first-child').addClass('active')
+  if (event.type === 'click') {
+    // const isVisible = $('#' + event.currentTarget.id).is(':in-viewport')
+    const isVisible = isElementInViewport(event.currentTarget)
+    if (isVisible === false) {
+      event.currentTarget.scrollIntoView()
+    }
+  }
+}
+
+$(document).ready(function () {
+  $('li').eq(0).addClass('active')
+  $('.cardATags').eq(0).focus()
+  $('#listContainer').find('a').on('click', function (event) {
+    highlight(event)
+  })
+
+  $(document).keydown(function (e) {
+    var liCount = $('li').length
+    var curentActive = 0
+
+    var eachCounter = 0
+    $('li').each(function () {
+      if ($(this).hasClass('active')) {
+        curentActive = eachCounter
+      }
+      eachCounter++
+    })
+
+    if (e.keyCode === 37) { // left
+      curentActive -= 1
+      e.preventDefault()
+    } else if (e.keyCode === 39) { // right
+      curentActive += 1
+      e.preventDefault()
+    } if (e.keyCode === 38) { // top
+      curentActive -= 1
+      e.preventDefault()
+    } if (e.keyCode === 40) { // bott
+      curentActive += 1
+      e.preventDefault()
+    }
+
+    if (curentActive === liCount) {
+      curentActive = 0
+    }
+
+    highlight(e)
+    $('li').eq(curentActive).click()
+  })
+})
+
 window.onload = function () {
   contentAdd(columnAddPreview('color1', 'Backlog'))
   contentAdd(columnAddPreview('color8', 'Grooming'))
@@ -584,9 +641,6 @@ window.onload = function () {
   contentAdd(columnAddPreview('color2', 'MIT'))
   contentAdd(columnAddPreview('color6', 'Today'))
   contentAdd(columnAddPreview('color7', 'Next'))
-  document.getElementById('filter').selectedIndex = 0
-  document.getElementById('filter').focus()
-  document.getElementById('filter').click()
   refresh()
 }
 window.onfocus = refresh

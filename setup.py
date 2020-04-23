@@ -1,26 +1,29 @@
 """
-py2app configuration file.
+KanbanView configuration file for py2app and pipy.
 """
 
+import os
 from setuptools import setup, find_packages  # type: ignore
+
+
+def package_files(directory):
+    """Automatically add data resources."""
+    paths = []
+    # pylint: disable=unused-variable
+    for (path, directories, filenames) in os.walk(directory):
+        for filename in filenames:
+            paths.append((directory, [os.path.join(path, filename)]))
+    return paths
+
 
 APP = ['bin/things-app']
 APP_NAME = "KanbanView"
 AUTHOR = "Alexander Willner"
 AUTHOR_MAIL = "alex@willner.ws"
 DESCRIPTON = "A simple read-only CLI, API and Web Service for Things 3"
-URL = "https://github.com/alexanderwillner/kanbanview"
+URL = "https://kanbanview.app"
 VERSION = "2.5.0"
-DATA_FILES = [('resources', ["resources/logo.png"]),
-              ('resources', ["resources/logo-dark.png"]),
-              ('resources', ["resources/kanban.js"]),
-              ('resources', ["resources/kanban.css"]),
-              ('resources', ["resources/kanban.html"]),
-              ('resources', ["resources/demo.sqlite3"]),
-              ('resources', ["resources/chart.css"]),
-              ('resources', ["resources/chart.bundle.min.js"]),
-              ('resources', ["resources/chartjs-plugin-labels.min.js"])
-              ]
+DATA_FILES = package_files('resources')
 OPTIONS = {
     'argv_emulation': False,
     'iconfile': 'resources/icon.icns',
@@ -34,6 +37,7 @@ OPTIONS = {
               'NSHumanReadableCopyright': 'Copyright 2020 ' + AUTHOR},
     'optimize': '2'
 }
+
 
 with open("README.md", "r") as fh:
     LONG_DESRIPTION = fh.read()
