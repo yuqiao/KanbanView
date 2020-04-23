@@ -35,6 +35,7 @@ class Things3API():
 
     def on_get(self, url):
         """Handles other GET requests"""
+        status = 200
         filename = self.PATH + url
         content_type = 'application/json'
         if filename.endswith('css'):
@@ -49,9 +50,14 @@ class Things3API():
             content_type = 'image/jpeg'
         if filename.endswith('ico'):
             content_type = 'image/x-ico'
-        with open(filename, 'rb') as source:
-            data = source.read()
-        return Response(response=data, content_type=content_type)
+        try:
+            with open(filename, 'rb') as source:
+                data = source.read()
+        except FileNotFoundError:
+            data = 'not found'
+            content_type = 'text'
+            status = 404
+        return Response(response=data, content_type=content_type, status=status)
 
     def mode_selector(self):
         """Switch between project and task mode"""
