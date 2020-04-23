@@ -4,15 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="kanban.css">
     <link rel="stylesheet" href="chart.css">
+    <link rel="stylesheet" href="fa.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-    <script type="text/javascript" src="kanban.js"></script>
-    <script type="text/javascript" src="chart.bundle.min.js"></script>
-    <script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
     <title>KanbanView</title>
   </head>
   <body>
     <div class="outer-container">
-      <div class="header">
+      <div class="header" id="header">
         <img class="logo" src="logo-dark.png" alt="logo" >
         <div class="onoffswitch">
                 <input type="checkbox" name="onoffswitch" 
@@ -27,22 +25,20 @@
       </div>
       <div class="sidebar-container">
         <div class="sidebar">
-          <form onclick="document.body.scrollTop = 0;">
-            <select   id="filter" size=2 class="filter" 
-                      onclick="document.body.scrollTop = 0;" 
-                      onchange="kanbanFilterChange();"
-                      onfocus="this.selectedIndex = -1; document.body.scrollTop = 0;">
-              <optgroup label="□ View">
-                <option id="kanban" data-function="kanbanUpdate" selected="selected" onclick="kanbanFilterReset(); kanbanUpdate();" accesskey="1" title="⌃+⎇+1">&nbsp;&nbsp;&nbsp;○ Kanban</option>
-                <option id="distribution" data-function="statsShowDistribution" onclick="statsShowDistribution();" accesskey="2" title="⌃+⎇+2">&nbsp;&nbsp;&nbsp;○ Distribution</option>
-                <option id="history" data-function="statsShowHistory" onclick="statsShowHistory();" accesskey="3" title="⌃+⎇+3">&nbsp;&nbsp;&nbsp;○ History</option>
-                <option id="universe" data-function="statsShowUniverse" onclick="statsShowUniverse();" accesskey="4" title="⌃+⎇+4">&nbsp;&nbsp;&nbsp;○ Universe</option>
-                <option id="minutes" data-function="statsShowMinutes" onclick="statsShowMinutes();" accesskey="5" title="⌃+⎇+5">&nbsp;&nbsp;&nbsp;○ Minutes</option>
-              </optgroup>
-              <optgroup label="□ Areas" data-ctx="area" id="areas" onclick="kanbanFilterChange(this); kanbanUpdate();"></optgroup>
-              <optgroup label="□ Projects" data-ctx="project" id="projects" onclick="kanbanFilterChange(this); kanbanUpdate();"></optgroup>
-            </select>
-          </form>
+          <div class="column sidelist" id="listContainer">
+            <div class="listHeader"><i class="fa fa-archive"></i> View</div>
+            <ul id="viewlist">
+              <a href="#" id="kanban" data-function="kanbanUpdate" onclick="kanbanFilterReset(); kanbanUpdate();" accesskey="1" title="⌃+⎇+1"><li>Kanban</li></a>
+              <a href="#" id="distribution" data-function="statsShowDistribution" onclick="statsShowDistribution();" accesskey="2" title="⌃+⎇+2"><li>Distribution</li></a>
+              <a href="#" id="history" data-function="statsShowHistory" onclick="statsShowHistory();" accesskey="3" title="⌃+⎇+3"><li>History</li></a>
+              <a href="#" id="universe" data-function="statsShowUniverse" onclick="statsShowUniverse();" accesskey="4" title="⌃+⎇+4"><li>Universe</li></a>
+              <a href="#" id="minutes" data-function="statsShowMinutes" onclick="statsShowMinutes();" accesskey="5" title="⌃+⎇+5"><li>Minutes</li></a>
+            </ul>
+            <div class="listHeader"><i class="fa fa-archive"></i> Areas</div>
+            <ul id="areas" data-ctx="area"></ul>
+            <div class="listHeader"><i class="fa fa-archive"></i> Projects</div>
+            <ul id="projects" data-ctx="project"></ul>
+          </div>
         </div>
         <div class="main-view-container">
           <article class='some-page-wrapper'>
@@ -53,5 +49,10 @@
         </div>
       </div>
     </div>
+    <script type="text/javascript" src="jquery-3.5.0.min.js"></script>
+    <script type="text/javascript" src="chart.bundle.min.js"></script>
+    <script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
+    <script type="text/javascript" src="kanban.js"></script>
+    <script type="text/javascript" src="fa.min.js" defer></script>
   </body>
 </html>
