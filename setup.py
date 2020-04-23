@@ -19,7 +19,9 @@ DATA_FILES = [('resources', ["resources/logo.png"]),
               ('resources', ["resources/demo.sqlite3"]),
               ('resources', ["resources/chart.css"]),
               ('resources', ["resources/chart.bundle.min.js"]),
-              ('resources', ["resources/chartjs-plugin-labels.min.js"])
+              ('resources', ["resources/chartjs-plugin-labels.min.js"]),
+              ('resources', ["resources/frappe-gantt.css"]),
+              ('resources', ["resources/frappe-gantt.min.js"])
               ]
 OPTIONS = {
     'argv_emulation': False,

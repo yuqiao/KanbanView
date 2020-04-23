@@ -395,6 +395,28 @@ class Things3():
                 """
         return self.get_rows(query)
 
+    def get_gantt(self):
+        """Get tasks with start and end date."""
+        query = f"""
+                TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_TASK} AND
+                TASK.{self.IS_OPEN} AND
+                TASK.{self.IS_SCHEDULED} AND
+                TASK.{self.IS_DUE} AND (
+                    (
+                        PROJECT.title IS NULL OR (
+                            PROJECT.{self.IS_NOT_TRASHED}
+                        )
+                    ) AND (
+                        HEADPROJ.title IS NULL OR (
+                            HEADPROJ.{self.IS_NOT_TRASHED}
+                        )
+                    )
+                )
+                ORDER BY TASK.{self.DATE_DUE}
+                """
+        return self.get_rows(query)
+
     def get_lint(self):
         """Get tasks that float around"""
         query = f"""
@@ -669,6 +691,7 @@ class Things3():
         "areas": get_areas,
         "all": get_all,
         "due": get_due,
+        "gantt": get_gantt,
         "lint": get_lint,
         "empty": get_empty_projects,
         "cleanup": get_cleanup,

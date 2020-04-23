@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, Chart */
+/* global XMLHttpRequest, Chart, Gantt */
 
 'use strict'
 
@@ -307,6 +307,47 @@ function canvasCreate () {
   canvas.id = 'canvas'
   canvas.className = 'canvas'
   return canvas
+}
+
+async function statsShowGantt () { // eslint-disable-line no-unused-vars
+  view = statsShowGantt
+  kanbanHide()
+  statsShow()
+  var canv = document.createElement('svg')
+  canv.id = 'canvas'
+  canv.className = 'canvas gantt'
+  statsReplace(canv)
+  var tasks = []
+  var data = []
+
+  await requestSequencial('api/gantt').then(function (data) {
+    tasks = JSON.parse(data.response)
+  })
+  tasks.forEach(function (task) {
+    data.push({
+      id: task.title,
+      name: task.title,
+      start: task.started,
+      end: task.due,
+      progress: 100,
+      dependencies: '',
+      custom_class: 'bar-milestone' // optional
+    })
+  })
+  console.log(data)
+  new Gantt('#canvas', data, { // eslint-disable-line no-new
+    header_height: 30,
+    column_width: 10,
+    step: 2,
+    view_modes: ['Quarter Day', 'Half Day', 'Day', 'Week', 'Month'],
+    bar_height: 20,
+    bar_corner_radius: 3,
+    arrow_curve: 5,
+    padding: 10,
+    view_mode: 'Month',
+    date_format: 'YYYY-MM-DD',
+    custom_popup_html: null
+  })
 }
 
 async function statsShowDistribution () { // eslint-disable-line no-unused-vars

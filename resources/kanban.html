@@ -4,10 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="kanban.css">
     <link rel="stylesheet" href="chart.css">
+    <link rel="stylesheet" href="frappe-gantt.css">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <script type="text/javascript" src="kanban.js"></script>
     <script type="text/javascript" src="chart.bundle.min.js"></script>
     <script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
+    <script type="text/javascript" src="frappe-gantt.min.js"></script>
     <title>KanbanView</title>
   </head>
   <body>
@@ -37,7 +39,8 @@
                 <option id="distribution" data-function="statsShowDistribution" onclick="statsShowDistribution();" accesskey="2" title="⌃+⎇+2">&nbsp;&nbsp;&nbsp;○ Distribution</option>
                 <option id="history" data-function="statsShowHistory" onclick="statsShowHistory();" accesskey="3" title="⌃+⎇+3">&nbsp;&nbsp;&nbsp;○ History</option>
                 <option id="universe" data-function="statsShowUniverse" onclick="statsShowUniverse();" accesskey="4" title="⌃+⎇+4">&nbsp;&nbsp;&nbsp;○ Universe</option>
-                <option id="minutes" data-function="statsShowMinutes" onclick="statsShowMinutes();" accesskey="5" title="⌃+⎇+5">&nbsp;&nbsp;&nbsp;○ Minutes</option>
+                <option id="gantt" data-function="statsShowGantt" onclick="statsShowGantt();" accesskey="5" title="⌃+⎇+5">&nbsp;&nbsp;&nbsp;○ Gantt</option>
+                <option id="minutes" data-function="statsShowMinutes" onclick="statsShowMinutes();" accesskey="6" title="⌃+⎇+6">&nbsp;&nbsp;&nbsp;○ Minutes</option>
               </optgroup>
               <optgroup label="□ Areas" data-ctx="area" id="areas" onclick="kanbanFilterChange(this); kanbanUpdate();"></optgroup>
               <optgroup label="□ Projects" data-ctx="project" id="projects" onclick="kanbanFilterChange(this); kanbanUpdate();"></optgroup>
