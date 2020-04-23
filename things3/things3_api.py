@@ -27,11 +27,11 @@ from things3.things3 import Things3
 class Things3API():
     """API Wrapper for the simple read-only API for Things 3."""
 
-    HOST = 'localhost'
-    PORT = 15000
     PATH = getcwd() + '/resources/'
     things3 = None
     test_mode = "task"
+    host = 'localhost'
+    port = 15000
 
     def on_get(self, url):
         """Handles other GET requests"""
@@ -100,7 +100,12 @@ class Things3API():
         self.things3.filter = ""
         return Response(status=200)
 
-    def __init__(self, database=None):
+    def __init__(self, database=None, host=None, port=None):
+        cfg = Things3.get_from_config(Things3.config, host, 'KANBANVIEW_HOST')
+        self.host = cfg if cfg else self.host
+        cfg = Things3.get_from_config(Things3.config, port, 'KANBANVIEW_PORT')
+        self.port = cfg if cfg else self.port
+
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
@@ -114,11 +119,11 @@ class Things3API():
 
     def main(self):
         """"Main function."""
-        print(f"Serving at http://{self.HOST}:{self.PORT} ...")
+        print(f"Serving at http://{self.host}:{self.port} ...")
 
         try:
             self.flask_context = make_server(
-                self.HOST, self.PORT, self.flask, True)
+                self.host, self.port, self.flask, True)
             self.flask_context.serve_forever()
         except KeyboardInterrupt:
             print("Shutting down...")

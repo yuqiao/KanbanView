@@ -50,7 +50,7 @@ class Things3App():
     def main(self):
         """Run the app."""
         # kill possible zombie processes; can't use psutil in py2app context
-        system('lsof -nti:' + str(things3_api.Things3API.PORT) +
+        system('lsof -nti:' + str(things3_api.Things3API.port) +
                ' | xargs kill -9')
 
         # Make sure the server shuts down
@@ -60,8 +60,8 @@ class Things3App():
 
         webview.create_window(
             title='KanbanView',
-            url=f'http://{things3_api.Things3API.HOST}:' +
-            f'{things3_api.Things3API.PORT}/{self.FILE}',
+            url=f'http://{things3_api.Things3API.host}:' +
+            f'{things3_api.Things3API.port}/{self.FILE}',
             width=1280, height=650,
             min_size=(1280, 650),
             frameless=True)
