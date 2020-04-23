@@ -7,7 +7,9 @@ from setuptools import setup, find_packages  # type: ignore
 
 
 def package_files(directory):
+    """Automatically add data resources."""
     paths = []
+    # pylint: disable=unused-variable
     for (path, directories, filenames) in os.walk(directory):
         for filename in filenames:
             paths.append((directory, [os.path.join(path, filename)]))
