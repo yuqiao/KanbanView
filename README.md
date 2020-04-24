@@ -24,7 +24,9 @@ Besides this, you've different options:
 3. Install the library and command line tools: `pip3 install things3-api`
 4. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
-While everything should work out of the box, you might want to change some configuration aspects. To have a GUI for this is Feature Request #19. For the time being, the following default values are shown here and you can change them by creating the file `~/.kanbanviewrc` (self compiled version) / `~/Library/Containers/ws.willner.kanbanview/Data/~/.kanbanviewrc` (AppStore version) or setting them as environment variables:
+## Configuration
+
+While everything should work out of the box, you might want to change some configuration aspects. To have a GUI for this is [Feature Request #19](https://github.com/AlexanderWillner/KanbanView/issues/19). For the time being, the following default values are shown here and you can change them by creating the file `~/.kanbanviewrc` (self compiled version) / `~/Library/Containers/ws.willner.kanbanview/Data/~/.kanbanviewrc` (AppStore version) or setting them as environment variables. Note that plain integer tags (such as `5`, `15`, or `60`) are being used to calculate the estimated time of task durations for today:
 
 ```ini
 [DATABASE]
