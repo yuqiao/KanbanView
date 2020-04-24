@@ -347,7 +347,7 @@ class Things3():
                     TASK.{self.IS_NOT_TRASHED} AND
                     TASK.{self.IS_PROJECT} AND
                     TASK.{self.IS_OPEN}
-                ORDER BY TASK.title
+                ORDER BY TASK.title COLLATE NOCASE
                 """
         return self.execute_query(query)
 
@@ -366,7 +366,7 @@ class Things3():
                     ) AS size
                 FROM
                     {self.TABLE_AREA} AS AREA
-                ORDER BY AREA.title
+                ORDER BY AREA.title COLLATE NOCASE
                 """
         return self.execute_query(query)
 
@@ -470,7 +470,7 @@ class Things3():
                TASK.{self.IS_OPEN} AND
                TASK.{self.IS_PROJECT}
             GROUP BY TASK.uuid
-            ORDER BY tasks DESC
+            ORDER BY tasks COLLATE NOCASE DESC
             """
         return self.execute_query(query)
 
