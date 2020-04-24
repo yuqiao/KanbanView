@@ -17,7 +17,7 @@ __status__ = "Development"
 import sqlite3
 import sys
 from random import shuffle
-from os import environ
+from os import environ, path
 import getpass
 import configparser
 from pathlib import Path
@@ -107,7 +107,7 @@ class Things3():
         elif environ.get(preference):
             result = environ.get(preference)
         elif 'DATABASE' in config and preference in config['DATABASE']:
-            result = config['DATABASE'][preference]
+            result = path.expanduser(config['DATABASE'][preference])
         return result
 
     @staticmethod
