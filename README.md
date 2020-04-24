@@ -24,6 +24,16 @@ Besides this, you've different options:
 3. Install the library and command line tools: `pip3 install things3-api`
 4. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
+While everything should work out of the box, you might want to change some configuration aspects. To have a GUI for this is Feature Request #19. For the time being, the following default values are shown here and you can change them by creating the file `~/.kanbanviewrc` (self compiled version) / `~/Library/Containers/ws.willner.kanbanview/Data/~/.kanbanviewrc` (AppStore version) or setting them as environment variables:
+
+```ini
+[DATABASE]
+THINGSDB=/Users/myname/Library/Containers/com.culturedcode.ThingsMac/Data/Library/Application Support/Cultured Code/Things/Things.sqlite3
+TAG_WAITING=Waiting
+TAG_MIT=MIT
+TAG_CLEANUP=Cleanup
+```
+
 ## Application
 
 The Kanban Application allows you to visualize the Things3 database following the Kanban approach (focused on tasks or on projects). It also includes some visualizations. There are different implementations of the application available.
