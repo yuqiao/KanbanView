@@ -333,7 +333,14 @@ class Things3():
                 SELECT
                     TASK.uuid,
                     TASK.title,
-                    NULL as context
+                    NULL as context,
+                    (SELECT COUNT(uuid)
+                     FROM TMTask AS PROJECT_TASK
+                     WHERE
+                       PROJECT_TASK.project = TASK.uuid AND
+                       PROJECT_TASK.{self.IS_NOT_TRASHED} AND
+                       PROJECT_TASK.{self.IS_OPEN}
+                    ) AS size
                 FROM
                     {self.TABLE_TASK} AS TASK
                 WHERE
@@ -347,13 +354,20 @@ class Things3():
     def get_areas(self):
         """Get areas."""
         query = f"""
-            SELECT
-                AREA.uuid AS uuid,
-                AREA.title AS title
-            FROM
-                {self.TABLE_AREA} AS AREA
-            ORDER BY AREA.title
-            """
+                SELECT
+                    AREA.uuid AS uuid,
+                    AREA.title AS title,
+                    (SELECT COUNT(uuid)
+                        FROM TMTask AS PROJECT
+                        WHERE
+                        PROJECT.area = AREA.uuid AND
+                        PROJECT.{self.IS_NOT_TRASHED} AND
+                        PROJECT.{self.IS_OPEN}
+                    ) AS size
+                FROM
+                    {self.TABLE_AREA} AS AREA
+                ORDER BY AREA.title
+                """
         return self.execute_query(query)
 
     def get_all(self):

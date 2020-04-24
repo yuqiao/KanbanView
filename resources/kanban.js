@@ -48,9 +48,9 @@ function contentReset (id) {
   filter.innerHTML = ''
 }
 
-function optionAdd (list, title, uuid) {
+function optionAdd (list, title, uuid, size) {
   var li = document.createElement('li')
-  li.innerHTML = title
+  li.innerHTML = `${title} (${size})`
 
   var a = document.createElement('a')
   a.href = '#'
@@ -65,7 +65,7 @@ function optionsAdd (data, id) {
   if (filter.childNodes.length === 0) {
     var items = JSON.parse(data.response)
     items.forEach(function (item) {
-      optionAdd(filter, item.title, item.uuid)
+      optionAdd(filter, item.title, item.uuid, item.size)
     })
   }
 }
