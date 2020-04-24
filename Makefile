@@ -1,6 +1,6 @@
 -include appstore/Makefile
 
-VERSION=2.5.0
+VERSION=2.5.2
 MAIN=things3_kanban
 APP=things3_app
 SERVER=things3_api
@@ -159,9 +159,11 @@ pre-commit:
 	@make auto-style lint
 	@make deps-install install 
 	@THINGSDB=resources/demo.sqlite3 things-cli inbox
-	@make uninstall clean test jpg
 	@THINGSDB=resources/demo.sqlite3 make run-api &
-	@THINGSDB=resources/demo.sqlite3 make run open args="today" cli open-api app kill-api
+	@make uninstall clean test jpg
+	@THINGSDB=resources/demo.sqlite3 make open-api run open args="today" cli
+	@sleep 2
+	@make kill-api app
 	@THINGSDB=resources/demo.sqlite3 make run-app &
 	@open dist/KanbanView.app
 	@git status
