@@ -611,24 +611,22 @@ $(document).ready(function () {
 
     if (e.keyCode === 37) { // left
       curentActive -= 1
-      e.preventDefault()
     } else if (e.keyCode === 39) { // right
       curentActive += 1
-      e.preventDefault()
     } if (e.keyCode === 38) { // top
       curentActive -= 1
-      e.preventDefault()
     } if (e.keyCode === 40) { // bott
       curentActive += 1
+    }
+
+    if (e.keyCode >= 37 && e.keyCode <= 40) {
       e.preventDefault()
+      if (curentActive === liCount) {
+        curentActive = 0
+      }
+      highlight(e)
+      $('li').eq(curentActive).click()
     }
-
-    if (curentActive === liCount) {
-      curentActive = 0
-    }
-
-    highlight(e)
-    $('li').eq(curentActive).click()
   })
 })
 
