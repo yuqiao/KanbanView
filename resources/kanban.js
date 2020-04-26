@@ -6,7 +6,7 @@
 
 var view = null
 var idxUUID = 'None'
-var canvas = document.getElementById('canvas')
+const canvas = document.getElementById('canvas')
 var mode = 'task'
 
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
@@ -16,7 +16,7 @@ const arrSum = arr => arr.reduce((a, b) => a + b, 0)
 
 function isElementInViewport (el) {
   if (typeof jQuery === 'function' && el instanceof jQuery) { el = el[0] }
-  var rect = el.getBoundingClientRect()
+  const rect = el.getBoundingClientRect()
   return (
     rect.top >= document.getElementById('header').offsetHeight &&
     rect.left >= 0 &&
@@ -44,15 +44,15 @@ function kanbanUpdate () {
 }
 
 function contentReset (id) {
-  var filter = document.getElementById(id)
+  const filter = document.getElementById(id)
   filter.innerHTML = ''
 }
 
 function optionAdd (list, title, uuid, size) {
-  var li = document.createElement('li')
+  const li = document.createElement('li')
   li.innerHTML = `${title} (${size})`
 
-  var a = document.createElement('a')
+  const a = document.createElement('a')
   a.href = '#'
   a.setAttribute('id', uuid)
   a.onclick = function () { highlight(event); kanbanFilterChange(this) }
@@ -61,9 +61,9 @@ function optionAdd (list, title, uuid, size) {
 }
 
 function optionsAdd (data, id) {
-  var filter = document.getElementById(id)
+  const filter = document.getElementById(id)
   if (filter.childNodes.length === 0) {
-    var items = JSON.parse(data.response)
+    const items = JSON.parse(data.response)
     items.forEach(function (item) {
       optionAdd(filter, item.title, item.uuid, item.size)
     })
@@ -71,12 +71,12 @@ function optionsAdd (data, id) {
 }
 
 function contentAdd (req) {
-  var elem = document.getElementById('content')
+  const elem = document.getElementById('content')
   elem.innerHTML += req
 }
 
 function contentReplace (id, data) {
-  var elem = document.getElementById(id)
+  const elem = document.getElementById(id)
   elem.outerHTML = data
 }
 
@@ -141,9 +141,9 @@ function columnAddPreview (cssclass, header) {
 }
 
 function rowsAdd (color, title, data, query, help, shortcut, icon) {
-  var rows = JSON.parse(data.response)
-  var rowHTML = rowsGet(rows)
-  var fragment = `
+  const rows = JSON.parse(data.response)
+  const rowHTML = rowsGet(rows)
+  const fragment = `
         <div class='column' 
             ondrop='onDrop(event);'
             ondragleave='onDragLeave(event);'
@@ -171,8 +171,8 @@ function rowsAdd (color, title, data, query, help, shortcut, icon) {
   }
 }
 
-var requestParallel = function (url, method) {
-  var request = new XMLHttpRequest()
+const requestParallel = function (url, method) {
+  const request = new XMLHttpRequest()
   request.onreadystatechange = function () {
     if (request.readyState !== 4) { return }
     if (request.status >= 200 && request.status < 300) {
@@ -185,8 +185,8 @@ var requestParallel = function (url, method) {
   request.send()
 }
 
-var requestSequencial = function (url, method) {
-  var request = new XMLHttpRequest()
+const requestSequencial = function (url, method) {
+  const request = new XMLHttpRequest()
   return new Promise(function (resolve, reject) {
     request.onreadystatechange = function () {
       if (request.readyState !== 4) { return }
@@ -266,7 +266,7 @@ function onDrop (event) { // eslint-disable-line no-unused-vars
 }
 
 function switchMode (event) { // eslint-disable-line no-unused-vars
-  var taskMode = document.getElementById('mode').checked
+  const taskMode = document.getElementById('mode').checked
   if (taskMode === true) {
     mode = 'task'
   } else {
@@ -276,8 +276,8 @@ function switchMode (event) { // eslint-disable-line no-unused-vars
 }
 
 function kanbanFilterChange (event) { // eslint-disable-line no-unused-vars
-  var uuid = event.id
-  var filterType = event.parentNode.dataset.ctx
+  const uuid = event.id
+  const filterType = event.parentNode.dataset.ctx
   if (uuid != null) {
     idxUUID = uuid
 
@@ -306,7 +306,7 @@ function statsReplace (canv) {
   document.getElementById('stats').appendChild(canv)
 }
 function canvasCreate () {
-  var canvas = document.createElement('canvas')
+  const canvas = document.createElement('canvas')
   canvas.id = 'canvas'
   canvas.className = 'canvas'
   return canvas
@@ -316,10 +316,10 @@ async function statsShowDistribution () { // eslint-disable-line no-unused-vars
   view = statsShowDistribution
   kanbanHide()
   statsShow()
-  var canv = canvasCreate()
+  const canv = canvasCreate()
   statsReplace(canv)
 
-  var ctx = canv.getContext('2d')
+  const ctx = canv.getContext('2d')
   var backlog = 0
   await requestSequencial('api/backlog').then(function (data) {
     backlog = JSON.parse(data.response).length
@@ -386,14 +386,14 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   kanbanHide()
   statsShow()
 
-  var canv = document.createElement('div')
+  const canv = document.createElement('div')
   canv.id = 'canvas'
   canv.className = 'canvas big-text container'
   statsReplace(canv)
 
   await requestSequencial('api/stats-min-today').then(function (data) {
-    var jsonfile = JSON.parse(data.response)
-    var minutes = jsonfile[0].minutes
+    const jsonfile = JSON.parse(data.response)
+    const minutes = jsonfile[0].minutes
     if (minutes == null) {
       canv.innerHTML = 'no time estimations'
     } else if (minutes === '1') {
@@ -410,36 +410,36 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
   view = statsShowUniverse
   kanbanHide()
   statsShow()
-  var canv = canvasCreate()
+  const canv = canvasCreate()
   statsReplace(canv)
-  var ctx = canv.getContext('2d')
+  const ctx = canv.getContext('2d')
 
   await requestSequencial('api/top-proj').then(function (data) {
-    var jsonfile = JSON.parse(data.response)
+    const jsonfile = JSON.parse(data.response)
 
-    var labels = jsonfile.map(function (e) {
+    const labels = jsonfile.map(function (e) {
       return e.title
     })
-    var uuids = jsonfile.map(function (e) {
+    const uuids = jsonfile.map(function (e) {
       return e.uuid
     })
-    var x = jsonfile.map(function (e) {
+    const x = jsonfile.map(function (e) {
       return e.created
     })
-    var y = jsonfile.map(function (e) {
+    const y = jsonfile.map(function (e) {
       return e.modified
     })
-    var r = jsonfile.map(function (e) {
+    const r = jsonfile.map(function (e) {
       return e.tasks
     })
 
-    var xMax = Math.max(...x)
-    var yMax = Math.max(...y)
-    var rMax = Math.max(...r)
-    var chartData = []
+    const xMax = Math.max(...x)
+    const yMax = Math.max(...y)
+    const rMax = Math.max(...r)
+    const chartData = []
 
     for (var i = 0; i < labels.length; i++) {
-      var chartDataset = {
+      const chartDataset = {
         label: labels[i],
         backgroundColor: 'rgba(' + (r[i] / rMax) * 250 + ', 150, 0, 0.5)',
         borderColor: 'rgba(150, 150, 0, 1)',
@@ -458,8 +458,8 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
       chartData.push(chartDataset)
     }
 
-    var dataset = { datasets: chartData }
-    var options = {
+    const dataset = { datasets: chartData }
+    const options = {
       title: { display: true, text: 'project size vs. age' },
       legend: { display: false },
       scales: {
@@ -484,8 +484,8 @@ async function statsShowUniverse () { // eslint-disable-line no-unused-vars
       options: options
     })
     document.getElementById('canvas').addEventListener('click', function (evt) {
-      var activePoint = chart.getDatasetAtEvent(evt)
-      var uuid = activePoint[0]._options.rotation
+      const activePoint = chart.getDatasetAtEvent(evt)
+      const uuid = activePoint[0]._options.rotation
       const a = document.createElement('a')
       a.target = '_blank'
       a.href = `things:///show?id=${uuid}`
@@ -498,30 +498,30 @@ async function statsShowHistory () { // eslint-disable-line no-unused-vars
   view = statsShowHistory
   kanbanHide()
   statsShow()
-  var canv = canvasCreate()
+  const canv = canvasCreate()
   statsReplace(canv)
 
   await requestSequencial('api/stats-day').then(function (data) {
-    var jsonfile = JSON.parse(data.response)
+    const jsonfile = JSON.parse(data.response)
 
-    var labels = jsonfile.map(function (e) {
+    const labels = jsonfile.map(function (e) {
       return e.date
     })
-    var created = jsonfile.map(function (e) {
+    const created = jsonfile.map(function (e) {
       return e.created
     })
-    var cancelled = jsonfile.map(function (e) {
+    const cancelled = jsonfile.map(function (e) {
       return e.cancelled
     })
-    var completed = jsonfile.map(function (e) {
+    const completed = jsonfile.map(function (e) {
       return e.completed
     })
-    var trashed = jsonfile.map(function (e) {
+    const trashed = jsonfile.map(function (e) {
       return e.trashed
     })
 
-    var ctx = canv.getContext('2d')
-    var config = {
+    const ctx = canv.getContext('2d')
+    const config = {
       type: 'bar',
       data: {
         labels: labels,
@@ -598,7 +598,7 @@ $(document).ready(function () {
   })
 
   $(document).keydown(function (e) {
-    var liCount = $('li').length
+    const liCount = $('li').length
     var curentActive = 0
 
     var eachCounter = 0
