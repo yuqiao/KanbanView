@@ -643,7 +643,7 @@ class Things3():
         if self.debug is True:
             print(sql)
         try:
-            connection = sqlite3.connect(self.database)
+            connection = sqlite3.connect('file:' + self.database + '?mode=ro', uri=True)
             connection.row_factory = Things3.dict_factory
             cursor = connection.cursor()
             cursor.execute(sql)
