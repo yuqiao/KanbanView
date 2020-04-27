@@ -210,7 +210,7 @@ a {
 
 .active {
   background-color: #666;
-  background-color: rgba(150,150,150,0.3);
+  background-color: rgba(150, 150, 150, 0.3);
   border-radius: 2px;
 }
 
@@ -219,6 +219,7 @@ a {
   margin-bottom: 0.2em;
   margin-top: 2em;
 }
+
 .sidelist {
   font-size: 12px;
   height: 100%;
@@ -230,9 +231,9 @@ a {
 }
 
 .sidelist ul {
-  list-style:none;
+  list-style: none;
   list-style-position: outside;
-  margin:0;
+  margin: 0;
   padding-left: 1em;
 }
 
@@ -244,7 +245,54 @@ a {
   content: "◉ ";
   margin: 0 0 0 -1.2em;
 }
- 
+
+.eisenhower {
+  display: grid;
+  grid-template-areas:
+    'Time Time'
+    'A B'
+    'C D';
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 10em 50% 50%;
+}
+
+.eisenhower-inner {
+  height: 100%;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.Time {
+  font-size:4em;
+  grid-area: Time;
+  text-align: center;
+}
+
+.A {
+  background: #eee;
+  grid-area: A;
+  padding-bottom:5em;
+}
+
+.B {
+  background: #ddd;
+  grid-area: B;
+  padding-bottom:5em;
+}
+
+.C {
+  background: #eee;
+  grid-area: C;
+  padding-bottom:15em;
+}
+
+.D {
+  background: #ddd;
+  grid-area: D;
+  padding-bottom:15em;
+}
+
+
 .loading {
   font-size: xx-large;
   position: absolute;
@@ -384,9 +432,11 @@ a {
     color: #fff;
   }
 
-  .sidebar-container, .canvas {
+  .sidebar-container,
+  .canvas {
     background-color: #222;
   }
+
   .header {
     background-image: linear-gradient(45deg, rgb(50, 50, 50), rgb(30, 30, 30));
   }
@@ -401,7 +451,8 @@ a {
     opacity: 1;
   }
 
-  .h2, a {
+  .h2,
+  a {
     color: #eee;
   }
 

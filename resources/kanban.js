@@ -34,8 +34,8 @@ function kanbanUpdate () {
     requestParallel('api/projects', function (data) { optionsAdd(data, 'projects') })
     requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i', 'inbox') })
     requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't', 'star') })
-    requestParallel('api/waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w', 'clock') })
-    requestParallel('api/mit', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm', 'exclamation-triangle') })
+    requestParallel('api/tag/Waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w', 'clock') })
+    requestParallel('api/tag/MIT', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm', 'exclamation-triangle') })
     requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
     requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, 'id=empty', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
     requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
@@ -381,28 +381,60 @@ async function statsShowDistribution () { // eslint-disable-line no-unused-vars
   })
 }
 
+function matrixAdd (cssClass, color, title, query, help, shortcut, icon) {
+  const fragment = `
+        <div class='${cssClass}' id='${title}'>
+                <a draggable='false' 
+                    href='things:///show?${query}'
+                    target='_blank'
+                    accesskey='${shortcut}'
+                    title='⌃+⎇+${shortcut}'>
+                    <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}</h2>
+                </a>
+                <div id='${title}-inner' class='eisenhower-inner'>
+                Loading...
+                </div>
+            </div>
+        </div>`
+  return fragment
+}
+
+function matrixReplace (id, data) {
+  const html = rowsGet(JSON.parse(data.response))
+  document.getElementById(id + '-inner').innerHTML = html
+}
+
 async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   view = statsShowMinutes
   kanbanHide()
   statsShow()
-
+  
   const canv = document.createElement('div')
   canv.id = 'canvas'
-  canv.className = 'canvas big-text container'
+  canv.className = 'canvas container eisenhower'
+  canv.innerHTML = matrixAdd('Time', 'color1', 'Time', 'query=A', 'Foo', 'T', 'clock') +
+                   matrixAdd('A', 'color4', 'A', 'query=A', 'Foo', 'A', 'fire') +
+                   matrixAdd('B', 'color6', 'B', 'query=B', 'Foo', 'B', 'exclamation-circle') +
+                   matrixAdd('C', 'color5', 'C', 'query=C', 'Foo', 'C', 'hands-helping') +
+                   matrixAdd('D', 'color3', 'D', 'query=D', 'Foo', 'D', 'trash')
   statsReplace(canv)
 
-  await requestSequencial('api/stats-min-today').then(function (data) {
+  requestParallel('api/filter/reset', null)
+  requestSequencial('api/tag/A/today').then(function (data) { matrixReplace('A', data) })
+  requestSequencial('api/tag/B/today').then(function (data) { matrixReplace('B', data) })
+  requestSequencial('api/tag/C/today').then(function (data) { matrixReplace('C', data) })
+  requestSequencial('api/tag/D/today').then(function (data) { matrixReplace('D', data) })
+  requestSequencial('api/stats-min-today').then(function (data) {
     const jsonfile = JSON.parse(data.response)
-    const minutes = jsonfile[0].minutes
+    var minutes = jsonfile[0].minutes
     if (minutes == null) {
-      canv.innerHTML = 'no time estimations'
+      minutes = 'no time estimations'
     } else if (minutes === '1') {
-      canv.innerHTML = minutes + ' minute'
+      minutes = minutes + ' minute'
     } else {
-      canv.innerHTML = minutes + ' minutes'
+      minutes = minutes + ' minutes'
     }
-
-    canv.title = 'use tags named after plain numbers'
+    document.getElementById('Time-inner').innerHTML = minutes
   })
 }
 

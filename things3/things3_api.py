@@ -70,6 +70,17 @@ class Things3API():
         if mode == "project" or self.test_mode == "project":
             self.things3.mode_project()
 
+    def tag(self, tag, area=None):
+        """Get specific tag."""
+        self.mode_selector()
+        if area is not None:
+            data = self.things3.get_tag_today(tag)
+        else:
+            data = self.things3.get_tag(tag)
+        self.things3.mode_task()
+        data = json.dumps(data)
+        return Response(response=data, content_type='application/json')
+
     def api(self, command):
         """Return database as JSON strings."""
         if command in self.things3.functions:
@@ -109,6 +120,8 @@ class Things3API():
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
+        self.flask.add_url_rule('/api/tag/<tag>', view_func=self.tag)
+        self.flask.add_url_rule('/api/tag/<tag>/<area>', view_func=self.tag)
         self.flask.add_url_rule(
             '/api/filter/<mode>/<uuid>', view_func=self.api_filter)
         self.flask.add_url_rule('/api/filter/reset',
@@ -123,7 +136,7 @@ class Things3API():
 
         try:
             self.flask_context = make_server(
-                self.host, self.port, self.flask, True)
+                self.host, self.port, self.flask, threaded=True)
             self.flask_context.serve_forever()
         except KeyboardInterrupt:
             print("Shutting down...")

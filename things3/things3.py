@@ -252,6 +252,34 @@ class Things3():
                 """
         return self.get_rows(query)
 
+    def get_tag_today(self, tag):
+        """Get today tasks with specific tag"""
+        query = f"""
+                TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_TASK} AND
+                TASK.{self.IS_OPEN} AND
+                (TASK.{self.IS_ANYTIME} OR (
+                     TASK.{self.IS_SOMEDAY} AND
+                     TASK.{self.DATE_START} <= strftime('%s', 'now')
+                     )
+                ) AND
+                TAGS.tags=(SELECT uuid FROM {self.TABLE_TAG}
+                             WHERE title='{tag}') AND
+                TASK.{self.IS_SCHEDULED} AND (
+                    (
+                        PROJECT.title IS NULL OR (
+                            PROJECT.{self.IS_NOT_TRASHED}
+                        )
+                    ) AND (
+                        HEADPROJ.title IS NULL OR (
+                            HEADPROJ.{self.IS_NOT_TRASHED}
+                        )
+                    )
+                )
+                ORDER BY TASK.duedate DESC , TASK.todayIndex
+            """
+        return self.get_rows(query)
+
     def get_anytime(self):
         """Get anytime tasks."""
         query = f"""
@@ -643,7 +671,8 @@ class Things3():
         if self.debug is True:
             print(sql)
         try:
-            connection = sqlite3.connect('file:' + self.database + '?mode=ro', uri=True)
+            connection = sqlite3.connect(
+                'file:' + self.database + '?mode=ro', uri=True)
             connection.row_factory = Things3.dict_factory
             cursor = connection.cursor()
             cursor.execute(sql)
