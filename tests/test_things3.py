@@ -37,7 +37,7 @@ class Things3Case(unittest.TestCase):
     def test_upcoming(self):
         """Test Upcoming."""
         tasks = self.things3.get_upcoming()
-        self.assertEqual(5, len(tasks))
+        self.assertEqual(6, len(tasks))
         titles = []
         for task in tasks:
             titles.append(task['title'])
@@ -81,7 +81,7 @@ class Things3Case(unittest.TestCase):
     def test_all(self):
         """Test all tasks."""
         tasks = self.things3.get_all()
-        self.assertEqual(55, len(tasks))
+        self.assertEqual(56, len(tasks))
 
     def test_due(self):
         """Test due tasks."""

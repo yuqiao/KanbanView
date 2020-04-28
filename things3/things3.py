@@ -626,12 +626,15 @@ class Things3():
                 END AS context_uuid,
                 CASE
                     WHEN TASK.recurrenceRule IS NULL
-                    THEN date(TASK.dueDate,"unixepoch")
+                    THEN strftime('%d.%m.', TASK.dueDate,"unixepoch") ||
+                         substr(strftime('%Y', TASK.dueDate,"unixepoch"),3, 2)
                 ELSE NULL
                 END AS due,
                 date(TASK.creationDate,"unixepoch") as created,
                 date(TASK.userModificationDate,"unixepoch") as modified,
-                date(TASK.startDate,"unixepoch") as started,
+                strftime('%d.%m.', TASK.startDate,"unixepoch") || 
+                  substr(strftime('%Y', TASK.startDate,"unixepoch"),3, 2)
+                  as started,
                 date(TASK.stopDate,"unixepoch") as stopped,
                 (SELECT COUNT(uuid)
                  FROM TMTask AS PROJECT_TASK
