@@ -16,7 +16,7 @@ class Things3APICase(unittest.TestCase):
     def test_today(self):
         """Test Today."""
         result = json.loads(self.things3_api.api("today").response[0])
-        self.assertEqual(2, len(result))
+        self.assertEqual(3, len(result))
 
     def test_not_implemented(self):
         """Test not implemented."""

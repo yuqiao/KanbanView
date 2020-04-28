@@ -16,7 +16,7 @@ class Things3Case(unittest.TestCase):
     def test_today(self):
         """Test Today."""
         tasks = self.things3.get_today()
-        self.assertEqual(2, len(tasks))
+        self.assertEqual(3, len(tasks))
         titles = []
         for task in tasks:
             titles.append(task['title'])
@@ -61,7 +61,7 @@ class Things3Case(unittest.TestCase):
     def test_mit(self):
         """Test MIT."""
         tasks = self.things3.get_mit()
-        self.assertEqual(5, len(tasks))
+        self.assertEqual(6, len(tasks))
 
     def test_completed(self):
         """Test completed tasks."""
