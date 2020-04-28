@@ -17,6 +17,7 @@ __status__ = "Development"
 import sys
 from os import getcwd
 import json
+import socket
 from flask import Flask
 from flask import Response
 from flask import request
@@ -28,12 +29,13 @@ class Things3API():
     """API Wrapper for the simple read-only API for Things 3."""
 
     PATH = getcwd() + '/resources/'
+    DEFAULT = 'kanban.html'
     things3 = None
     test_mode = "task"
     host = 'localhost'
     port = 15000
 
-    def on_get(self, url):
+    def on_get(self, url=DEFAULT):
         """Handles other GET requests"""
         status = 200
         filename = self.PATH + url
@@ -96,6 +98,10 @@ class Things3API():
                         content_type='application/json',
                         status=404)
 
+    def get_url(self):
+        """Get the public url for the endpoint"""
+        return f"http://{socket.gethostname()}:{self.port}"
+
     def api_filter(self, mode, uuid):
         """Filter view by specific modifiers"""
         if mode == "area" and uuid != "":
@@ -120,6 +126,7 @@ class Things3API():
         self.things3 = Things3(database=database)
         self.flask = Flask(__name__)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
+        self.flask.add_url_rule('/api/url', view_func=self.get_url)
         self.flask.add_url_rule('/api/tag/<tag>', view_func=self.tag)
         self.flask.add_url_rule('/api/tag/<tag>/<area>', view_func=self.tag)
         self.flask.add_url_rule(
@@ -127,6 +134,7 @@ class Things3API():
         self.flask.add_url_rule('/api/filter/reset',
                                 view_func=self.api_filter_reset)
         self.flask.add_url_rule('/<url>', view_func=self.on_get)
+        self.flask.add_url_rule('/', view_func=self.on_get)
         self.flask.app_context().push()
         self.flask_context = None
 

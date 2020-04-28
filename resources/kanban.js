@@ -408,7 +408,7 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   view = statsShowMinutes
   kanbanHide()
   statsShow()
-  
+
   const canv = document.createElement('div')
   canv.id = 'canvas'
   canv.className = 'canvas container eisenhower'
@@ -662,6 +662,15 @@ $(document).ready(function () {
   })
 })
 
+function copyURLtoClipboard () { // eslint-disable-line no-unused-vars
+  const url = document.getElementById('host').dataset.host
+  navigator.clipboard.writeText(url).then(function () {
+    alert('Please open ' + url + ' on your tablet. URL already copied to the clipboard.')
+  }, function (err) {
+    alert('Async: Could not copy text: ', err)
+  })
+}
+
 window.onload = function () {
   contentAdd(columnAddPreview('color1', 'Backlog'))
   contentAdd(columnAddPreview('color8', 'Grooming'))
@@ -671,6 +680,10 @@ window.onload = function () {
   contentAdd(columnAddPreview('color2', 'MIT'))
   contentAdd(columnAddPreview('color6', 'Today'))
   contentAdd(columnAddPreview('color7', 'Next'))
+  // requestSequencial('api/url').then(function (data) {
+  //   document.getElementById('host').dataset.host =
+  //     data.response + '/kanban.html'
+  // })
   refresh()
 }
 window.onfocus = refresh

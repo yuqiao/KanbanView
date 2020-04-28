@@ -632,7 +632,7 @@ class Things3():
                 END AS due,
                 date(TASK.creationDate,"unixepoch") as created,
                 date(TASK.userModificationDate,"unixepoch") as modified,
-                strftime('%d.%m.', TASK.startDate,"unixepoch") || 
+                strftime('%d.%m.', TASK.startDate,"unixepoch") ||
                   substr(strftime('%Y', TASK.startDate,"unixepoch"),3, 2)
                   as started,
                 date(TASK.stopDate,"unixepoch") as stopped,

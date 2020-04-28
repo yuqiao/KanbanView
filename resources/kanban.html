@@ -35,19 +35,25 @@
       <div class="header" id="header">
         <img class="logo" src="logo-dark.png" alt="logo" >
         <div class="onoffswitch">
-                <input type="checkbox" name="onoffswitch" 
-                       class="onoffswitch-checkbox" id="mode"
-                       checked="checked" onclick="switchMode();"
-                       accesskey="p" title="⌃+⎇+P">
-                <label class="onoffswitch-label" for="mode">
-                  <span class="onoffswitch-inner"><!----></span>
-                  <span class="onoffswitch-switch"><!----></span>
-                </label>
-            </div>
+          <input type="checkbox" name="onoffswitch"
+                  class="onoffswitch-checkbox" id="mode"
+                  checked="checked" onclick="switchMode();"
+                  accesskey="p" title="⌃+⎇+P">
+          <label class="onoffswitch-label" for="mode">
+            <span class="onoffswitch-inner"><!----></span>
+            <span class="onoffswitch-switch"><!----></span>
+          </label>
+        </div>
       </div>
       <div class="sidebar-container">
         <div class="sidebar">
           <div class="column sidelist" id="listContainer">
+            <!--
+            <div class="listHeader">
+              <i class="fa fa-external-link-alt"></i>
+              <a id='host' data-url='' href="javascript:copyURLtoClipboard();">Open on iPad</a>
+            </div>
+            -->
             <div class="listHeader"><i class="fa fa-archive"> </i> View</div>
             <ul id="viewlist">
               <a href="#" id="kanban" data-function="kanbanUpdate" onclick="kanbanFilterReset(); kanbanUpdate();" accesskey="1" title="⌃+⎇+1"><li>Kanban</li></a>
