@@ -60,6 +60,7 @@ class Things3Case(unittest.TestCase):
 
     def test_mit(self):
         """Test MIT."""
+        self.things3.tag_mit = 'MIT'
         tasks = self.things3.get_mit()
         self.assertEqual(6, len(tasks))
 
