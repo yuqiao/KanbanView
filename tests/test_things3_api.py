@@ -23,9 +23,19 @@ class Things3APICase(unittest.TestCase):
         result = json.loads(self.things3_api.api("today").response[0])
         self.assertEqual(4, len(result))
 
+    def test_get_tag(self):
+        """Test tags."""
+        result = json.loads(self.things3_api.tag("Waiting").response[0])
+        self.assertEqual(3, len(result))
+
     def test_not_implemented(self):
         """Test not implemented."""
         result = self.things3_api.api("not-implemented").status_code
+        self.assertEqual(404, result)
+
+    def test_not_found(self):
+        """Test not found."""
+        result = self.things3_api.on_get('sdf').status_code
         self.assertEqual(404, result)
 
     def test_toggle(self):
