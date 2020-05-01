@@ -10,7 +10,7 @@
 
 This repository contains a simple read-only CLI, API and Web Service for [Things3](http://culturedcode.com). It further includes an example web application to create a visual task-level overview (Kanban) of what is on your plate.
 
-![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020.png)
+![view2020](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-1.png)
 
 ## Installation
 
@@ -48,23 +48,27 @@ The **app** version runs a macOS application via `make run-app`. You can also cr
 
 Dark mode with project mode enabled:
 
-![dark-mode](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-projects.png)
+![dark-mode](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-6.png)
 
 Types of tasks:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-types.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-2.png)
 
 History of task actions:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-stats.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-3.png)
 
 Universe view on the projects:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-universe.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-4.png)
 
-How many minutes are scheduled for today:
+How many minutes are scheduled for today and view task in an Eisenhower matrix:
 
-![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/view-2020-dark-minutes.png)
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-5.png)
+
+Remote control via iPad:
+
+![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-7.png)
 
 ## Commands
 
