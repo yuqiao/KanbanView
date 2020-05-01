@@ -1,6 +1,6 @@
 -include appstore/Makefile
 
-VERSION=2.5.3
+VERSION=2.6.dev0
 MAIN=things3_kanban
 APP=things3_app
 SERVER=things3_api
@@ -155,6 +155,7 @@ feedback:
 	@open https://github.com/AlexanderWillner/KanbanView/issues
 
 pre-commit:
+	@rm ~/.kanbanviewrc
 	@make clean kill-api
 	@make auto-style lint
 	@make deps-install install 
