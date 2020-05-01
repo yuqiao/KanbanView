@@ -5,13 +5,18 @@
 
 import unittest
 import json
-from things3 import things3_api
+import configparser
+from things3 import things3, things3_api
 
 
 class Things3APICase(unittest.TestCase):
     """Class documentation goes here."""
 
-    things3_api = things3_api.Things3API(database='resources/demo.sqlite3')
+    things3_api = things3_api.Things3API()
+    things3 = things3.Things3(database='resources/demo.sqlite3')
+    things3.config = configparser.ConfigParser()
+    things3.config.read('tests/kanbanviewrc')
+    things3_api.things3 = things3
 
     def test_today(self):
         """Test Today."""
@@ -49,6 +54,11 @@ class Things3APICase(unittest.TestCase):
         result = self.things3_api.on_get(
             "/kanban.html").response[0].decode("utf-8")
         self.assertIn("kanban.js", result)
+
+    def test_config(self):
+        """Test configuration."""
+        result = self.things3_api.config_get('TAG_MIT').response[0]
+        self.assertEqual(b"MIT", result)
 
 
 if __name__ == '__main__':

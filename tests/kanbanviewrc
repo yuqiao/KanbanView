@@ -1,0 +1,5 @@
+[DATABASE]
+THINGSDB=resources/demo.sqlite3
+TAG_WAITING=Waiting
+TAG_MIT=MIT
+TAG_CLEANUP=Cleanup

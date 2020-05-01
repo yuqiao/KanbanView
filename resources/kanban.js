@@ -10,7 +10,7 @@ const canvas = document.getElementById('canvas')
 var mode = 'task'
 
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
-function kanbanShow () { document.getElementById('content').style.display = '' }
+function kanbanShow () { preferencesHide(); statsHide(); document.getElementById('content').style.display = '' }
 
 const arrSum = arr => arr.reduce((a, b) => a + b, 0)
 
@@ -28,6 +28,7 @@ function isElementInViewport (el) {
 function kanbanUpdate () {
   view = kanbanUpdate
   statsHide()
+  preferencesHide()
   kanbanShow()
   if (canvas == null) {
     requestParallel('api/areas', function (data) { optionsAdd(data, 'areas') })
@@ -80,6 +81,16 @@ function contentReplace (id, data) {
   elem.outerHTML = data
 }
 
+function rowAdd (uuid, task, started, due, cssClass, context) {
+  return `<div class='box' draggable='false' 
+               ondragstart='onDragStart(event);' 
+               id='${uuid}'>${task}
+            <div class='deadline'>${started}</div>
+            <div class='deadline'>${due}</div>
+            <div class='area ${cssClass}'>${context}</div>
+          </div>
+          `
+}
 function rowsGet (rows) {
   var fragment = ''
   rows.forEach(function (row) {
@@ -119,13 +130,7 @@ function rowsGet (rows) {
       cssClass = 'hasDeadline'
     }
 
-    fragment += `<div class='box' draggable='false' 
-                          ondragstart='onDragStart(event);' 
-                          id='${row.uuid}'>${task}
-                        <div class='deadline'>${started}</div>
-                        <div class='deadline'>${due}</div>
-                        <div class='area ${cssClass}'>${context}</div>
-                    </div>`
+    fragment += rowAdd(row.uuid, task, started, due, cssClass, context)
   })
   return fragment
 }
@@ -140,10 +145,8 @@ function columnAddPreview (cssclass, header) {
             </div>`
 }
 
-function rowsAdd (color, title, data, query, help, shortcut, icon) {
-  const rows = JSON.parse(data.response)
-  const rowHTML = rowsGet(rows)
-  const fragment = `
+function columnAdd (title, help, query, shortcut, color, size, rowHTML, icon) {
+  return `
         <div class='column' 
             ondrop='onDrop(event);'
             ondragleave='onDragLeave(event);'
@@ -156,12 +159,19 @@ function rowsAdd (color, title, data, query, help, shortcut, icon) {
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
                     <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}
-                        <span class='size'>${rows.length}</span>
+                        <span class='size'>${size}</span>
                     </h2>
                 </a>
                 ${rowHTML}
             </div>
-        </div>`
+        </div>
+        `
+}
+
+function rowsAdd (color, title, data, query, help, shortcut, icon) {
+  const rows = JSON.parse(data.response)
+  const rowHTML = rowsGet(rows)
+  const fragment = columnAdd(title, help, query, shortcut, color, rows.length, rowHTML, icon)
 
   if (document.getElementById(title) !== null) {
     contentReplace(title, fragment)
@@ -185,7 +195,7 @@ const requestParallel = function (url, method) {
   request.send()
 }
 
-const requestSequencial = function (url, method) {
+const requestSequencial = function (url, method, data) {
   const request = new XMLHttpRequest()
   return new Promise(function (resolve, reject) {
     request.onreadystatechange = function () {
@@ -197,7 +207,7 @@ const requestSequencial = function (url, method) {
       }
     }
     request.open(method || 'GET', `${url}?mode=${mode}`, true)
-    request.send()
+    request.send(data || null)
   })
 }
 
@@ -295,10 +305,20 @@ function kanbanFilterReset () {
   requestParallel('api/filter/reset', refresh)
 }
 
+function preferencesHide () {
+  document.getElementById('prefs').style.display = 'none'
+}
+function preferencesShow () {
+  statsHide()
+  kanbanHide()
+  document.getElementById('prefs').style.display = ''
+}
 function statsHide () {
   document.getElementById('stats').style.display = 'none'
 }
 function statsShow () {
+  preferencesHide()
+  kanbanHide()
   document.getElementById('stats').style.display = ''
 }
 function statsReplace (canv) {
@@ -629,7 +649,7 @@ $(document).ready(function () {
     highlight(event)
   })
 
-  $(document).keydown(function (e) {
+  $(document).keyup(function (e) {
     const liCount = $('li').length
     var curentActive = 0
 
@@ -662,13 +682,38 @@ $(document).ready(function () {
   })
 })
 
-function copyURLtoClipboard () { // eslint-disable-line no-unused-vars
-  const url = document.getElementById('host').dataset.host
-  navigator.clipboard.writeText(url).then(function () {
-    alert('Please open ' + url + ' on your tablet. URL already copied to the clipboard.')
-  }, function (err) {
-    alert('Async: Could not copy text: ', err)
-  })
+function savePreferences () { // eslint-disable-line no-unused-vars
+  view = showPreferences
+  kanbanHide()
+  statsHide()
+  preferencesShow()
+  requestSequencial('config/TAG_MIT', 'PUT', document.getElementById('pref-mit').value)
+  requestSequencial('config/TAG_WAITING', 'PUT', document.getElementById('pref-waiting').value)
+  requestSequencial('config/TAG_CLEANUP', 'PUT', document.getElementById('pref-cleanup').value)
+  requestSequencial('config/API_EXPOSE', 'PUT', document.getElementById('pref-expose').checked)
+  requestSequencial('config/KANBANVIEW_PORT', 'PUT', document.getElementById('pref-port').value)
+}
+
+function showPreferences () { // eslint-disable-line no-unused-vars
+  view = showPreferences
+  kanbanHide()
+  statsHide()
+  preferencesShow()
+  const prefDB = rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
+               rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
+               rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '')
+  const prefs = document.getElementById('prefs')
+  prefs.innerHTML = columnAdd('Database', 'Database Configuration', '', '', 'color2', '', prefDB, 'database')
+
+  const prefAPI = rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
+      rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
+  prefs.innerHTML = prefs.innerHTML + columnAdd('API (restart app after changes)', 'API Configuration', '', '', 'color4', '', prefAPI, 'wifi')
+  requestSequencial('config/TAG_MIT').then(function (data) { document.getElementById('pref-mit').value = data.response })
+  requestSequencial('config/TAG_WAITING').then(function (data) { document.getElementById('pref-waiting').value = data.response })
+  requestSequencial('config/TAG_CLEANUP').then(function (data) { document.getElementById('pref-cleanup').value = data.response })
+  requestSequencial('config/API_EXPOSE').then(function (data) { console.log(data.response); document.getElementById('pref-expose').checked = (data.response.toLowerCase() === 'true') })
+  requestSequencial('config/KANBANVIEW_PORT').then(function (data) { console.log(data.response); document.getElementById('pref-port').value = data.response })
+  requestSequencial('api/url').then(function (data) { document.getElementById('host').innerHTML = data.response; document.getElementById('host').href = data.response })
 }
 
 window.onload = function () {
@@ -680,10 +725,6 @@ window.onload = function () {
   contentAdd(columnAddPreview('color2', 'MIT'))
   contentAdd(columnAddPreview('color6', 'Today'))
   contentAdd(columnAddPreview('color7', 'Next'))
-  // requestSequencial('api/url').then(function (data) {
-  //   document.getElementById('host').dataset.host =
-  //     data.response + '/kanban.html'
-  // })
   refresh()
 }
 window.onfocus = refresh

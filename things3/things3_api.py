@@ -30,7 +30,6 @@ class Things3API():
 
     PATH = getcwd() + '/resources/'
     DEFAULT = 'kanban.html'
-    things3 = None
     test_mode = "task"
     host = 'localhost'
     port = 15000
@@ -71,6 +70,17 @@ class Things3API():
             mode = 'task'
         if mode == "project" or self.test_mode == "project":
             self.things3.mode_project()
+
+    def config_get(self, key):
+        """Read key from config"""
+        data = self.things3.get_config(key)
+        return Response(response=data)
+
+    def config_set(self, key):
+        """Write key to config"""
+        value = request.get_data().decode('utf-8')
+        self.things3.set_config(key, value)
+        return Response()
 
     def tag(self, tag, area=None):
         """Get specific tag."""
@@ -117,14 +127,26 @@ class Things3API():
         self.things3.filter = ""
         return Response(status=200)
 
-    def __init__(self, database=None, host=None, port=None):
-        cfg = Things3.get_from_config(Things3.config, host, 'KANBANVIEW_HOST')
-        self.host = cfg if cfg else self.host
-        cfg = Things3.get_from_config(Things3.config, port, 'KANBANVIEW_PORT')
-        self.port = cfg if cfg else self.port
-
+    def __init__(self, database=None, host=None, port=None, expose=None):
         self.things3 = Things3(database=database)
+
+        cfg = self.things3.get_from_config(host, 'KANBANVIEW_HOST')
+        self.host = cfg if cfg else self.host
+        self.things3.set_config('KANBANVIEW_HOST', self.host)
+
+        cfg = self.things3.get_from_config(port, 'KANBANVIEW_PORT')
+        self.port = cfg if cfg else self.port
+        self.things3.set_config('KANBANVIEW_PORT', self.port)
+
+        cfg = self.things3.get_from_config(expose, 'API_EXPOSE')
+        self.host = '0.0.0.0' if (str(cfg).lower() == 'true') else 'localhost'
+        self.things3.set_config('KANBANVIEW_HOST', self.host)
+        self.things3.set_config('API_EXPOSE', str(cfg).lower() == 'true')
+
         self.flask = Flask(__name__)
+        self.flask.add_url_rule('/config/<key>', view_func=self.config_get)
+        self.flask.add_url_rule(
+            '/config/<key>', view_func=self.config_set, methods=["PUT"])
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
         self.flask.add_url_rule('/api/url', view_func=self.get_url)
         self.flask.add_url_rule('/api/tag/<tag>', view_func=self.tag)

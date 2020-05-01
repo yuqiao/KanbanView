@@ -28,10 +28,10 @@ class Things3():
     """Simple read-only API for Things 3."""
 
     # Database info
+    FILE_CONFIG = str(Path.home()) + '/.kanbanviewrc'
     FILE_DB = '/Library/Containers/'\
               'com.culturedcode.ThingsMac/Data/Library/'\
               'Application Support/Cultured Code/Things/Things.sqlite3'
-
     TABLE_TASK = "TMTask"
     TABLE_AREA = "TMArea"
     TABLE_TAG = "TMTag"
@@ -73,7 +73,7 @@ class Things3():
     tag_cleanup = "Cleanup"
     anonymize = False
     config = configparser.ConfigParser()
-    config.read(str(Path.home()) + '/.kanbanviewrc')
+    config.read(FILE_CONFIG)
 
     # pylint: disable=R0913
     def __init__(self,
@@ -83,31 +83,51 @@ class Things3():
                  tag_cleanup=None,
                  anonymize=None):
 
-        cfg = self.get_from_config(self.config, tag_waiting, 'TAG_WAITING')
+        cfg = self.get_from_config(tag_waiting, 'TAG_WAITING')
         self.tag_waiting = cfg if cfg else self.tag_waiting
+        self.set_config('TAG_WAITING', self.tag_waiting)
 
-        cfg = self.get_from_config(self.config, anonymize, 'ANONYMIZE')
-        self.anonymize = cfg if cfg else self.anonymize
+        cfg = self.get_from_config(anonymize, 'ANONYMIZE')
+        self.anonymize = (cfg == 'True') if (cfg == 'True') else self.anonymize
+        self.set_config('ANONYMIZE', self.anonymize)
 
-        cfg = self.get_from_config(self.config, tag_mit, 'TAG_MIT')
+        cfg = self.get_from_config(tag_mit, 'TAG_MIT')
         self.tag_mit = cfg if cfg else self.tag_mit
+        self.set_config('TAG_MIT', self.tag_mit)
 
-        cfg = self.get_from_config(self.config, tag_cleanup, 'TAG_CLEANUP')
+        cfg = self.get_from_config(tag_cleanup, 'TAG_CLEANUP')
         self.tag_cleanup = cfg if cfg else self.tag_cleanup
+        self.set_config('TAG_CLEANUP', self.tag_cleanup)
 
-        cfg = self.get_from_config(self.config, database, 'THINGSDB')
+        cfg = self.get_from_config(database, 'THINGSDB')
         self.database = cfg if cfg else self.database
+        self.set_config('THINGSDB', self.database)
 
-    @staticmethod
-    def get_from_config(config, variable, preference):
+    def set_config(self, key, value, domain='DATABASE'):
+        """Write variable to config."""
+        if domain not in self.config:
+            self.config.add_section(domain)
+        if value is not None and key is not None:
+            self.config.set(domain, str(key), str(value))
+            with open(self.FILE_CONFIG, "w+") as configfile:
+                self.config.write(configfile)
+
+    def get_config(self, key, domain='DATABASE'):
+        """Get variable from config."""
+        result = None
+        if domain in self.config and key in self.config[domain]:
+            result = path.expanduser(self.config[domain][key])
+        return result
+
+    def get_from_config(self, variable, key, domain='DATABASE'):
         """Set variable. Priority: input, environment, config"""
         result = None
         if variable is not None:
             result = variable
-        elif environ.get(preference):
-            result = environ.get(preference)
-        elif 'DATABASE' in config and preference in config['DATABASE']:
-            result = path.expanduser(config['DATABASE'][preference])
+        elif environ.get(key):
+            result = environ.get(key)
+        elif domain in self.config and key in self.config[domain]:
+            result = path.expanduser(self.config[domain][key])
         return result
 
     @staticmethod

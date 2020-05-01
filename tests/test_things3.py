@@ -12,6 +12,7 @@ class Things3Case(unittest.TestCase):
 
     def setUp(self):
         self.things3 = Things3(database='resources/demo.sqlite3')
+        self.things3.tag_mit = 'MIT'
 
     def test_today(self):
         """Test Today."""
@@ -60,7 +61,6 @@ class Things3Case(unittest.TestCase):
 
     def test_mit(self):
         """Test MIT."""
-        self.things3.tag_mit = 'MIT'
         tasks = self.things3.get_mit()
         self.assertEqual(6, len(tasks))
 
