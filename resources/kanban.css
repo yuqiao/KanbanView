@@ -432,9 +432,9 @@ a {
 }
 
 .pref-input {
+  background-color: transparent;
   border: 1px solid #999;
   padding: 3px;
-  background-color: transparent;
 }
 
 

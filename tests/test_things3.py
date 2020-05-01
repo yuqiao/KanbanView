@@ -17,7 +17,7 @@ class Things3Case(unittest.TestCase):
     def test_today(self):
         """Test Today."""
         tasks = self.things3.get_today()
-        self.assertEqual(3, len(tasks))
+        self.assertEqual(4, len(tasks))
         titles = []
         for task in tasks:
             titles.append(task['title'])
@@ -38,7 +38,7 @@ class Things3Case(unittest.TestCase):
     def test_upcoming(self):
         """Test Upcoming."""
         tasks = self.things3.get_upcoming()
-        self.assertEqual(6, len(tasks))
+        self.assertEqual(5, len(tasks))
         titles = []
         for task in tasks:
             titles.append(task['title'])
@@ -47,7 +47,7 @@ class Things3Case(unittest.TestCase):
     def test_next(self):
         """Test Next."""
         tasks = self.things3.get_anytime()
-        self.assertEqual(30, len(tasks))
+        self.assertEqual(29, len(tasks))
 
     # def test_backlog(self):
     #     """Test Backlog."""

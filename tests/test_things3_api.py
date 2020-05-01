@@ -21,7 +21,7 @@ class Things3APICase(unittest.TestCase):
     def test_today(self):
         """Test Today."""
         result = json.loads(self.things3_api.api("today").response[0])
-        self.assertEqual(3, len(result))
+        self.assertEqual(4, len(result))
 
     def test_not_implemented(self):
         """Test not implemented."""
@@ -31,23 +31,23 @@ class Things3APICase(unittest.TestCase):
     def test_toggle(self):
         """Test toggle."""
         result = json.loads(self.things3_api.api("next").response[0])
-        self.assertEqual(30, len(result))
+        self.assertEqual(29, len(result))
         self.things3_api.test_mode = "project"
         result = json.loads(self.things3_api.api("next").response[0])
         self.assertEqual(5, len(result))
         self.things3_api.test_mode = "task"
         result = json.loads(self.things3_api.api("next").response[0])
-        self.assertEqual(30, len(result))
+        self.assertEqual(29, len(result))
 
     def test_filter(self):
         """Test Filter."""
         self.things3_api.api_filter(
             'project', 'F736F7F8-C9D5-4F30-B158-3684669985BC')
         result = json.loads(self.things3_api.api("next").response[0])
-        self.assertEqual(27, len(result))
+        self.assertEqual(26, len(result))
         self.things3_api.api_filter_reset()
         result = json.loads(self.things3_api.api("next").response[0])
-        self.assertEqual(30, len(result))
+        self.assertEqual(29, len(result))
 
     def test_get_file(self):
         """Test get file."""
