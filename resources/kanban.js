@@ -38,7 +38,7 @@ function kanbanUpdate () {
     requestParallel('api/tag/Waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w', 'clock') })
     requestParallel('api/tag/MIT', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm', 'exclamation-triangle') })
     requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
-    requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, 'id=empty', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
+    requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, '', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
     requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
     requestParallel('api/backlog', function (data) { rowsAdd('color1', 'Backlog', data, 'id=someday', 'tasks in someday projects', 'b', 'paperclip') })
   }
@@ -146,6 +146,9 @@ function columnAddPreview (cssclass, header) {
 }
 
 function columnAdd (title, help, query, shortcut, color, size, rowHTML, icon) {
+  if (query !== '') {
+    query = `href="things:///show?${query}"`
+  }
   return `
         <div class='column' 
             ondrop='onDrop(event);'
@@ -154,7 +157,7 @@ function columnAdd (title, help, query, shortcut, color, size, rowHTML, icon) {
             id='${title}' title='${help}'>
             <div class='inner-column'>
                 <a draggable='false' 
-                    href='things:///show?${query}'
+                    ${query}
                     target='_blank'
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
@@ -402,10 +405,13 @@ async function statsShowDistribution () { // eslint-disable-line no-unused-vars
 }
 
 function matrixAdd (cssClass, color, title, query, help, shortcut, icon) {
+  if (query !== '') {
+    query = `href="things:///show?${query}"`
+  }
   const fragment = `
         <div class='${cssClass}' id='${title}'>
                 <a draggable='false' 
-                    href='things:///show?${query}'
+                    ${query}
                     target='_blank'
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
@@ -432,11 +438,11 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   const canv = document.createElement('div')
   canv.id = 'canvas'
   canv.className = 'canvas container eisenhower'
-  canv.innerHTML = matrixAdd('Time', 'color1', 'Time', 'query=A', 'Foo', 'T', 'clock') +
-                   matrixAdd('A', 'color4', 'A', 'query=A', 'Foo', 'A', 'fire') +
-                   matrixAdd('B', 'color6', 'B', 'query=B', 'Foo', 'B', 'exclamation-circle') +
-                   matrixAdd('C', 'color5', 'C', 'query=C', 'Foo', 'C', 'hands-helping') +
-                   matrixAdd('D', 'color3', 'D', 'query=D', 'Foo', 'D', 'trash')
+  canv.innerHTML = matrixAdd('Time', 'color1', 'Time', '', '', 'T', 'clock') +
+                   matrixAdd('A', 'color4', 'A', 'query=A', '', 'A', 'fire') +
+                   matrixAdd('B', 'color6', 'B', 'query=B', '', 'B', 'exclamation-circle') +
+                   matrixAdd('C', 'color5', 'C', 'query=C', '', 'C', 'hands-helping') +
+                   matrixAdd('D', 'color3', 'D', 'query=D', '', 'D', 'trash')
   statsReplace(canv)
 
   requestParallel('api/filter/reset', null)
