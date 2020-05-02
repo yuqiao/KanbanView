@@ -62,7 +62,7 @@ Universe view on the projects:
 
 ![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-4.png)
 
-How many minutes are scheduled for today and view task in an Eisenhower matrix:
+How many minutes are scheduled for today (tags with plain numbers such as `5`, `15`, `30` are counted) and view task in an Eisenhower matrix (tags `A`, `B`, `C`, `D` are used):
 
 ![stat-types](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/KanbanView-AppStore-5.png)
 
