@@ -8,6 +8,7 @@ var view = null
 var idxUUID = 'None'
 const canvas = document.getElementById('canvas')
 var mode = 'task'
+const config = {}
 
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
 function kanbanShow () { preferencesHide(); statsHide(); document.getElementById('content').style.display = '' }
@@ -35,8 +36,8 @@ function kanbanUpdate () {
     requestParallel('api/projects', function (data) { optionsAdd(data, 'projects') })
     requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i', 'inbox') })
     requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't', 'star') })
-    requestParallel('api/tag/Waiting', function (data) { rowsAdd('color3', 'Waiting', data, 'query=Waiting', 'tasks with the tag "Waiting"', 'w', 'clock') })
-    requestParallel('api/tag/MIT', function (data) { rowsAdd('color2', 'MIT', data, 'query=MIT', 'most important tasks with the tag "MIT"', 'm', 'exclamation-triangle') })
+    requestParallel('api/tag/Waiting', function (data) { rowsAdd('color3', 'Waiting', data, `query=${config.tag_waiting}`, `tasks with the tag "${config.tag_waiting}"`, 'w', 'clock') })
+    requestParallel('api/tag/MIT', function (data) { rowsAdd('color2', 'MIT', data, `query=${config.tag_mit}`, `most important tasks with the tag "${config.tag_mit}"`, 'm', 'exclamation-triangle') })
     requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
     requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, '', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
     requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
@@ -698,6 +699,7 @@ function savePreferences () { // eslint-disable-line no-unused-vars
   requestSequencial('config/TAG_CLEANUP', 'PUT', document.getElementById('pref-cleanup').value)
   requestSequencial('config/API_EXPOSE', 'PUT', document.getElementById('pref-expose').checked)
   requestSequencial('config/KANBANVIEW_PORT', 'PUT', document.getElementById('pref-port').value)
+  readPreferences()
 }
 
 function showPreferences () { // eslint-disable-line no-unused-vars
@@ -714,15 +716,27 @@ function showPreferences () { // eslint-disable-line no-unused-vars
   const prefAPI = rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
       rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
   prefs.innerHTML = prefs.innerHTML + columnAdd('API (restart app after changes)', 'API Configuration', '', '', 'color4', '', prefAPI, 'wifi')
-  requestSequencial('config/TAG_MIT').then(function (data) { document.getElementById('pref-mit').value = data.response })
-  requestSequencial('config/TAG_WAITING').then(function (data) { document.getElementById('pref-waiting').value = data.response })
-  requestSequencial('config/TAG_CLEANUP').then(function (data) { document.getElementById('pref-cleanup').value = data.response })
-  requestSequencial('config/API_EXPOSE').then(function (data) { console.log(data.response); document.getElementById('pref-expose').checked = (data.response.toLowerCase() === 'true') })
-  requestSequencial('config/KANBANVIEW_PORT').then(function (data) { console.log(data.response); document.getElementById('pref-port').value = data.response })
-  requestSequencial('api/url').then(function (data) { document.getElementById('host').innerHTML = data.response; document.getElementById('host').href = data.response })
+  readPreferences()
+  document.getElementById('pref-mit').value = config.tag_mit
+  document.getElementById('pref-waiting').value = config.tag_waiting
+  document.getElementById('pref-cleanup').value = config.tag_cleanup
+  document.getElementById('pref-expose').checked = config.api_expose
+  document.getElementById('pref-port').value = config.api_port
+  document.getElementById('host').innerHTML = config.api_url
+  document.getElementById('host').href = config.api_url
+}
+
+function readPreferences () {
+  requestSequencial('config/TAG_MIT').then(function (data) { config.tag_mit = data.response })
+  requestSequencial('config/TAG_WAITING').then(function (data) { config.tag_waiting = data.response })
+  requestSequencial('config/TAG_CLEANUP').then(function (data) { config.tag_cleanup = data.response })
+  requestSequencial('config/API_EXPOSE').then(function (data) { config.api_expose = (data.response.toLowerCase() === 'true') })
+  requestSequencial('config/KANBANVIEW_PORT').then(function (data) { config.api_port = data.response })
+  requestSequencial('api/url').then(function (data) { config.api_url = data.response })
 }
 
 window.onload = function () {
+  readPreferences()
   contentAdd(columnAddPreview('color1', 'Backlog'))
   contentAdd(columnAddPreview('color8', 'Grooming'))
   contentAdd(columnAddPreview('color5', 'Upcoming'))
