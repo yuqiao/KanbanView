@@ -36,8 +36,8 @@ function kanbanUpdate () {
     requestParallel('api/projects', function (data) { optionsAdd(data, 'projects') })
     requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i', 'inbox') })
     requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't', 'star') })
-    requestParallel('api/tag/Waiting', function (data) { rowsAdd('color3', 'Waiting', data, `query=${config.tag_waiting}`, `tasks with the tag "${config.tag_waiting}"`, 'w', 'clock') })
-    requestParallel('api/tag/MIT', function (data) { rowsAdd('color2', 'MIT', data, `query=${config.tag_mit}`, `most important tasks with the tag "${config.tag_mit}"`, 'm', 'exclamation-triangle') })
+    requestParallel(`api/tag/${config.tag_waiting}`, function (data) { rowsAdd('color3', 'Waiting', data, `query=${config.tag_waiting}`, `tasks with the tag "${config.tag_waiting}"`, 'w', 'clock') })
+    requestParallel(`api/tag/${config.tag_mit}`, function (data) { rowsAdd('color2', 'MIT', data, `query=${config.tag_mit}`, `most important tasks with the tag "${config.tag_mit}"`, 'm', 'exclamation-triangle') })
     requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
     requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, '', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
     requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
@@ -657,6 +657,9 @@ $(document).ready(function () {
   })
 
   $(document).keyup(function (e) {
+    if (view === showPreferences) {
+      return
+    }
     const liCount = $('li').length
     var curentActive = 0
 
@@ -726,17 +729,17 @@ function showPreferences () { // eslint-disable-line no-unused-vars
   document.getElementById('host').href = config.api_url
 }
 
-function readPreferences () {
-  requestSequencial('config/TAG_MIT').then(function (data) { config.tag_mit = data.response })
-  requestSequencial('config/TAG_WAITING').then(function (data) { config.tag_waiting = data.response })
-  requestSequencial('config/TAG_CLEANUP').then(function (data) { config.tag_cleanup = data.response })
-  requestSequencial('config/API_EXPOSE').then(function (data) { config.api_expose = (data.response.toLowerCase() === 'true') })
-  requestSequencial('config/KANBANVIEW_PORT').then(function (data) { config.api_port = data.response })
-  requestSequencial('api/url').then(function (data) { config.api_url = data.response })
+async function readPreferences () {
+  await requestSequencial('config/TAG_MIT').then(function (data) { config.tag_mit = data.response })
+  await requestSequencial('config/TAG_WAITING').then(function (data) { config.tag_waiting = data.response })
+  await requestSequencial('config/TAG_CLEANUP').then(function (data) { config.tag_cleanup = data.response })
+  await requestSequencial('config/API_EXPOSE').then(function (data) { config.api_expose = (data.response.toLowerCase() === 'true') })
+  await requestSequencial('config/KANBANVIEW_PORT').then(function (data) { config.api_port = data.response })
+  await requestSequencial('api/url').then(function (data) { config.api_url = data.response })
 }
 
-window.onload = function () {
-  readPreferences()
+window.onload = async function () {
+  await readPreferences()
   contentAdd(columnAddPreview('color1', 'Backlog'))
   contentAdd(columnAddPreview('color8', 'Grooming'))
   contentAdd(columnAddPreview('color5', 'Upcoming'))
