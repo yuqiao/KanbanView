@@ -75,7 +75,7 @@ class Things3():
     tag_b = "B"
     tag_c = "C"
     tag_d = "D"
-    stat_Days = 365
+    stat_days = 365
     anonymize = False
     config = configparser.ConfigParser()
     config.read(FILE_CONFIG)
