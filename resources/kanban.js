@@ -83,7 +83,7 @@ function contentReplace (id, data) {
 }
 
 function rowAdd (uuid, task, started, due, cssClass, context) {
-  return `<div class='box' draggable='false' 
+  return `<div class='box bigger' draggable='false' 
                ondragstart='onDragStart(event);' 
                id='${uuid}'>${task}
             <div class='deadline'>${started}</div>
@@ -139,7 +139,7 @@ function rowsGet (rows) {
 function columnAddPreview (cssclass, header) {
   return `<div class='column' id='${header}'>
                 <div class='inner-column'>
-                    <h2 class='h2 ${cssclass}'>
+                    <h2 class='h2 bigger ${cssclass}'>
                         ${header}<span class='size'></span>
                     </h2>
                 </div>
@@ -162,7 +162,7 @@ function columnAdd (title, help, query, shortcut, color, size, rowHTML, icon) {
                     target='_blank'
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
-                    <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}
+                    <h2 class='h2 bigger ${color}'><i class="fa fa-${icon}"></i> ${title}
                         <span class='size'>${size}</span>
                     </h2>
                 </a>
@@ -416,7 +416,7 @@ function matrixAdd (cssClass, color, title, query, help, shortcut, icon) {
                     target='_blank'
                     accesskey='${shortcut}'
                     title='⌃+⎇+${shortcut}'>
-                    <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}</h2>
+                    <h2 class='h2 bigger ${color}'><i class="fa fa-${icon}"></i> ${title}</h2>
                 </a>
                 <div id='${title}-inner' class='eisenhower-inner' title='${help}'>
                 Loading...
@@ -716,7 +716,7 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
   preferencesShow()
   const prefs = document.getElementById('prefs')
 
-  const prefDB = '<h3 class="h3"><i class="fa fa-database"></i> Database</h3>' +
+  const prefDB = '<h3 class="h3 bigger"><i class="fa fa-database"></i> Database</h3>' +
                  rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
                  rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
                  rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '') +
@@ -725,7 +725,7 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
                  rowAdd(null, 'Eisenhower "C" Tag: <input class="pref-input" id="pref-C" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the C quadrant of the Eisenhower view (urgent and not important).', '', '', '') +
                  rowAdd(null, 'Eisenhower "D" Tag: <input class="pref-input" id="pref-D" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the D quadrant of the Eisenhower view (not urgent and not important).', '', '', '') +
                  rowAdd(null, 'Days for history view: <input class="pref-input" id="pref-statdays" onchange="javascript:savePreferences();">', 'How many days the statistic view should consider (currently the app has to be restarted to take this preference to take effect).', '', '', '') +
-                 '<h3><i class="fa fa-wifi"></i> API</h3>' +
+                 '<h3 class="h3 bigger"><i class="fa fa-wifi"></i> API</h3>' +
                  rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
                  rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
 

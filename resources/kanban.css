@@ -126,7 +126,6 @@ body {
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 2px 2px #999;
-  font-size: 12px;
   margin: 15px;
   padding: 10px;
   transition: background 0.3s ease-in-out;
@@ -139,7 +138,6 @@ body {
 
 .h2 {
   color: white;
-  font-size: 12px;
   margin: 0;
   padding: 15px;
 }
@@ -151,9 +149,12 @@ body {
 
 .h3 {
   color: #000;
-  font-size: 13px;
   padding-left: 1em;
   padding-top: 1em;
+}
+
+.bigger {
+  font-size: 12px;
 }
 
 a {
@@ -228,7 +229,6 @@ a {
 }
 
 .sidelist {
-  font-size: 12px;
   height: 100%;
   margin-left: 1em;
 }
