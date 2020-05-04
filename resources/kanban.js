@@ -716,20 +716,19 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
   preferencesShow()
   const prefs = document.getElementById('prefs')
 
-  const prefDB = '<h3 class="h3 bigger"><i class="fa fa-database"></i> Database</h3>' +
-                 rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
+  const prefDB = rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
                  rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
                  rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '') +
                  rowAdd(null, 'Eisenhower "A" Tag: <input class="pref-input" id="pref-A" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the A quadrant of the Eisenhower view (urgent and important).', '', '', '') +
                  rowAdd(null, 'Eisenhower "B" Tag: <input class="pref-input" id="pref-B" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the B quadrant of the Eisenhower view (not urgent and important).', '', '', '') +
                  rowAdd(null, 'Eisenhower "C" Tag: <input class="pref-input" id="pref-C" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the C quadrant of the Eisenhower view (urgent and not important).', '', '', '') +
                  rowAdd(null, 'Eisenhower "D" Tag: <input class="pref-input" id="pref-D" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the D quadrant of the Eisenhower view (not urgent and not important).', '', '', '') +
-                 rowAdd(null, 'Days for history view: <input class="pref-input" id="pref-statdays" onchange="javascript:savePreferences();">', 'How many days the statistic view should consider (currently the app has to be restarted to take this preference to take effect).', '', '', '') +
-                 '<h3 class="h3 bigger"><i class="fa fa-wifi"></i> API</h3>' +
-                 rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
-                 rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
+                 rowAdd(null, 'Days for history view: <input class="pref-input" id="pref-statdays" onchange="javascript:savePreferences();">', 'How many days the statistic view should consider (currently the app has to be restarted to take this preference to take effect).', '', '', '')
+  const prefAPI = rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
+                  rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
 
-  prefs.innerHTML = columnAdd('Preferences', 'Preferences', '', '', 'color2', '', prefDB, 'sliders-h')
+  prefs.innerHTML = columnAdd('Database', 'Database', '', '', 'color2', '', prefDB, 'database') +
+                    columnAdd('API', 'API', '', '', 'color3', '', prefAPI, 'wifi')
 
   await readPreferences()
   document.getElementById('pref-mit').value = config.tag_mit

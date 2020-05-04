@@ -88,7 +88,7 @@ body {
   padding: 0;
 }
 
-.stats {
+.stats, .prefs {
   align-items: center;
   display: flex;
   height: 100%;
@@ -425,22 +425,6 @@ a {
 
 .scrollable {
     overflow-y: auto;
-}
-
-.prefs {
-  color: #444;
-  height: 100%;
-  margin: 1em;
-  margin-left: 20em;
-  margin-right: 20em;
-}
-
-.prefs .column {
-  border: 1px solid black;
-  border-radius: 5px;
-  box-shadow: 2px 2px #999;
-  margin: 1em;
-  opacity: 0.85;
 }
 
 .pref-input {
