@@ -110,7 +110,10 @@ class Things3API():
 
     def get_url(self):
         """Get the public url for the endpoint"""
-        return f"http://{socket.gethostname()}:{self.port}"
+        fqdn = socket.getfqdn()
+        if not fqdn.lower().endswith('.local'):
+            fqdn = socket.getfqdn() + '.local'
+        return f"http://{fqdn}:{self.port}"
 
     def api_filter(self, mode, uuid):
         """Filter view by specific modifiers"""
