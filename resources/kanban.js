@@ -705,7 +705,7 @@ function savePreferences () { // eslint-disable-line no-unused-vars
   readPreferences()
 }
 
-function showPreferences () { // eslint-disable-line no-unused-vars
+async function showPreferences () { // eslint-disable-line no-unused-vars
   view = showPreferences
   kanbanHide()
   statsHide()
@@ -719,7 +719,7 @@ function showPreferences () { // eslint-disable-line no-unused-vars
   const prefAPI = rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
       rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
   prefs.innerHTML = prefs.innerHTML + columnAdd('API (restart app after changes)', 'API Configuration', '', '', 'color4', '', prefAPI, 'wifi')
-  readPreferences()
+  await readPreferences()
   document.getElementById('pref-mit').value = config.tag_mit
   document.getElementById('pref-waiting').value = config.tag_waiting
   document.getElementById('pref-cleanup').value = config.tag_cleanup
@@ -739,7 +739,6 @@ async function readPreferences () {
 }
 
 window.onload = async function () {
-  await readPreferences()
   contentAdd(columnAddPreview('color1', 'Backlog'))
   contentAdd(columnAddPreview('color8', 'Grooming'))
   contentAdd(columnAddPreview('color5', 'Upcoming'))
@@ -748,6 +747,6 @@ window.onload = async function () {
   contentAdd(columnAddPreview('color2', 'MIT'))
   contentAdd(columnAddPreview('color6', 'Today'))
   contentAdd(columnAddPreview('color7', 'Next'))
-  refresh()
+  await readPreferences().then(function (data) { refresh() })
 }
 window.onfocus = refresh

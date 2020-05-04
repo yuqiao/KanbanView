@@ -416,6 +416,10 @@ a {
   right: 0;
 }
 
+.scrollable {
+    overflow-y: auto;
+}
+
 .prefs {
   color: #444;
   margin: 1em;
