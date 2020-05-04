@@ -692,17 +692,16 @@ $(document).ready(function () {
   })
 })
 
-function savePreferences () { // eslint-disable-line no-unused-vars
+async function savePreferences () { // eslint-disable-line no-unused-vars
   view = showPreferences
   kanbanHide()
   statsHide()
   preferencesShow()
-  requestSequencial('config/TAG_MIT', 'PUT', document.getElementById('pref-mit').value)
-  requestSequencial('config/TAG_WAITING', 'PUT', document.getElementById('pref-waiting').value)
-  requestSequencial('config/TAG_CLEANUP', 'PUT', document.getElementById('pref-cleanup').value)
-  requestSequencial('config/API_EXPOSE', 'PUT', document.getElementById('pref-expose').checked)
-  requestSequencial('config/KANBANVIEW_PORT', 'PUT', document.getElementById('pref-port').value)
-  readPreferences()
+  await requestSequencial('config/TAG_MIT', 'PUT', document.getElementById('pref-mit').value).then(readPreferences())
+  await requestSequencial('config/TAG_WAITING', 'PUT', document.getElementById('pref-waiting').value).then(readPreferences())
+  await requestSequencial('config/TAG_CLEANUP', 'PUT', document.getElementById('pref-cleanup').value).then(readPreferences())
+  await requestSequencial('config/API_EXPOSE', 'PUT', document.getElementById('pref-expose').checked).then(readPreferences())
+  await requestSequencial('config/KANBANVIEW_PORT', 'PUT', document.getElementById('pref-port').value).then(readPreferences())
 }
 
 async function showPreferences () { // eslint-disable-line no-unused-vars
