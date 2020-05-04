@@ -709,15 +709,18 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
   kanbanHide()
   statsHide()
   preferencesShow()
-  const prefDB = rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
-               rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
-               rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '')
   const prefs = document.getElementById('prefs')
-  prefs.innerHTML = columnAdd('Database', 'Database Configuration', '', '', 'color2', '', prefDB, 'database')
 
-  const prefAPI = rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
-      rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
-  prefs.innerHTML = prefs.innerHTML + columnAdd('API (restart app after changes)', 'API Configuration', '', '', 'color4', '', prefAPI, 'wifi')
+  const prefDB = '<h3><i class="fa fa-database"></i> Database</h3>' +
+                 rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
+                 rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
+                 rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '') +
+                 '<h3><i class="fa fa-wifi"></i> API</h3>' +
+                 rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
+                 rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
+
+  prefs.innerHTML = columnAdd('Preferences', 'Preferences', '', '', 'color2', '', prefDB, 'sliders-h')
+
   await readPreferences()
   document.getElementById('pref-mit').value = config.tag_mit
   document.getElementById('pref-waiting').value = config.tag_waiting

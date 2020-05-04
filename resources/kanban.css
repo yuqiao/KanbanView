@@ -149,6 +149,13 @@ body {
   padding-right: 10px;
 }
 
+h3 {
+  color: #000;
+  font-size: 13px;
+  padding-left: 1em;
+  padding-top: 1em;
+}
+
 a {
   color: #333;
   text-decoration: none;
@@ -422,6 +429,7 @@ a {
 
 .prefs {
   color: #444;
+  height: 100%;
   margin: 1em;
   margin-left: 20em;
   margin-right: 20em;
