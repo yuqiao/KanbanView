@@ -190,7 +190,7 @@ const requestParallel = function (url, method) {
   request.onreadystatechange = function () {
     if (request.readyState !== 4) { return }
     if (request.status >= 200 && request.status < 300) {
-      method(request)
+      if (method !== null) { method(request) }
     } else {
       console.log('Error: ' + request.status)
     }
@@ -418,7 +418,7 @@ function matrixAdd (cssClass, color, title, query, help, shortcut, icon) {
                     title='⌃+⎇+${shortcut}'>
                     <h2 class='h2 ${color}'><i class="fa fa-${icon}"></i> ${title}</h2>
                 </a>
-                <div id='${title}-inner' class='eisenhower-inner'>
+                <div id='${title}-inner' class='eisenhower-inner' title='${help}'>
                 Loading...
                 </div>
             </div>
@@ -440,17 +440,17 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   canv.id = 'canvas'
   canv.className = 'canvas container eisenhower'
   canv.innerHTML = matrixAdd('Time', 'color1', 'Time', '', '', 'T', 'clock') +
-                   matrixAdd('A', 'color4', 'A', 'query=A', '', 'A', 'fire') +
-                   matrixAdd('B', 'color6', 'B', 'query=B', '', 'B', 'exclamation-circle') +
-                   matrixAdd('C', 'color5', 'C', 'query=C', '', 'C', 'hands-helping') +
-                   matrixAdd('D', 'color3', 'D', 'query=D', '', 'D', 'trash')
+                   matrixAdd('A', 'color4', 'A', `query=${config.A}`, `tasks today with tag ${config.A}`, 'A', 'fire') +
+                   matrixAdd('B', 'color6', 'B', `query=${config.B}`, `tasks today with tag ${config.B}`, 'B', 'exclamation-circle') +
+                   matrixAdd('C', 'color5', 'C', `query=${config.C}`, `tasks today with tag ${config.C}`, 'C', 'hands-helping') +
+                   matrixAdd('D', 'color3', 'D', `query=${config.D}`, `tasks today with tag ${config.D}`, 'D', 'trash')
   statsReplace(canv)
 
   requestParallel('api/filter/reset', null)
-  requestSequencial('api/tag/A/today').then(function (data) { matrixReplace('A', data) })
-  requestSequencial('api/tag/B/today').then(function (data) { matrixReplace('B', data) })
-  requestSequencial('api/tag/C/today').then(function (data) { matrixReplace('C', data) })
-  requestSequencial('api/tag/D/today').then(function (data) { matrixReplace('D', data) })
+  requestSequencial(`api/tag/${config.A}/today`).then(function (data) { matrixReplace('A', data) })
+  requestSequencial(`api/tag/${config.B}/today`).then(function (data) { matrixReplace('B', data) })
+  requestSequencial(`api/tag/${config.C}/today`).then(function (data) { matrixReplace('C', data) })
+  requestSequencial(`api/tag/${config.D}/today`).then(function (data) { matrixReplace('D', data) })
   requestSequencial('api/stats-min-today').then(function (data) {
     const jsonfile = JSON.parse(data.response)
     var minutes = jsonfile[0].minutes
@@ -700,6 +700,11 @@ async function savePreferences () { // eslint-disable-line no-unused-vars
   await requestSequencial('config/TAG_MIT', 'PUT', document.getElementById('pref-mit').value).then(readPreferences())
   await requestSequencial('config/TAG_WAITING', 'PUT', document.getElementById('pref-waiting').value).then(readPreferences())
   await requestSequencial('config/TAG_CLEANUP', 'PUT', document.getElementById('pref-cleanup').value).then(readPreferences())
+  await requestSequencial('config/TAG_A', 'PUT', document.getElementById('pref-A').value).then(readPreferences())
+  await requestSequencial('config/TAG_B', 'PUT', document.getElementById('pref-B').value).then(readPreferences())
+  await requestSequencial('config/TAG_C', 'PUT', document.getElementById('pref-C').value).then(readPreferences())
+  await requestSequencial('config/TAG_D', 'PUT', document.getElementById('pref-D').value).then(readPreferences())
+  await requestSequencial('config/STAT_DAYS', 'PUT', document.getElementById('pref-statdays').value).then(readPreferences())
   await requestSequencial('config/API_EXPOSE', 'PUT', document.getElementById('pref-expose').checked).then(readPreferences())
   await requestSequencial('config/KANBANVIEW_PORT', 'PUT', document.getElementById('pref-port').value).then(readPreferences())
 }
@@ -711,10 +716,15 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
   preferencesShow()
   const prefs = document.getElementById('prefs')
 
-  const prefDB = '<h3><i class="fa fa-database"></i> Database</h3>' +
+  const prefDB = '<h3 class="h3"><i class="fa fa-database"></i> Database</h3>' +
                  rowAdd(null, 'MIT Tag: <input class="pref-input" id="pref-mit" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Most Important Task column.', '', '', '') +
                  rowAdd(null, 'Waiting Tag: <input class="pref-input" id="pref-waiting" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Waiting column.', '', '', '') +
                  rowAdd(null, 'Cleanup Tag: <input class="pref-input" id="pref-cleanup" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the Grooming column.', '', '', '') +
+                 rowAdd(null, 'Eisenhower "A" Tag: <input class="pref-input" id="pref-A" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the A quadrant of the Eisenhower view (urgent and important).', '', '', '') +
+                 rowAdd(null, 'Eisenhower "B" Tag: <input class="pref-input" id="pref-B" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the B quadrant of the Eisenhower view (not urgent and important).', '', '', '') +
+                 rowAdd(null, 'Eisenhower "C" Tag: <input class="pref-input" id="pref-C" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the C quadrant of the Eisenhower view (urgent and not important).', '', '', '') +
+                 rowAdd(null, 'Eisenhower "D" Tag: <input class="pref-input" id="pref-D" onchange="javascript:savePreferences();">', 'Tasks with this tag will be shown in the D quadrant of the Eisenhower view (not urgent and not important).', '', '', '') +
+                 rowAdd(null, 'Days for history view: <input class="pref-input" id="pref-statdays" onchange="javascript:savePreferences();">', 'How many days the statistic view should consider (currently the app has to be restarted to take this preference to take effect).', '', '', '') +
                  '<h3><i class="fa fa-wifi"></i> API</h3>' +
                  rowAdd(null, 'Expose API to network: <input class="pref-input" id="pref-expose" type="checkbox" onchange="javascript:savePreferences();">', 'If enabled, you can open the GUI by devices within your network, e.g. via an iPad by opening this link and saving it to the home screen: <i class="fa fa-external-link-alt"></i> <a id="host" href="#" target="_blank"></a>.', '', '', '') +
                  rowAdd(null, 'PORT: <input class="pref-input" id="pref-port" onchange="javascript:savePreferences();">', 'TCP port the API is listening at.', '', '', '')
@@ -725,6 +735,11 @@ async function showPreferences () { // eslint-disable-line no-unused-vars
   document.getElementById('pref-mit').value = config.tag_mit
   document.getElementById('pref-waiting').value = config.tag_waiting
   document.getElementById('pref-cleanup').value = config.tag_cleanup
+  document.getElementById('pref-A').value = config.A
+  document.getElementById('pref-B').value = config.B
+  document.getElementById('pref-C').value = config.C
+  document.getElementById('pref-D').value = config.D
+  document.getElementById('pref-statdays').value = config.statdays
   document.getElementById('pref-expose').checked = config.api_expose
   document.getElementById('pref-port').value = config.api_port
   document.getElementById('host').innerHTML = config.api_url
@@ -735,6 +750,11 @@ async function readPreferences () {
   await requestSequencial('config/TAG_MIT').then(function (data) { config.tag_mit = data.response })
   await requestSequencial('config/TAG_WAITING').then(function (data) { config.tag_waiting = data.response })
   await requestSequencial('config/TAG_CLEANUP').then(function (data) { config.tag_cleanup = data.response })
+  await requestSequencial('config/TAG_A').then(function (data) { config.A = data.response })
+  await requestSequencial('config/TAG_B').then(function (data) { config.B = data.response })
+  await requestSequencial('config/TAG_C').then(function (data) { config.C = data.response })
+  await requestSequencial('config/TAG_D').then(function (data) { config.D = data.response })
+  await requestSequencial('config/STAT_DAYS').then(function (data) { config.statdays = data.response })
   await requestSequencial('config/API_EXPOSE').then(function (data) { config.api_expose = (data.response.toLowerCase() === 'true') })
   await requestSequencial('config/KANBANVIEW_PORT').then(function (data) { config.api_port = data.response })
   await requestSequencial('api/url').then(function (data) { config.api_url = data.response })

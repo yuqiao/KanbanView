@@ -23,7 +23,7 @@ import configparser
 from pathlib import Path
 
 
-# pylint: disable=R0904
+# pylint: disable=R0904,R0902
 class Things3():
     """Simple read-only API for Things 3."""
 
@@ -71,6 +71,11 @@ class Things3():
     tag_waiting = "Waiting"
     tag_mit = "MIT"
     tag_cleanup = "Cleanup"
+    tag_a = "A"
+    tag_b = "B"
+    tag_c = "C"
+    tag_d = "D"
+    stat_Days = 365
     anonymize = False
     config = configparser.ConfigParser()
     config.read(FILE_CONFIG)
@@ -81,6 +86,11 @@ class Things3():
                  tag_waiting=None,
                  tag_mit=None,
                  tag_cleanup=None,
+                 tag_a=None,
+                 tag_b=None,
+                 tag_c=None,
+                 tag_d=None,
+                 stat_days=None,
                  anonymize=None):
 
         cfg = self.get_from_config(tag_waiting, 'TAG_WAITING')
@@ -98,6 +108,26 @@ class Things3():
         cfg = self.get_from_config(tag_cleanup, 'TAG_CLEANUP')
         self.tag_cleanup = cfg if cfg else self.tag_cleanup
         self.set_config('TAG_CLEANUP', self.tag_cleanup)
+
+        cfg = self.get_from_config(tag_a, 'TAG_A')
+        self.tag_a = cfg if cfg else self.tag_a
+        self.set_config('TAG_A', self.tag_a)
+
+        cfg = self.get_from_config(tag_b, 'TAG_B')
+        self.tag_b = cfg if cfg else self.tag_b
+        self.set_config('TAG_B', self.tag_b)
+
+        cfg = self.get_from_config(tag_c, 'TAG_C')
+        self.tag_c = cfg if cfg else self.tag_c
+        self.set_config('TAG_C', self.tag_c)
+
+        cfg = self.get_from_config(tag_d, 'TAG_D')
+        self.tag_d = cfg if cfg else self.tag_d
+        self.set_config('TAG_D', self.tag_d)
+
+        cfg = self.get_from_config(stat_days, 'STAT_DAYS')
+        self.stat_days = cfg if cfg else self.stat_days
+        self.set_config('STAT_DAYS', self.stat_days)
 
         cfg = self.get_from_config(database, 'THINGSDB')
         self.database = cfg if cfg else self.database
@@ -168,7 +198,7 @@ class Things3():
         return self.get_rows(query)
 
     def get_today(self):
-        """Get all tasks from the today list."""
+        """Get all tasks from the todays list."""
         query = f"""
                 TASK.{self.IS_NOT_TRASHED} AND
                 TASK.{self.IS_TASK} AND
@@ -524,16 +554,15 @@ class Things3():
 
     def get_daystats(self):
         """Get a history of task activities"""
-        days = 365
         query = f"""
                 WITH RECURSIVE timeseries(x) AS (
                     SELECT 0
                     UNION ALL
                     SELECT x+1 FROM timeseries
-                    LIMIT {days}
+                    LIMIT {self.stat_days}
                 )
                 SELECT
-                    date(julianday("now", "-{days} days"),
+                    date(julianday("now", "-{self.stat_days} days"),
                          "+" || x || " days") as date,
                     CREATED.TasksCreated as created,
                     CLOSED.TasksClosed as completed,
