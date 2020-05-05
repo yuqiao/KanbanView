@@ -82,7 +82,7 @@ uninstall:
 
 
 test:
-	@type coverage >/dev/null 2>&1 || (echo "Run 'pip install coverage' first." >&2 ; exit 1)
+	@type coverage >/dev/null 2>&1 || (echo "Run '$(PIP) install coverage' first." >&2 ; exit 1)
 	@coverage erase
 	@coverage run -a -m $(SRC_TEST).test_things3
 	@coverage run -a -m $(SRC_TEST).test_things3_api
