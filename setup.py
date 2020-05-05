@@ -22,7 +22,7 @@ AUTHOR = "Alexander Willner"
 AUTHOR_MAIL = "alex@willner.ws"
 DESCRIPTON = "A simple read-only CLI, API and Web Service for Things 3"
 URL = "https://kanbanview.app"
-VERSION = "2.6.0"
+VERSION = "2.6.1.dev0"
 DATA_FILES = package_files('resources')
 OPTIONS = {
     'argv_emulation': False,
