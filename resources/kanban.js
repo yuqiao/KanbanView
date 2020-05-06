@@ -36,12 +36,12 @@ function kanbanUpdate () {
     requestParallel('api/projects', function (data) { optionsAdd(data, 'projects') })
     requestParallel('api/inbox', function (data) { rowsAdd('color4', 'Inbox', data, 'id=inbox', 'tasks in the inbox', 'i', 'inbox') })
     requestParallel('api/today', function (data) { rowsAdd('color6', 'Today', data, 'id=today', 'tasks for today', 't', 'star') })
-    requestParallel(`api/tag/${config.tag_waiting}`, function (data) { rowsAdd('color3', 'Waiting', data, `query=${config.tag_waiting}`, `tasks with the tag "${config.tag_waiting}"`, 'w', 'clock') })
+    requestParallel(`api/tag/${config.tag_waiting}`, function (data) { rowsAdd('color1', 'Waiting', data, `query=${config.tag_waiting}`, `tasks with the tag "${config.tag_waiting}"`, 'w', 'clock') })
     requestParallel(`api/tag/${config.tag_mit}`, function (data) { rowsAdd('color2', 'MIT', data, `query=${config.tag_mit}`, `most important tasks with the tag "${config.tag_mit}"`, 'm', 'exclamation-triangle') })
     requestParallel('api/upcoming', function (data) { rowsAdd('color5', 'Upcoming', data, 'id=upcoming', 'scheduled tasks', 'u', 'calendar-alt') })
     requestParallel('api/cleanup', function (data) { rowsAdd('color8', 'Grooming', data, '', 'empty projects, tasks with no parent, items with tag "Cleanup"', '', 'broom') })
     requestParallel('api/next', function (data) { rowsAdd('color7', 'Next', data, 'id=anytime', 'anytime tasks that are not in today', 'n', 'forward') })
-    requestParallel('api/backlog', function (data) { rowsAdd('color1', 'Backlog', data, 'id=someday', 'tasks in someday projects', 'b', 'paperclip') })
+    requestParallel('api/backlog', function (data) { rowsAdd('color3', 'Backlog', data, 'id=someday', 'tasks in someday projects', 'b', 'paperclip') })
   }
 }
 
@@ -128,7 +128,6 @@ function rowsGet (rows) {
     }
     if (row.started !== null) {
       started = `Start: ${row.started}`
-      cssClass = 'hasDeadline'
     }
 
     fragment += rowAdd(row.uuid, task, started, due, cssClass, context)
