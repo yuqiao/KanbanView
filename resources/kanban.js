@@ -768,5 +768,7 @@ window.onload = async function () {
   contentAdd(columnAddPreview('color6', 'Today'))
   contentAdd(columnAddPreview('color7', 'Next'))
   await readPreferences().then(function (data) { refresh() })
+  const fragment = window.location.hash.substr(1)
+  if (fragment) { document.getElementById(fragment).click(); document.body.scrollTop = 0 }
 }
 window.onfocus = refresh
