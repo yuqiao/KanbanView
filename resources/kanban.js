@@ -438,9 +438,9 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   const canv = document.createElement('div')
   canv.id = 'canvas'
   canv.className = 'canvas container eisenhower'
-  canv.innerHTML = matrixAdd('Time', 'color1', 'Time', '', '', 'T', 'clock') +
-                   matrixAdd('A', 'color4', 'A', `query=${config.A}`, `tasks today with tag ${config.A}`, 'A', 'fire') +
-                   matrixAdd('B', 'color6', 'B', `query=${config.B}`, `tasks today with tag ${config.B}`, 'B', 'exclamation-circle') +
+  canv.innerHTML = matrixAdd('Time', 'color3', 'Time', '', '', 'T', 'clock') +
+                   matrixAdd('A', 'color8', 'A', `query=${config.A}`, `tasks today with tag ${config.A}`, 'A', 'fire') +
+                   matrixAdd('B', 'color2', 'B', `query=${config.B}`, `tasks today with tag ${config.B}`, 'B', 'exclamation-circle') +
                    matrixAdd('C', 'color5', 'C', `query=${config.C}`, `tasks today with tag ${config.C}`, 'C', 'hands-helping') +
                    matrixAdd('D', 'color3', 'D', `query=${config.D}`, `tasks today with tag ${config.D}`, 'D', 'trash')
   statsReplace(canv)
