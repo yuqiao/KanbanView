@@ -58,13 +58,14 @@ class Things3App():
 
         print(f"Using database 1: {self.database}")
 
-        webview.create_window(
+        window = webview.create_window(
             title='KanbanView',
             url=f'http://{things3_api.Things3API.host}:' +
             f'{things3_api.Things3API.port}/{self.FILE}',
             width=1280, height=650,
             min_size=(1280, 650),
             frameless=True)
+        window.closed += on_closed
         self.api_thread = Thread(target=self.open_api)
 
         try:
@@ -77,6 +78,22 @@ class Things3App():
             self.api.flask_context.shutdown()
             self.api_thread.join()
             sys.exit(0)
+
+
+def on_closed():
+    """Show a hint to buy the app"""
+    text = "Thank you for using KanbanView! " +\
+        "If you enjoy using it, please consider buying the app."
+    title = "KanbanView"
+    url = "https://kanbanview.app"
+    system("""osascript -e ' """ +
+           f"""set dialog to (display dialog "{text}" """ +
+           """buttons {"Buy", "Later"} default button 1 """ +
+           f"""giving up after 10 """ +
+           f"""with title "{title}" """ +
+           f"""with icon POSIX file "resources/icon.icns")' """ +
+           f"""-e 'if the button returned of the result is "Buy" then' """ +
+           f"""-e 'do shell script "open {url}"' -e 'end if'""")
 
 
 def main():
