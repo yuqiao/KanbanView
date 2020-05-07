@@ -47,7 +47,7 @@ class Things3App():
         print("Sigterm...")
         self.api.flask_context.shutdown()
 
-    def main(self):
+    def main(self, appstore=False):
         """Run the app."""
         # kill possible zombie processes; can't use psutil in py2app context
         system('lsof -nti:' + str(things3_api.Things3API.port) +
@@ -65,7 +65,8 @@ class Things3App():
             width=1280, height=650,
             min_size=(1280, 650),
             frameless=True)
-        window.closed += on_closed
+        if not appstore:
+            window.closed += advertise
         self.api_thread = Thread(target=self.open_api)
 
         try:
@@ -80,7 +81,7 @@ class Things3App():
             sys.exit(0)
 
 
-def on_closed():
+def advertise():
     """Show a hint to buy the app"""
     text = "Thank you for using KanbanView! " +\
         "If you enjoy using it, please consider buying the app."
