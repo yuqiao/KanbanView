@@ -10,6 +10,11 @@ const canvas = document.getElementById('canvas')
 var mode = 'task'
 const config = {}
 
+function round (value, precision) {
+  var multiplier = Math.pow(10, precision || 0)
+  return Math.round(value * multiplier) / multiplier
+}
+
 function kanbanHide () { document.getElementById('content').style.display = 'none' }
 function kanbanShow () { preferencesHide(); statsHide(); document.getElementById('content').style.display = '' }
 
@@ -455,10 +460,10 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
     var minutes = jsonfile[0].minutes
     if (minutes == null) {
       minutes = 'no time estimations'
-    } else if (minutes === '1') {
-      minutes = minutes + ' minute'
+    } else if (minutes === 60) {
+      minutes = round(minutes / 60) + ' hour'
     } else {
-      minutes = minutes + ' minutes'
+      minutes = round(minutes / 60, 1) + ' hours'
     }
     document.getElementById('Time-inner').innerHTML = minutes
   })
