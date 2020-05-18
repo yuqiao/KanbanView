@@ -78,8 +78,9 @@ class Things3API():
 
     def config_set(self, key):
         """Write key to config"""
-        value = request.get_data().decode('utf-8')
-        self.things3.set_config(key, value)
+        value = request.get_data().decode('utf-8').strip()
+        if value:
+            self.things3.set_config(key, value)
         return Response()
 
     def tag(self, tag, area=None):
