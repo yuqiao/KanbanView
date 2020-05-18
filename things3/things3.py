@@ -47,7 +47,6 @@ class Things3():
     IS_SCHEDULED = f"{DATE_START} IS NOT NULL"
     IS_NOT_SCHEDULED = f"{DATE_START} IS NULL"
     IS_DUE = f"{DATE_DUE} IS NOT NULL"
-    IS_NOT_DUE = f"{DATE_DUE} IS NULL"
     IS_RECURRING = "recurrenceRule IS NOT NULL"
     IS_NOT_RECURRING = "recurrenceRule IS NULL"
     IS_TASK = "type = 0"
@@ -242,7 +241,7 @@ class Things3():
                         )
                     )
                 )
-                ORDER BY TASK.duedate DESC, TASK.creationdate DESC
+                ORDER BY TASK.duedate DESC, TASK.{self.DATE_CREATE} DESC
                 """
         return self.get_rows(query)
 
@@ -532,8 +531,8 @@ class Things3():
             SELECT
                 TASK.uuid,
                 TASK.title AS title,
-                creationDate AS created,
-                userModificationDate AS modified,
+                {self.DATE_CREATE} AS created,
+                {self.DATE_MOD} AS modified,
                 (SELECT COUNT(uuid)
                  FROM TMTask AS PROJECT_TASK
                  WHERE
@@ -571,7 +570,7 @@ class Things3():
                 FROM timeseries
                 LEFT JOIN
                     (SELECT COUNT(uuid) AS TasksCreated,
-                        date(creationDate,"unixepoch") AS DAY
+                        date({self.DATE_CREATE},"unixepoch") AS DAY
                         FROM {self.TABLE_TASK} AS TASK
                         WHERE DAY NOT NULL
                           AND TASK.{self.IS_TASK}
@@ -587,7 +586,7 @@ class Things3():
                         AS CANCELLED ON CANCELLED.DAY = date
                 LEFT JOIN
                     (SELECT COUNT(uuid) AS TasksTrashed,
-                        date(userModificationDate,"unixepoch") AS DAY
+                        date({self.DATE_MOD},"unixepoch") AS DAY
                         FROM {self.TABLE_TASK} AS TASK
                         WHERE DAY NOT NULL
                           AND TASK.{self.IS_TRASHED} AND TASK.{self.IS_TASK}
@@ -679,8 +678,8 @@ class Things3():
                          substr(strftime('%Y', TASK.dueDate,"unixepoch"),3, 2)
                 ELSE NULL
                 END AS due,
-                date(TASK.creationDate,"unixepoch") as created,
-                date(TASK.userModificationDate,"unixepoch") as modified,
+                date(TASK.{self.DATE_CREATE},"unixepoch") as created,
+                date(TASK.{self.DATE_MOD},"unixepoch") as modified,
                 strftime('%d.%m.', TASK.startDate,"unixepoch") ||
                   substr(strftime('%Y', TASK.startDate,"unixepoch"),3, 2)
                   as started,
@@ -693,9 +692,9 @@ class Things3():
                    PROJECT_TASK.{self.IS_OPEN}
                 ) AS size,
                 CASE
-                    WHEN TASK.type = 0 THEN 'task'
-                    WHEN TASK.type = 1 THEN 'project'
-                    WHEN TASK.type = 2 THEN 'heading'
+                    WHEN TASK.{self.IS_TASK} THEN 'task'
+                    WHEN TASK.{self.IS_PROJECT} THEN 'project'
+                    WHEN TASK.{self.IS_HEADING} THEN 'heading'
                 END AS type
             FROM
                 {self.TABLE_TASK} AS TASK

@@ -1,0 +1,6 @@
+objc  # unused import (things3/things3_app.py:23)
+pkg_resources  # unused import (things3/things3_app.py:24)
+_.closed  # unused attribute (things3/things3_app.py:69)
+_.row_factory  # unused attribute (things3/things3.py:727)
+cls  # unused variable (things3/things3_cli.py:54)
+cls  # unused variable (things3/things3_cli.py:59)

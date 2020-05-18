@@ -107,6 +107,7 @@ clean:
 	@rm -f $(DEST)
 	@find . -name \*.pyc -delete
 	@find . -name __pycache__ -delete
+	@rm -rf htmlcov
 	@rm -rf build dist *.egg-info
 	@rm -rf .mypy_cache/
 	@rm -f .coverage
@@ -127,9 +128,13 @@ code-lint:
 	@type pylint >/dev/null 2>&1 || (echo "Run '$(PIP) install pylint' first." >&2 ; exit 1)
 	@type flake8 >/dev/null 2>&1 || (echo "Run '$(PIP) install flake8' first." >&2 ; exit 1)
 	@type mypy >/dev/null 2>&1 || (echo "Run '$(PIP) install mypy' first." >&2 ; exit 1)
-	@echo "Flake8:" ; flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST) setup.py
-	@echo "Mypy:" ; mypy $(SRC_CORE) $(SRC_TEST) setup.py
-	@echo "PyLint:" ; pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py setup.py
+	@type vulture >/dev/null 2>&1 || (echo "Run '$(PIP) install vulture' first." >&2 ; exit 1)
+	@pip3 show pydiatra >/dev/null 2>&1 || (echo "Run '$(PIP) install pydiatra' first." >&2 ; exit 1)
+	@echo "Flake8:" ; $(PYTHON) -m flake8 --max-complexity 10 $(SRC_CORE) $(SRC_TEST) setup.py
+	@echo "Vulture:" ; $(PYTHON) -m vulture $(SRC_CORE) setup.py .vulture-whitelist
+	@echo "Pydiatra:" ; $(PYTHON) -m pydiatra $(SRC_CORE)/*.py $(SRC_TEST)/*.py  setup.py
+	@echo "Mypy:" ; $(PYTHON) -m mypy $(SRC_CORE) $(SRC_TEST) setup.py
+	@echo "PyLint:" ; $(PYTHON) -m pylint $(SRC_CORE)/*.py $(SRC_TEST)/*.py  setup.py
 
 css-lint:
 	@type csslint >/dev/null 2>&1 || (echo "Run 'npm install -g csslint' first." >&2 ; exit 1)
