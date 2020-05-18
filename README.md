@@ -1,5 +1,6 @@
 [![GitHub Release](https://img.shields.io/github/v/release/AlexanderWillner/kanbanview?sort=semver)](https://github.com/AlexanderWillner/KanbanView/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/things3-api?label=pypi%20downloads)](https://pypi.org/project/things3-api/)
 [![GitHub Download Count](https://img.shields.io/github/downloads/AlexanderWillner/KanbanView/total.svg)](https://github.com/AlexanderWillner/KanbanView/releases)
 [![GitHub Issues](https://img.shields.io/github/issues/alexanderwillner/kanbanview)](https://github.com/AlexanderWillner/KanbanView/issues)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/quality/g/alexanderwillner/kanbanview)](https://scrutinizer-ci.com/g/AlexanderWillner/KanbanView/?branch=master)
