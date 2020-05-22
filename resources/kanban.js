@@ -435,6 +435,20 @@ function matrixReplace (id, data) {
   document.getElementById(id + '-inner').innerHTML = html
 }
 
+async function statsShowSeinfeld () { // eslint-disable-line no-unused-vars
+  view = statsShowSeinfeld
+  kanbanHide()
+  statsShow()
+  const canv = document.createElement('div')
+  canv.id = 'canvas'
+  canv.className = 'canvas container seinfeld'
+  canv.innerHTML = matrixAdd('Time', 'color3', 'Time', '', '', 'T', 'clock')
+  statsReplace(canv)
+  requestParallel('api/filter/reset', null)
+  const tag = '30F51D04-F5B8-4ADC-AAC8-3A02F2DD0A5A'
+  requestSequencial(`api/seinfeld/365/${tag}`).then(function (data) { console.log(data) })
+}
+
 async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   view = statsShowMinutes
   kanbanHide()

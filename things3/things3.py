@@ -412,7 +412,7 @@ class Things3():
                     TASK.title,
                     NULL as context,
                     (SELECT COUNT(uuid)
-                     FROM TMTask AS PROJECT_TASK
+                     FROM {self.TABLE_TASK} AS PROJECT_TASK
                      WHERE
                        PROJECT_TASK.project = TASK.uuid AND
                        PROJECT_TASK.{self.IS_NOT_TRASHED} AND
@@ -435,7 +435,7 @@ class Things3():
                     AREA.uuid AS uuid,
                     AREA.title AS title,
                     (SELECT COUNT(uuid)
-                        FROM TMTask AS PROJECT
+                        FROM {self.TABLE_TASK} AS PROJECT
                         WHERE
                         PROJECT.area = AREA.uuid AND
                         PROJECT.{self.IS_NOT_TRASHED} AND
@@ -509,7 +509,7 @@ class Things3():
             GROUP BY TASK.uuid
             HAVING
                 (SELECT COUNT(uuid)
-                 FROM TMTask AS PROJECT_TASK
+                 FROM {self.TABLE_TASK} AS PROJECT_TASK
                  WHERE
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND
@@ -534,7 +534,7 @@ class Things3():
                 {self.DATE_CREATE} AS created,
                 {self.DATE_MOD} AS modified,
                 (SELECT COUNT(uuid)
-                 FROM TMTask AS PROJECT_TASK
+                 FROM {self.TABLE_TASK} AS PROJECT_TASK
                  WHERE
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND
@@ -549,6 +549,36 @@ class Things3():
             GROUP BY TASK.uuid
             ORDER BY tasks COLLATE NOCASE DESC
             """
+        return self.execute_query(query)
+
+    def get_seinfeld(self, days, tag_id):
+        """Get 'Seinfeld' statistics for a given tag"""
+        query = f"""
+                WITH RECURSIVE timeseries(x) AS (
+                    SELECT 0
+                    UNION ALL
+                    SELECT x+1 FROM timeseries
+                    LIMIT {days}
+                )
+                SELECT
+                    date(julianday("now", "-{days} days"),
+                         "+" || x || " days") as date,
+                    SEINFELDTASK.SeinfeldDone
+                FROM timeseries
+                LEFT JOIN
+                (SELECT COUNT(uuid) AS SeinfeldDone,
+                        date(TASK.stopDate,"unixepoch") AS DAY
+                        FROM {self.TABLE_TASK} AS TASK
+                        LEFT JOIN {self.TABLE_TASKTAG} ON
+                            TASK.uuid = {self.TABLE_TASKTAG}.tasks
+                        WHERE
+                            DAY NOT NULL
+                            AND {self.TABLE_TASKTAG}.tags = '{tag_id}'
+                            AND TASK.{self.IS_DONE}
+                        GROUP BY DAY)
+                    AS SEINFELDTASK ON SEINFELDTASK.DAY = date
+                ORDER BY date DESC
+                """
         return self.execute_query(query)
 
     def get_daystats(self):
@@ -611,17 +641,23 @@ class Things3():
                 FROM
                     {self.TABLE_TASK} AS TASK
                 LEFT OUTER JOIN
-                TMTask PROJECT ON TASK.project = PROJECT.uuid
+                    {self.TABLE_TASK} PROJECT ON
+                    TASK.project = PROJECT.uuid
                 LEFT OUTER JOIN
-                    TMArea AREA ON TASK.area = AREA.uuid
+                    TMArea AREA ON
+                    TASK.area = AREA.uuid
                 LEFT OUTER JOIN
-                    TMTask HEADING ON TASK.actionGroup = HEADING.uuid
+                    {self.TABLE_TASK} HEADING ON
+                    TASK.actionGroup = HEADING.uuid
                 LEFT OUTER JOIN
-                    TMTask HEADPROJ ON HEADING.project = HEADPROJ.uuid
+                    {self.TABLE_TASK} HEADPROJ ON
+                    HEADING.project = HEADPROJ.uuid
                 LEFT OUTER JOIN
-                    TMTaskTag TAGS ON TASK.uuid = TAGS.tasks
+                    {self.TABLE_TASKTAG} TAGS ON
+                    TASK.uuid = TAGS.tasks
                 LEFT OUTER JOIN
-                    TMTag TAG ON TAGS.tags = TAG.uuid
+                    {self.TABLE_TAG} TAG ON
+                    TAGS.tags = TAG.uuid
                 WHERE
                     printf("%d", TAG.title) = TAG.title AND
                     TASK.{self.IS_NOT_TRASHED} AND
@@ -685,7 +721,7 @@ class Things3():
                   as started,
                 date(TASK.stopDate,"unixepoch") as stopped,
                 (SELECT COUNT(uuid)
-                 FROM TMTask AS PROJECT_TASK
+                 FROM {self.TABLE_TASK} AS PROJECT_TASK
                  WHERE
                    PROJECT_TASK.project = TASK.uuid AND
                    PROJECT_TASK.{self.IS_NOT_TRASHED} AND

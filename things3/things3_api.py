@@ -94,6 +94,11 @@ class Things3API():
         data = json.dumps(data)
         return Response(response=data, content_type='application/json')
 
+    def seinfeld(self, days, tagid):
+        """Return 'seinfeld' statistics"""
+        data = json.dumps(self.things3.get_seinfeld(days, tagid))
+        return Response(response=data, content_type='application/json')
+
     def api(self, command):
         """Return database as JSON strings."""
         if command in self.things3.functions:
@@ -149,6 +154,8 @@ class Things3API():
         self.flask.add_url_rule('/config/<key>', view_func=self.config_get)
         self.flask.add_url_rule(
             '/config/<key>', view_func=self.config_set, methods=["PUT"])
+        self.flask.add_url_rule(
+            '/api/seinfeld/<days>/<tagid>', view_func=self.seinfeld)
         self.flask.add_url_rule('/api/<command>', view_func=self.api)
         self.flask.add_url_rule('/api/url', view_func=self.get_url)
         self.flask.add_url_rule('/api/tag/<tag>', view_func=self.tag)
