@@ -451,19 +451,19 @@ async function statsShowMinutes () { // eslint-disable-line no-unused-vars
   statsReplace(canv)
 
   requestParallel('api/filter/reset', null)
-  requestSequencial(`api/tag/${config.A}/today`).then(function (data) { matrixReplace('A', data) })
-  requestSequencial(`api/tag/${config.B}/today`).then(function (data) { matrixReplace('B', data) })
-  requestSequencial(`api/tag/${config.C}/today`).then(function (data) { matrixReplace('C', data) })
-  requestSequencial(`api/tag/${config.D}/today`).then(function (data) { matrixReplace('D', data) })
+  requestSequencial(`api/tag/${config.A}`).then(function (data) { matrixReplace('A', data) })
+  requestSequencial(`api/tag/${config.B}`).then(function (data) { matrixReplace('B', data) })
+  requestSequencial(`api/tag/${config.C}`).then(function (data) { matrixReplace('C', data) })
+  requestSequencial(`api/tag/${config.D}`).then(function (data) { matrixReplace('D', data) })
   requestSequencial('api/stats-min-today').then(function (data) {
     const jsonfile = JSON.parse(data.response)
     var minutes = jsonfile[0].minutes
     if (minutes == null) {
       minutes = 'no time estimations'
     } else if (minutes === 60) {
-      minutes = round(minutes / 60) + ' hour'
+      minutes = round(minutes / 60) + ' hour today'
     } else {
-      minutes = round(minutes / 60, 1) + ' hours'
+      minutes = round(minutes / 60, 1) + ' hours today'
     }
     document.getElementById('Time-inner').innerHTML = minutes
   })
