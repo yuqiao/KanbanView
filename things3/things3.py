@@ -551,7 +551,7 @@ class Things3():
             """
         return self.execute_query(query)
 
-    def get_seinfeld(self, days, tag_id):
+    def get_seinfeld(self, days, tag):
         """Get 'Seinfeld' statistics for a given tag"""
         query = f"""
                 WITH RECURSIVE timeseries(x) AS (
@@ -563,19 +563,22 @@ class Things3():
                 SELECT
                     date(julianday("now", "-{days} days"),
                          "+" || x || " days") as date,
-                    SEINFELDTASK.SeinfeldDone
+                    SEINFELDTASK.SeinfeldDone,
+                    title
                 FROM timeseries
                 LEFT JOIN
                 (SELECT COUNT(uuid) AS SeinfeldDone,
-                        date(TASK.stopDate,"unixepoch") AS DAY
+                        date(TASK.stopDate,"unixepoch") AS DAY,
+                        title
                         FROM {self.TABLE_TASK} AS TASK
                         LEFT JOIN {self.TABLE_TASKTAG} ON
                             TASK.uuid = {self.TABLE_TASKTAG}.tasks
                         WHERE
                             DAY NOT NULL
-                            AND {self.TABLE_TASKTAG}.tags = '{tag_id}'
+                            AND {self.TABLE_TASKTAG}.tags = 
+                                (SELECT uuid FROM {self.TABLE_TAG} WHERE title='{tag}')
                             AND TASK.{self.IS_DONE}
-                        GROUP BY DAY)
+                        GROUP BY DAY, title)
                     AS SEINFELDTASK ON SEINFELDTASK.DAY = date
                 ORDER BY date DESC
                 """

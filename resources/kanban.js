@@ -8,7 +8,7 @@ var view = null
 var idxUUID = 'None'
 const canvas = document.getElementById('canvas')
 var mode = 'task'
-const config = {}
+const config = { tag_seinfeld: 'Seinfeld' }
 
 function round (value, precision) {
   var multiplier = Math.pow(10, precision || 0)
@@ -444,9 +444,16 @@ async function statsShowSeinfeld () { // eslint-disable-line no-unused-vars
   canv.className = 'canvas container seinfeld'
   canv.innerHTML = matrixAdd('Time', 'color3', 'Time', '', '', 'T', 'clock')
   statsReplace(canv)
-  requestParallel('api/filter/reset', null)
-  const tag = '30F51D04-F5B8-4ADC-AAC8-3A02F2DD0A5A'
-  requestSequencial(`api/seinfeld/365/${tag}`).then(function (data) { console.log(data) })
+  requestSequencial('api/filter/reset', null)
+  requestSequencial(`api/seinfeld/365/${config.tag_seinfeld}`).then(function (data) {
+    const jsonfile = JSON.parse(data.response)
+    const array = []
+    jsonfile.forEach(data => {
+      array[jsonfile.title] = 's' // { jsonfile.date: jsonfile.SeinfeldDone }
+    })
+
+    console.log(jsonfile)
+  })
 }
 
 async function statsShowMinutes () { // eslint-disable-line no-unused-vars
