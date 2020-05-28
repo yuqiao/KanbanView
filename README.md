@@ -15,15 +15,15 @@ This repository contains a simple read-only CLI, API and Web Service for [Things
 
 ## Installation
 
-To support the development, consider to buy the pre-compiled binary from the AppStore:
+To safe time and to support the development, consider to buy the pre-compiled binary from the AppStore:
 
 [![AppStore](https://github.com/AlexanderWillner/KanbanView/raw/master/doc/download_appstore-black.png)](https://apps.apple.com/us/app/kanbanview/id1507458952?mt=12&UO=kanbanview.app)
 
 Besides this, you've different options:
 
-2. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
-3. Install the library and command line tools: `pip3 install things3-api`
-4. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
+1. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
+2. Install the library and command line tools: `pip3 install things3-api`
+3. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
 
 ## Configuration
 
