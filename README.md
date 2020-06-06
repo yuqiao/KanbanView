@@ -21,9 +21,25 @@ To support the development, consider to buy the pre-compiled binary from the App
 
 Besides this, you've different options:
 
-2. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
-3. Install the library and command line tools: `pip3 install things3-api`
-4. Star, fork and contribute to the lastest code: `git clone https://github.com/AlexanderWillner/KanbanView.git`
+1. Download a [release](https://github.com/AlexanderWillner/KanbanView/releases).
+2. Install the library and command line tools: `pip3 install things3-api`
+3. Star, fork and contribute to the lastest code:
+
+```bash
+# ==================================
+# In case you don't have Python 3 on your Mac:
+# ==================================
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+$ brew install python3 pip3
+
+# ==================================
+# Install and run the code
+# ==================================
+$ git clone https://github.com/AlexanderWillner/KanbanView.git
+$ cd KanbanView
+$ pip3 install -r requirements.txt 
+$ ./bin/things-cli
+```
 
 ## Configuration
 
