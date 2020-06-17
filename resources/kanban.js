@@ -439,20 +439,26 @@ async function statsShowSeinfeld () { // eslint-disable-line no-unused-vars
   view = statsShowSeinfeld
   kanbanHide()
   statsShow()
+
   const canv = document.createElement('div')
   canv.id = 'canvas'
-  canv.className = 'canvas container seinfeld'
-  canv.innerHTML = matrixAdd('Time', 'color3', 'Time', '', '', 'T', 'clock')
+  canv.className = 'prefs'
   statsReplace(canv)
+
   requestSequencial('api/filter/reset', null)
   requestSequencial(`api/seinfeld/365/${config.tag_seinfeld}`).then(function (data) {
     const jsonfile = JSON.parse(data.response)
     const array = []
     jsonfile.forEach(data => {
-      array[jsonfile.title] = 's' // { jsonfile.date: jsonfile.SeinfeldDone }
+      if (data.title !== null) {
+        if (array[data.title] === undefined) { array[data.title] = [] }
+        array[data.title].push({ date: data.date, checked: data.SeinfeldDone })
+      }
     })
-
-    console.log(jsonfile)
+    Object.keys(array).forEach(function (key, index) {
+      canv.innerHTML += columnAdd(key, '', '', '', 'color2', '', 'todo', 'database')
+      console.log(key, array[key])
+    })
   })
 }
 
