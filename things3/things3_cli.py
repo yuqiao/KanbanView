@@ -40,8 +40,9 @@ class Things3CLI():
         elif self.print_csv:
             fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'size',
                           'type', 'due', 'created', 'modified', 'started',
-                          'stopped']
-            writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+                          'stopped', 'notes']
+            writer = csv.DictWriter(
+                sys.stdout, fieldnames=fieldnames, delimiter=';')
             writer.writeheader()
             writer.writerows(tasks)
         else:

@@ -575,8 +575,9 @@ class Things3():
                             TASK.uuid = {self.TABLE_TASKTAG}.tasks
                         WHERE
                             DAY NOT NULL
-                            AND {self.TABLE_TASKTAG}.tags = 
-                                (SELECT uuid FROM {self.TABLE_TAG} WHERE title='{tag}')
+                            AND {self.TABLE_TASKTAG}.tags =
+                                (SELECT uuid FROM {self.TABLE_TAG}
+                                 WHERE title='{tag}')
                             AND TASK.{self.IS_DONE}
                         GROUP BY DAY, title)
                     AS SEINFELDTASK ON SEINFELDTASK.DAY = date
@@ -734,7 +735,8 @@ class Things3():
                     WHEN TASK.{self.IS_TASK} THEN 'task'
                     WHEN TASK.{self.IS_PROJECT} THEN 'project'
                     WHEN TASK.{self.IS_HEADING} THEN 'heading'
-                END AS type
+                END AS type,
+                TASK.notes
             FROM
                 {self.TABLE_TASK} AS TASK
             LEFT OUTER JOIN
