@@ -29,9 +29,8 @@ class Things3():
 
     # Database info
     FILE_CONFIG = str(Path.home()) + '/.kanbanviewrc'
-    FILE_DB = '/Library/Containers/'\
-              'com.culturedcode.ThingsMac/Data/Library/'\
-              'Application Support/Cultured Code/Things/Things.sqlite3'
+    FILE_DB = '/Library/Group Containers/'\
+              'JLMPQHK86H.com.culturedcode.ThingsMac/Things.sqlite3'
     TABLE_TASK = "TMTask"
     TABLE_AREA = "TMArea"
     TABLE_TAG = "TMTag"
@@ -63,7 +62,7 @@ class Things3():
     MODE_PROJECT = "type = 1"
 
     # Variables
-    debug = False
+    debug = True
     user = getpass.getuser()
     database = f"/Users/{user}/{FILE_DB}"
     filter = ""
@@ -721,6 +720,7 @@ class Things3():
     def execute_query(self, sql):
         """Run the actual query"""
         if self.debug is True:
+            print(self.database)
             print(sql)
         try:
             connection = sqlite3.connect(
