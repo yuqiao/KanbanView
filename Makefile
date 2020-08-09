@@ -1,6 +1,6 @@
 -include appstore/Makefile
 
-VERSION=2.6.2.dev1
+VERSION=2.6.2
 MAIN=things3_kanban
 APP=things3_app
 SERVER=things3_api

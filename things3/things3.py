@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.6.2.dev1"
+__version__ = "2.6.2"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -62,7 +62,7 @@ class Things3():
     MODE_PROJECT = "type = 1"
 
     # Variables
-    debug = True
+    debug = False
     user = getpass.getuser()
     database = f"/Users/{user}/{FILE_DB}"
     filter = ""
@@ -129,6 +129,15 @@ class Things3():
 
         cfg = self.get_from_config(database, 'THINGSDB')
         self.database = cfg if cfg else self.database
+        # Automated migration to new database location in Things 3.12.6
+        # --------------------------------
+        try:
+            with open(self.database) as f_d:
+                if "Your database file has been moved there" in f_d.readline():
+                    self.database = f"/Users/{self.user}/{self.FILE_DB}"
+        except UnicodeDecodeError:
+            pass  # binary file, so it is still the old database
+        # --------------------------------
         self.set_config('THINGSDB', self.database)
 
     def set_config(self, key, value, domain='DATABASE'):

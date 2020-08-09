@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.6.2.dev1"
+__version__ = "2.6.2"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -41,7 +41,8 @@ class Things3CLI():
             fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'size',
                           'type', 'due', 'created', 'modified', 'started',
                           'stopped', 'notes']
-            writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames, delimiter=';')
+            writer = csv.DictWriter(
+                sys.stdout, fieldnames=fieldnames, delimiter=';')
             writer.writeheader()
             writer.writerows(tasks)
         else:
