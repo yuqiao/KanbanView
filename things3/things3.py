@@ -135,8 +135,8 @@ class Things3():
             with open(self.database) as f_d:
                 if "Your database file has been moved there" in f_d.readline():
                     self.database = f"/Users/{self.user}/{self.FILE_DB}"
-        except UnicodeDecodeError:
-            pass  # binary file, so it is still the old database
+        except (UnicodeDecodeError, FileNotFoundError):
+            pass  # binary file (old database) or doesn't exist
         # --------------------------------
         self.set_config('THINGSDB', self.database)
 
