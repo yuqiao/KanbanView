@@ -9,3 +9,4 @@ flask==1.1.2
 argcomplete==1.11.1
 pywebview==3.3.5
 setuptools==45.0.0
+twine==3.2.0
