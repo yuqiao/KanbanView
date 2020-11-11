@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.6.2"
+__version__ = "2.6.3"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -21,6 +21,7 @@ import csv
 import webbrowser
 import argcomplete  # type: ignore
 from things3.things3 import Things3
+from things3.things3_opml import Things3OPML
 
 
 class Things3CLI():
@@ -28,6 +29,8 @@ class Things3CLI():
 
     print_json = False
     print_csv = False
+    print_opml = False
+    anonymize = False
     things3 = None
 
     def __init__(self, database=None):
@@ -37,6 +40,8 @@ class Things3CLI():
         """Print a task."""
         if self.print_json:
             print(json.dumps(tasks))
+        elif self.print_opml:
+            Things3OPML().print_tasks(tasks)
         elif self.print_csv:
             fieldnames = ['uuid', 'title', 'context', 'context_uuid', 'size',
                           'type', 'due', 'created', 'modified', 'started',
@@ -48,7 +53,7 @@ class Things3CLI():
         else:
             for task in tasks:
                 title = task['title']
-                context = task['context']
+                context = task['context'] if 'context' in task else ''
                 print(' - ', title, ' (', context, ')')
 
     @classmethod
@@ -88,6 +93,10 @@ class Things3CLI():
                               help='Shows all tasks')
         subparsers.add_parser('csv',
                               help='Exports tasks as CSV')
+        subparsers.add_parser('areas',
+                              help='Shows all areas')
+        subparsers.add_parser('opml',
+                              help='Exports tasks as OPML')
         subparsers.add_parser('due',
                               help='Shows tasks with due dates')
         subparsers.add_parser('empty',
@@ -147,6 +156,14 @@ class Things3CLI():
                             action="store_true", default=False,
                             help="output as CSV", dest="csv")
 
+        parser.add_argument("-o", "--opml",
+                            action="store_true", default=False,
+                            help="output as OPML", dest="opml")
+
+        parser.add_argument("-a", "--anonymize",
+                            action="store_true", default=False,
+                            help="anonymize output", dest="anonymize")
+
         parser.add_argument(
             "--version",
             action="version",
@@ -165,10 +182,15 @@ class Things3CLI():
             command = args.command
             self.print_json = args.json
             self.print_csv = args.csv
+            self.print_opml = args.opml
+            self.anonymize = args.anonymize
+            self.things3.anonymize = self.anonymize
 
             if command in self.things3.functions:
                 func = self.things3.functions[command]
                 self.print_tasks(func(self.things3))
+            elif command == "opml":
+                Things3OPML().print_all(self.things3)
             elif command == "csv":
                 print("Deprecated: use --csv instead")
             elif command == "feedback":

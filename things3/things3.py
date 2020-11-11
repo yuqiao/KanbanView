@@ -9,7 +9,7 @@ __author__ = "Alexander Willner"
 __copyright__ = "2020 Alexander Willner"
 __credits__ = ["Alexander Willner"]
 __license__ = "Apache License 2.0"
-__version__ = "2.6.2"
+__version__ = "2.6.3"
 __maintainer__ = "Alexander Willner"
 __email__ = "alex@willner.ws"
 __status__ = "Development"
@@ -30,7 +30,8 @@ class Things3():
     # Database info
     FILE_CONFIG = str(Path.home()) + '/.kanbanviewrc'
     FILE_DB = '/Library/Group Containers/'\
-              'JLMPQHK86H.com.culturedcode.ThingsMac/Things.sqlite3'
+              'JLMPQHK86H.com.culturedcode.ThingsMac/'\
+              'Things Database.thingsdatabase/main.sqlite'
     TABLE_TASK = "TMTask"
     TABLE_AREA = "TMArea"
     TABLE_TAG = "TMTag"
@@ -129,7 +130,7 @@ class Things3():
 
         cfg = self.get_from_config(database, 'THINGSDB')
         self.database = cfg if cfg else self.database
-        # Automated migration to new database location in Things 3.12.6
+        # Automated migration to new database location in Things 3.12.6/3.13.1
         # --------------------------------
         try:
             with open(self.database) as f_d:
@@ -190,7 +191,8 @@ class Things3():
         if self.anonymize:
             for task in tasks:
                 task['title'] = self.anonymize_string(task['title'])
-                task['context'] = self.anonymize_string(task['context'])
+                task['context'] = self.anonymize_string(
+                    task['context']) if 'context' in task else ''
         return tasks
 
     def get_inbox(self):
@@ -227,6 +229,34 @@ class Things3():
                     )
                 )
                 ORDER BY TASK.duedate DESC , TASK.todayIndex
+                """
+        return self.get_rows(query)
+
+    def get_task(self, area=None, project=None):
+        """Get tasks."""
+        afilter = f'AND TASK.area = "{area}"' \
+            if area is not None else ''
+        pfilter = f'AND TASK.project = "{project}"' \
+            if project is not None else ''
+        query = f"""
+                TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_TASK} AND
+                TASK.{self.IS_OPEN} AND
+                TASK.{self.IS_ANYTIME} AND
+                TASK.{self.IS_NOT_RECURRING} AND (
+                    (
+                        PROJECT.title IS NULL OR (
+                            PROJECT.{self.IS_NOT_TRASHED}
+                        )
+                    ) AND (
+                        HEADPROJ.title IS NULL OR (
+                            HEADPROJ.{self.IS_NOT_TRASHED}
+                        )
+                    )
+                )
+                {afilter}
+                {pfilter}
+                ORDER BY TASK.duedate DESC, TASK.{self.DATE_CREATE} DESC
                 """
         return self.get_rows(query)
 
@@ -412,8 +442,9 @@ class Things3():
                 """
         return self.get_rows(query)
 
-    def get_projects(self):
+    def get_projects(self, area=None):
         """Get projects."""
+        afilter = f'AND TASK.area = "{area}"' if area is not None else ''
         query = f"""
                 SELECT
                     TASK.uuid,
@@ -432,6 +463,7 @@ class Things3():
                     TASK.{self.IS_NOT_TRASHED} AND
                     TASK.{self.IS_PROJECT} AND
                     TASK.{self.IS_OPEN}
+                    {afilter}
                 ORDER BY TASK.title COLLATE NOCASE
                 """
         return self.execute_query(query)

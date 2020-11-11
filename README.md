@@ -31,7 +31,7 @@ While everything should work out of the box, you might want to change some confi
 
 ```ini
 [DATABASE]
-THINGSDB=/Users/myname/Library/Group Containers/JLMPQHK86H.com.culturedcode.ThingsMac/Things.sqlite3
+THINGSDB=/Users/myname/Library/Group Containers/JLMPQHK86H.com.culturedcode.ThingsMac/Things Database.thingsdatabase/main.sqlite
 TAG_WAITING=Waiting
 TAG_MIT=MIT
 TAG_CLEANUP=Cleanup
