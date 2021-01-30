@@ -21,6 +21,8 @@ from os import system
 from threading import Thread
 import webview  # type: ignore
 import objc  # type: ignore # pylint: disable=unused-import # noqa F401
+# In case of `ModuleNotFoundError: No module named 'pkg_resources.py2_warn'` run:
+# pip3 install -r requirements.txt
 import pkg_resources.py2_warn  # type: ignore # pylint: disable=unused-import # noqa F401
 import things3.things3_api as things3_api
 
