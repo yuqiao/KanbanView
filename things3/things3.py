@@ -736,6 +736,11 @@ class Things3():
                     WHEN TASK.{self.IS_PROJECT} THEN 'project'
                     WHEN TASK.{self.IS_HEADING} THEN 'heading'
                 END AS type,
+                CASE
+                    WHEN TASK.{self.IS_OPEN} THEN 'open'
+                    WHEN TASK.{self.IS_CANCELLED} THEN 'cancelled'
+                    WHEN TASK.{self.IS_DONE} THEN 'done'
+                END AS status,
                 TASK.notes
             FROM
                 {self.TABLE_TASK} AS TASK
