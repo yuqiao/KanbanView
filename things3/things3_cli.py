@@ -47,7 +47,8 @@ class Things3CLI():
                           'type', 'due', 'created', 'modified', 'started',
                           'stopped', 'notes']
             writer = csv.DictWriter(
-                sys.stdout, fieldnames=fieldnames, delimiter=';')
+                sys.stdout, fieldnames=fieldnames, delimiter=';',
+                extrasaction='ignore')
             writer.writeheader()
             writer.writerows(tasks)
         else:
