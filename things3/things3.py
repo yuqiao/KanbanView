@@ -423,6 +423,16 @@ class Things3():
                 """
         return self.get_rows(query)
 
+    def get_logbook(self):
+        """Get today completed tasks."""
+        query = f"""
+                TASK.{self.IS_NOT_TRASHED} AND
+                TASK.{self.IS_TASK} AND
+                TASK.{self.IS_DONE} AND
+                stopped = date('now')
+                """
+        return self.get_rows(query)
+
     def get_cancelled(self):
         """Get cancelled tasks."""
         query = f"""
@@ -815,5 +825,6 @@ class Things3():
         "cleanup": get_cleanup,
         "top-proj": get_largest_projects,
         "stats-day": get_daystats,
-        "stats-min-today": get_minutes_today
+        "stats-min-today": get_minutes_today,
+        "logbook": get_logbook,
     }

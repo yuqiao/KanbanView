@@ -55,7 +55,10 @@ class Things3CLI():
             for task in tasks:
                 title = task['title']
                 context = task['context'] if 'context' in task else ''
-                print(' - ', title, ' (', context, ')')
+                if task['status'] == 'done':
+                    print('- [x] ', title, ' (', context, ')')
+                else:
+                    print('- [ ] ', title, ' (', context, ')')
 
     @classmethod
     def print_unimplemented(cls):
